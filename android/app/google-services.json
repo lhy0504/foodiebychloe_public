@@ -1,0 +1,163 @@
+{
+  "project_info": {
+    "project_number": "1021177800634",
+    "project_id": "rntest-47f77",
+    "storage_bucket": "rntest-47f77.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1021177800634:android:d6392dd58edc92a2c75f83",
+        "android_client_info": {
+          "package_name": "com.awesomeproject2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1021177800634-hqji34lnmgic4kg2scp34gmorhache41.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkTCvkSBvaJqQGbop4b_9yJCSZJWKLyqs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1021177800634-hqji34lnmgic4kg2scp34gmorhache41.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1021177800634:android:0a3654c848719ad7c75f83",
+        "android_client_info": {
+          "package_name": "com.example.foodiebychloe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1021177800634-hqji34lnmgic4kg2scp34gmorhache41.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkTCvkSBvaJqQGbop4b_9yJCSZJWKLyqs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1021177800634-hqji34lnmgic4kg2scp34gmorhache41.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1021177800634:android:c0497051796e292ac75f83",
+        "android_client_info": {
+          "package_name": "com.foodiebychloe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1021177800634-rql76qt9sjuquol6qsav1ue6uj1rggm9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.foodiebychloe",
+            "certificate_hash": "c491826ed4bb5c08a4b1eb42aa07949c41225f73"
+          }
+        },
+        {
+          "client_id": "1021177800634-hqji34lnmgic4kg2scp34gmorhache41.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkTCvkSBvaJqQGbop4b_9yJCSZJWKLyqs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1021177800634-hqji34lnmgic4kg2scp34gmorhache41.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1021177800634:android:55656c105ce3a246c75f83",
+        "android_client_info": {
+          "package_name": "com.instacloneapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1021177800634-hqji34lnmgic4kg2scp34gmorhache41.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkTCvkSBvaJqQGbop4b_9yJCSZJWKLyqs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1021177800634-hqji34lnmgic4kg2scp34gmorhache41.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1021177800634:android:83ca48860b25247ac75f83",
+        "android_client_info": {
+          "package_name": "com.scanner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1021177800634-hqji34lnmgic4kg2scp34gmorhache41.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkTCvkSBvaJqQGbop4b_9yJCSZJWKLyqs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1021177800634-hqji34lnmgic4kg2scp34gmorhache41.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

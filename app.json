@@ -1,14 +1,15 @@
 {
   "expo": {
-    "name": "FoodieByChloe",
-    "slug": "FoodieByChloe",
-    "version": "1.0.0",
+    "name": "foodieByChloe",
+    "slug": "foodieByChloe",
+    "scheme": "foodiebychloe",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#EEECE3"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -20,13 +21,32 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.foodiebychloe",
+      "versionCode": 9,
+      "permissions": [
+        "CAMERA_ROLL",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ],
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#EEECE3"
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBParPaZC61CNm5ouh-4vt9aloKsmTVCCQ"
+        }
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "packagerOpts": {
+      "sourceExts": [
+        "cjs"
+      ]
     }
   }
 }
