@@ -60,3 +60,4 @@ web-build/
 dist/
 
 # @end expo-cli
+src*-*複製/

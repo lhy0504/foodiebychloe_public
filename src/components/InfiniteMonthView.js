@@ -137,7 +137,7 @@ class MonthView extends React.Component {
             style={{ flex: 1, padding: 2 }}
             onPress={() => this.viewPost(day)}>
             <View style={{ flex: 1 }}>
-                <View style={{ flex: 1, backgroundColor: '#d9d7cf', opacity:0.75 }}>
+                <View style={{ flex: 1, backgroundColor: '#d9d7cf', opacity:0.8 }}>
                     <Text style={{
                         backgroundColor: this.isToday(day) ? '#FF9636' : '#6F6F71',
                         textAlign: 'center',

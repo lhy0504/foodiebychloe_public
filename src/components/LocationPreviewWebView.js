@@ -42,12 +42,23 @@ export default function RestaurantTileFromID(props) {
     }
 
     return (data ? <TouchableHighlight activeOpacity={0.6} underlayColor="#e6e6e6" onPress={() => openProfile(data.name, data.place_id)}>
-        <HStack alignItems='center' 
+        <HStack alignItems='center' backgroundColor='white'
             borderBottomColor='coolGray.100' borderBottomWidth={1} borderRadius={10}>
 
             <Box m={3} borderRadius={5} overflow='hidden'>
-              
-                <Image style={{ height: 90, width: 90, }} source={{
+                {/* <Svg width={90} height={90} >
+                    <ImageSvg
+                        borderRadius={5}
+                        width={'100%'}
+                        height={'100%'}
+                        preserveAspectRatio="xMidYMid slice"
+                        href={{
+                            uri: data.pic ||
+                                'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/facebook/65/clinking-beer-mugs_1f37b.png'
+                        }}
+                    />
+                </Svg> */}
+                <WebView style={{ height: 90, width: 90, }} source={{
                     uri: data.pic ||
                         'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/facebook/65/clinking-beer-mugs_1f37b.png'
 

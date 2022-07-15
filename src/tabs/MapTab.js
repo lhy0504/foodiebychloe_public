@@ -7,7 +7,7 @@ import {
 import { Feather, AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
 
 import { getUserPostsMonthly, getMyUid, getRestaurantsMap } from '../utils/FirebaseUtil'
-import LocationPreview from './../components/LocationPreview'
+import LocationPreview from './../components/LocationPreviewWebView'
 
 import MapView from 'react-native-maps';
 import { Marker, Callout } from 'react-native-maps';

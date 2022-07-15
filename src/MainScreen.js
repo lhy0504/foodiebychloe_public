@@ -94,6 +94,17 @@ export default function MainScreen({ navigation, route }) {
 
                 }
             }}>
+                 <Tab.Screen name="Home" component={HomeTab} stackNavigation={navigation}
+                    options={{
+                        tabBarActiveTintColor: 'black',
+                        tabBarIcon: (props) => {
+                            if (props.focused) {
+                                return <Ionicons name="home" size={24} color="black" />;
+                            } else {
+                                return <Ionicons name="home-outline" size={24} color='grey' />;
+                            }
+                        }
+                    }} />
                 <Tab.Screen name="GalleryTab" component={GalleryTab} navigation={navigation}
                     options={{
                         tabBarActiveTintColor: 'black',
@@ -128,17 +139,7 @@ export default function MainScreen({ navigation, route }) {
                             }
                         }
                     }} />
-                <Tab.Screen name="Home" component={HomeTab} stackNavigation={navigation}
-                    options={{
-                        tabBarActiveTintColor: 'black',
-                        tabBarIcon: (props) => {
-                            if (props.focused) {
-                                return <Ionicons name="home" size={24} color="black" />;
-                            } else {
-                                return <Ionicons name="home-outline" size={24} color='grey' />;
-                            }
-                        }
-                    }} />
+               
 
             </Tab.Navigator></>
     );

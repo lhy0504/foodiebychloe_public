@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import {
-    View,  Image,  TouchableHighlight ,TouchableOpacity
+    View, Image, TouchableHighlight, TouchableOpacity, Dimensions
 } from 'react-native';
 import {
     HStack, Text, Box,
     VStack, Avatar
 } from "native-base";
-import {  AntDesign, Ionicons } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import {
     getUser, getMyUid, unlikePost, likePost
     , getPostById
@@ -17,6 +17,7 @@ import StarRating from 'react-native-star-rating';
 import Swiper from 'react-native-swiper/src';
 
 
+var { width, height } = Dimensions.get('window')
 const delayPressIn = 200
 
 export default function Post(props) {
@@ -33,8 +34,8 @@ export default function Post(props) {
             var me = await getUser(undefined, false)
             if (me.block.includes(p.userid)) return
             /* check block end */
-                
-            var u = await getUser(p.userid,false)
+
+            var u = await getUser(p.userid, false)
             setItem({
                 ...p,
                 propic: u.propic,
@@ -80,89 +81,69 @@ export default function Post(props) {
         (item.publicOrFriends == 'friends' && item.friends.includes(getMyUid())
             || item.userid == getMyUid()
             || item.publicOrFriends == 'public'
-        ) && <><TouchableHighlight activeOpacity={1}underlayColor="#e6e6e6" onPress={openStory}>
+        ) && <><TouchableHighlight activeOpacity={1} underlayColor="#e6e6e6" onPress={openStory}>
             <Box>
-                <HStack height='50px' alignItems='center'>
+                <HStack mt={2}>
                     <TouchableOpacity onPress={openProfile}>
-                        <Avatar ml='15px' mr='8px' size="35px" source={{ uri: item.propic, }} />
+                        <Avatar m={2} ml={3} size={10} source={{ uri: item.propic, }} />
                     </TouchableOpacity>
 
-                    <View style={{ justifyContent: 'center' }}>
-                        <VStack>
+                    <View style={{ flexShrink: 1 }}>
 
-                            {item.overalltitle != '' && <Text
-                                fontWeight={'bold'}
-                                numberOfLines={1}>{item.overalltitle}</Text>}
-                            <HStack justifyContent='space-between' alignItems='center'>
-                                <LocationButton
-                                    location={item.location}
-                                    place_id={item.place_id}
-                                    navigation={props.navigation} />
-                                <Text>{"  "}</Text>
-                                {item.overallyummy != 0 && <StarRating
-                                    fullStarColor='#ff9636'
-                                    rating={item.overallyummy}
-                                    starSize={16} />}
+                        <HStack alignItems='center' flex={1}>
+                            <TouchableHighlight activeOpacity={1} underlayColor="#e6e6e6" onPress={openProfile}>
+                                <Text fontSize='xs' color='coolGray.500' mr={1}>{item.name}{" 給了 "}</Text>
+                            </TouchableHighlight>
 
-                            </HStack>
+                            {item.overallyummy != 0 && <StarRating
+                                fullStarColor='#ff9636'
+                                rating={item.overallyummy}
+                                starSize={16} />}
 
-                        </VStack>
+                        </HStack>
+
+                        {item.overalltitle != '' && <Text
+                            fontSize={'lg'}
+                            fontWeight={'bold'}
+                            flex={1}
+                            flexWrap='wrap'>{item.overalltitle}</Text>}
+
+
                     </View>
 
                 </HStack>{/* '#f3f4f6' */}
 
-                {item.overalldescription != '' && <Text numberOfLines={3} mx={4} mb={1}>{item.overalldescription}</Text>}
-            </Box>
-        </TouchableHighlight>
-            <Swiper loop={false} style={{ height: 300, backgroundColor: '#f0f0ed', }}
-                activeDotColor='#ff9636' showsButtons
-                onIndexChanged={(indexS) => setCurrIndex(indexS)}>
-                {item.image.map((itemI, indexI) => {
-                    return (
-                        <TouchableHighlight activeOpacity={1}underlayColor="#e6e6e6" onPress={openStory} delayPressIn={delayPressIn}>
-                            <View style={{
-                                height: 300, width: null
-                            }}>
+                {item.overalldescription != '' && <Text  fontSize='sm'
+                    numberOfLines={3} mx={3} mb={2}>{item.overalldescription}</Text>}
 
-                                <Image source={{ uri: itemI }} style={{
-                                    height: 300, width: null, flex: 1, resizeMode: 'contain'
-                                }} />
 
+                <View style={{ flexWrap: 'wrap', flexDirection: 'row' , margin:-2}} >
+                    {item.image.length > 2 ?
+                        item.image.map(
+                            img => (<View style={{ flexBasis: '33%', padding: 2 }}>
+                                <Image source={{ uri: img }} style={{ height: width / 3, width: '100%', }} />
                             </View>
-                        </TouchableHighlight>
-                    );
-                })}
-            </Swiper>
+                            )
+                        )
+                        :
+                        item.image.map(
+                            img => (<View style={{ flex:1 , padding: 2 }}>
+                                <Image source={{ uri: img }} style={{ height: width / item.image.length , width: '100%', }} />
+                            </View>
+                            )
+                        )}
+                </View>
 
-            <TouchableHighlight activeOpacity={1}underlayColor="#e6e6e6" onPress={openStory} >
+                <HStack justifyContent='space-between' alignItems='center' px={4} mt={2}>
+                    <LocationButton
+                        location={item.location}
+                        place_id={item.place_id}
+                        navigation={props.navigation} />
+                </HStack>
+
                 <Box>
-                    <Box px={5} backgroundColor='#f0f0ed'>
 
-                        {item.title[currIndex] != '' && item.title[currIndex] != undefined
-                            && item.price[currIndex] > 0 && item.yummystar[currIndex] > 0 &&
-                            <HStack pt={2} alignItems='center'>
-                                <Text fontWeight='bold' color='black'>{item.title[currIndex]}</Text>
-
-                                {item.price[currIndex] > 0 &&
-                                    <Text fontWeight='normal' color='black'>{"   "}
-                                        {"$"}
-                                        {item.price[currIndex]}
-                                        {"   "}
-                                    </Text>}
-                                {item.yummystar[currIndex] > 0 && <StarRating
-                                    fullStarColor='#ff9636'
-                                    rating={item.yummystar[currIndex]}
-                                    starSize={16} />}
-                            </HStack>}
-                        {item.description[currIndex] != '' && item.description[currIndex] != undefined &&
-                            <HStack ml={-1} pl={1}>
-                                <Box flex={1} pl={3} mb={2} py={1} borderColor="#ff9636" borderLeftWidth={1.5}>
-                                    <Text numberOfLines={6}>{item.description[currIndex]}</Text>
-                                </Box>
-                            </HStack>}
-
-                    </Box>
-                    <Box px={5} mb={4} mt={3}>
+                    <Box px={5} mb={2} mt={4}>
                         <HStack justifyContent='space-between'>
                             <HStack alignContent='center' mb={1}>
                                 <TouchableOpacity onPress={doLike}>
@@ -187,9 +168,7 @@ export default function Post(props) {
 
                             </HStack>
                             <HStack style={{ justifyContent: 'center' }}>
-                                <TouchableHighlight activeOpacity={1}underlayColor="#e6e6e6" onPress={openProfile}>
-                                    <Text fontSize='xs' color='coolGray.500' textAlign='center'>{item.name}</Text>
-                                </TouchableHighlight>
+
                                 <Text color='coolGray.500' fontSize='xs' textAlign='center'>{"  "}{item.date}  {item.time}</Text>
                             </HStack>
                         </HStack>
@@ -201,10 +180,11 @@ export default function Post(props) {
 
                     {/* divider
       */}
-                    <Box mt={2} mx={10} />
-                    <Box mb={2} mx={10} />
+
+                    <Box h={6} px={10} backgroundColor='#eee' />
                 </Box>
-            </TouchableHighlight>
+            </Box>
+        </TouchableHighlight>
         </>
     )
 }

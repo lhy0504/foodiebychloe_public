@@ -1,7 +1,7 @@
-import React, {  useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-    
-    RefreshControl,  ScrollView,  TouchableOpacity
+
+    RefreshControl, ScrollView, ImageBackground, Dimensions
 } from 'react-native';
 import {
     FlatList, HStack, IconButton, Text, Box,
@@ -10,7 +10,7 @@ import {
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import {
     getLocation, getUser, getAllUsers
-    , getAllRestaurants,getPublicPosts
+    , getAllRestaurants, getPublicPosts
 } from '../utils/FirebaseUtil'
 import Post from '../components/Post'
 import LocationPreview from './../components/LocationPreview'
@@ -19,6 +19,7 @@ import UserPreview from './../components/UserPreview'
 import NotificationButton from './../components/NotificationButton'
 
 const Tab = createMaterialTopTabNavigator();
+var { width, height } = Dimensions.get('window')
 
 function Feed(props) {
 
@@ -39,7 +40,7 @@ function Feed(props) {
     return (
         <VStack backgroundColor='white' flex={1} >
             <FlatList
-                style={{flex:1}}
+                style={{ flex: 1 }}
                 contentContainerStyle={{ paddingBottom: 20 }}
                 refreshControl={
                     <RefreshControl
@@ -59,7 +60,7 @@ function Feed(props) {
 }
 function FriendList(props) {
     const [allusers, setAllusers] = useState([])
-    const [myuser, setMyuser] = useState({ friends: [],requests:[] })
+    const [myuser, setMyuser] = useState({ friends: [], requests: [] })
     const [refreshing, setRefreshing] = React.useState(false);
 
     async function getData() {
@@ -82,41 +83,50 @@ function FriendList(props) {
     }
 
     return (
-        <VStack backgroundColor='white' >
-            <ScrollView refreshControl={
-                <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={getData}
-                />
-            }>
-                {myuser.requests.length != 0 && <HStack px={3} py={1} backgroundColor='coolGray.200'>
-                    <Text color='coolGray.400' fontWeight={'bold'}>{"追蹤請求"}</Text>
-                </HStack>
-                }
-                {myuser.requests.map((item) => (
-                    <UserPreview userid={item} navigation={props.navigation} />
-                )
-                )}
+        <ImageBackground
+            source={require("./../../assets/gallery_bg.png")}
+            style={{ width: width, height: height }}
+        >
+            <VStack flex={1} >
+                <ScrollView refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={getData}
+                    />
+                }>
+                    {myuser.requests.length != 0 &&
+                        <HStack m={5}>
+                            <Text fontSize={'xl'} color='white' fontWeight={'bold'}>{"追蹤請求"}</Text>
+                        </HStack>
+                    }
+                    {myuser.requests.map((item) => (
+                        <Box borderRadius={9} m={5} my={2} py={2} overflow='hidden' backgroundColor={'#EEECE3'}>
+                            <UserPreview userid={item} navigation={props.navigation} /></Box>
+                    )
+                    )}
+                    <HStack m={5}>
+                        <Text fontSize={'xl'} color='white' fontWeight={'bold'}>{"熱門foodie"}</Text>
+                    </HStack>
 
-                <HStack px={3} py={1} backgroundColor='coolGray.200'>
-                    <Text color='coolGray.400' fontWeight={'bold'}>{"熱門foodie"}</Text>
-                </HStack>
 
-                {allusers.map((item,index) => (
-                   <UserPreview user={item} navigation={props.navigation} />
-                )
-                )}
-                <HStack px={3} py={1} backgroundColor='coolGray.200'>
-                    <Text color='coolGray.400' fontWeight={'bold'}>{"朋友"}</Text>
-                </HStack>
-                {myuser.friends.map((item) => (
-                    <UserPreview userid={item} navigation={props.navigation} />
-                )
-                )}
-                 <Box m={20} />
-            </ScrollView>
-        </VStack >
+                    {allusers.map((item, index) => (
+                        <Box borderRadius={9} m={5} my={2} py={2} overflow='hidden' backgroundColor={'#EEECE3'}>
+                            <UserPreview user={item} navigation={props.navigation} /></Box>
+                    )
+                    )}
+                    <HStack m={5}>
+                        <Text fontSize={'xl'} color='white' fontWeight={'bold'}>{"朋友"}</Text>
+                    </HStack>
 
+                    {myuser.friends.map((item) => (
+                        <Box borderRadius={9} m={5} my={2} py={2} overflow='hidden' backgroundColor={'#EEECE3'}>
+                            <UserPreview userid={item} navigation={props.navigation} /></Box>
+                    )
+                    )}
+                    <Box m={20} />
+                </ScrollView>
+            </VStack >
+        </ImageBackground>
     );
 }
 
@@ -138,49 +148,50 @@ function RestaurantList(props) {
 
     useEffect(() => { getData() }, [])
 
-    const openProfile = (restaurant) => {
-        props.navigation.navigate('LocationProfileStack', {
-            location: restaurant.name,
-            place_id: restaurant.place_id
-        })
-    }
-
-    
     return (
-        <VStack backgroundColor='white' >
-            <ScrollView refreshControl={
-                <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={getData}
-                />
-            }>
-               
-                <HStack px={3} py={1} backgroundColor='coolGray.200'>
-                    <Text color='coolGray.400' fontWeight={'bold'}>{"建議"}</Text>
-                </HStack>
+        <ImageBackground
+            source={require("./../../assets/gallery_bg.png")}
+            style={{ width: width, height: height }}
+        >
+            <VStack flex={1}>
+                <ScrollView refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={getData}
+                    />
+                }>
 
-                {allrestaurants.map((item,index) => (
-                     <LocationPreview location={item}  navigation={props.navigation} />
-                )
-                )}
-                 <HStack px={3} py={1} backgroundColor='coolGray.200'>
-                    <Text color='coolGray.400' fontWeight={'bold'}>{"書籤"}</Text>
-                </HStack>
-                {bookmarks.map((item) => (
-                    <LocationPreview place_id={item}  navigation={props.navigation} />
-                )
-                )}
-                <Box m={20} />
-            </ScrollView>
-        </VStack >
+                    <HStack m={5}>
+                        <Text fontSize={'xl'} color='white' fontWeight={'bold'}>{"排名"}</Text>
+                    </HStack>
+
+                    {allrestaurants.map((item, index) => (
+                        <Box borderRadius={9} m={5} my={2} overflow='hidden' backgroundColor={'#EEECE3'}>
+                            <LocationPreview location={item} navigation={props.navigation} />
+                        </Box>
+                    )
+                    )}
+                    <HStack m={5}>
+                        <Text fontSize={'xl'} color='white' fontWeight={'bold'}>{"書籤"}</Text>
+                    </HStack>
+
+                    {bookmarks.map((item) => (
+                        <Box borderRadius={9} m={5} my={2} overflow='hidden' backgroundColor={'#EEECE3'}>
+                            <LocationPreview place_id={item} navigation={props.navigation} />
+                        </Box>
+                    )
+                    )}
+                    <Box m={20} />
+                </ScrollView>
+            </VStack ></ImageBackground>
 
     );
 }
 export default class HomeTab extends React.Component {
 
-   
+
     render() {
-    
+
         return (
             <NativeBaseProvider>
 
@@ -210,8 +221,9 @@ export default class HomeTab extends React.Component {
                         /* swipeEnabled:false */
 
                     }} />
-                    <Tab.Screen name="朋友們" component={FriendList} />
+
                     <Tab.Screen name="找餐廳" component={RestaurantList} />
+                    <Tab.Screen name="朋友" component={FriendList} />
                 </Tab.Navigator>
             </NativeBaseProvider>
         );
