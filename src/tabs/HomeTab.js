@@ -77,7 +77,7 @@ function FriendList(props) {
     useEffect(() => { getData() }, [])
 
     const openProfile = (id) => {
-        props.navigation.navigate('UserProfileStack', {
+        props.navigation.push('UserProfileStack', {
             userid: id
         })
     }
@@ -198,33 +198,15 @@ export default class HomeTab extends React.Component {
                 {/*  Header Bar  */}
                 <HStack alignItems='center' justifyContent='space-between'
                     borderBottomWidth='1px' borderBottomColor='coolGray.300'
-                    backgroundColor='#f3f4f6'
+                    backgroundColor='#fff'
+                    py={2}
                 >
-
-                    <Text ml={5} fontSize='lg' color='coolGray.500' textAlign='center'>ғᴏᴏᴅɪᴇ ʙʏ ᴄʜʟᴏᴇ🍺</Text>
+{/* color='coolGray.500' */}
+                    <Text ml={5} fontSize='lg' color='coolGray.600' fontWeight={'semibold'} textAlign='center'>ғᴏᴏᴅɪᴇ ʙʏ ᴄʜʟᴏᴇ🍺</Text>
                     <NotificationButton navigation={this.props.navigation} />
                 </HStack>
 
-                <Tab.Navigator
-                    swipeEnabled
-                    screenOptions={{
-                        lazy: true,
-                        tabBarLabelStyle: { fontWeight: 'bold', textTransform: "none", marginTop: -9 },
-                        tabBarIndicatorStyle: { backgroundColor: '#ff9636' },
-                        tabBarStyle: {
-                            height: 35
-                        }
-
-                    }}
-                >
-                    <Tab.Screen name="看一看" component={Feed} options={{
-                        /* swipeEnabled:false */
-
-                    }} />
-
-                    <Tab.Screen name="找餐廳" component={RestaurantList} />
-                    <Tab.Screen name="朋友" component={FriendList} />
-                </Tab.Navigator>
+                <Feed navigation={ this.props.navigation }/>
             </NativeBaseProvider>
         );
     }

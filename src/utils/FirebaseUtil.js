@@ -1,17 +1,93 @@
 import { v4 as uuidv4 } from 'uuid';
 import firebase from './FirebaseInit'
 import { registerForPushNotificationsAsync, sendPushNotification } from './PushNotifications'
-
-/* 
+import { Image } from 'react-native';
+import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';/* 
 Cache using AsyncStorage
 */
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+/* 
+
+T*/
+
+const Testing = false
+const testUID = 'gladysfoodie.fdchloe@gmail.com'
+
+export function TestingPurpose() {
+  if (!Testing) return
+
+  /* 
+  Register
+  */
+  if (false) {
+    firebase.firestore()
+      .collection("users").doc(testUID).set({
+        name: "𝐆𝐥𝐚𝐝𝐲𝐬'𝐬 𝐅𝐨𝐨𝐝𝐢𝐞🍰",
+        email: testUID,
+        uid: testUID,
+        propic: 'https://scontent-hkt1-1.cdninstagram.com/v/t51.2885-19/246863303_373878977752955_2164896707255147869_n.jpg?stp=dst-jpg_s150x150&_nc_ht=scontent-hkt1-1.cdninstagram.com&_nc_cat=111&_nc_ohc=TlRGrI5RrQEAX_FZMFz&tn=zwr5qf92Y7xsCaUq&edm=APU89FABAAAA&ccb=7-5&oh=00_AT8pEgmGO82XThdmECuSp826lEh7CpPXtz7k0mqMTIgHzw&oe=62DF1A0F&_nc_sid=86f79a',
+        status: '給予大家最真實的評價‼️',
+
+
+        joined: new Date().toLocaleDateString(),
+        foodieScore: 20,
+        following: [],
+        friends: [],
+        scorehistory: [],
+        feed: [],
+        post: [],
+        requests: [],
+        pushtoken: '',
+        followerCount: 9,
+        block: [],
+        bookmarks: []
+
+      })
+  }
+  /* 
+  Post
+  */
+  if (true) {
+    var post = {
+      userid: testUID,
+      price: [0, 0, 0, 0, 0],
+      place_id: '',
+      date: new Date().toLocaleDateString('en-US'),
+      with: '',
+      tag: '',
+      likes: [],
+      hashtag: '',
+      comment: [],
+
+      image: ['https://scontent-hkt1-2.cdninstagram.com/v/t51.2885-15/294077957_168079459059384_338375874651609466_n.jpg?stp=dst-jpg_e35&_nc_ht=scontent-hkt1-2.cdninstagram.com&_nc_cat=100&_nc_ohc=B3l9Wp4e4YYAX_E9dK6&tn=zwr5qf92Y7xsCaUq&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=Mjg4NDc0MjAwMTIwMTIxNTM2Mg%3D%3D.2-ccb7-5&oh=00_AT9WekmoJ97UWp6wx8cESOJPZ_skRFDw381StzWjmObRew&oe=62DF5647&_nc_sid=30a2ef', 'https://scontent-hkt1-1.cdninstagram.com/v/t51.2885-15/293730990_781342786627657_591414257285132910_n.jpg?stp=dst-jpg_e35&_nc_ht=scontent-hkt1-1.cdninstagram.com&_nc_cat=101&_nc_ohc=5G4F9gEONSIAX-V2z-M&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=Mjg4NDc0MjAwMTA1ODQwNDYzNw%3D%3D.2-ccb7-5&oh=00_AT9ckfsN6QSQhc6qpj7D2mpmbxGPfTPSVEgZ2Z1lIxSGmQ&oe=62DF6E34&_nc_sid=30a2ef', 'https://scontent-hkt1-1.cdninstagram.com/v/t51.2885-15/293825808_1375806596248151_7135881749554395747_n.jpg?stp=dst-jpg_e35&_nc_ht=scontent-hkt1-1.cdninstagram.com&_nc_cat=111&_nc_ohc=Ych1lLz2jGYAX_EqofD&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=Mjg4NDc0MjAwMTA2NzAwNDcwOQ%3D%3D.2-ccb7-5&oh=00_AT-31tlw2O5-E_qcqCsJFOjiAiYp8bSRJ9jdPM6QOWQblQ&oe=62DF74E6&_nc_sid=30a2ef', 'https://scontent-hkt1-1.cdninstagram.com/v/t51.2885-15/293730990_781342786627657_591414257285132910_n.jpg?stp=dst-jpg_e35&_nc_ht=scontent-hkt1-1.cdninstagram.com&_nc_cat=101&_nc_ohc=5G4F9gEONSIAX-V2z-M&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=Mjg4NDc0MjAwMTA1ODQwNDYzNw%3D%3D.2-ccb7-5&oh=00_AT9ckfsN6QSQhc6qpj7D2mpmbxGPfTPSVEgZ2Z1lIxSGmQ&oe=62DF6E34&_nc_sid=30a2ef', 'https://scontent-hkt1-2.cdninstagram.com/v/t51.2885-15/293864315_1372838293547802_2383309017863982347_n.jpg?stp=dst-jpg_e35&_nc_ht=scontent-hkt1-2.cdninstagram.com&_nc_cat=106&_nc_ohc=Gm21f4Y4vygAX-jD3pp&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=Mjg4NDc0MjAwMTA2NjgyODE4MQ%3D%3D.2-ccb7-5&oh=00_AT9A_XqnAOrLNscxATjS_jyUP_aip_VazeQaG2zAu0__vQ&oe=62DF4F5C&_nc_sid=30a2ef', 'https://scontent-hkt1-2.cdninstagram.com/v/t51.2885-15/294196108_789785298862952_6777630241642020740_n.jpg?stp=dst-jpg_e35&_nc_ht=scontent-hkt1-2.cdninstagram.com&_nc_cat=108&_nc_ohc=Q29xjCvU6FUAX-k0Ed0&tn=zwr5qf92Y7xsCaUq&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=Mjg4NDc0MjAwMTA2Njg4Nzg4MA%3D%3D.2-ccb7-5&oh=00_AT83HURcz7kS23xNbNv7-wFjlUm0WBxhFMdq6-qXDO0JZQ&oe=62DEE6C7&_nc_sid=30a2ef'],
+      yummystar: [3, 4, 5, 3, 3, 3],
+      title: ['南海下午茶套餐🌊 $228/2pp', '芝士薯蓉炸餅🥔:', '迷你三文治🥪:', '煙熏三文魚和忌廉芝士一口多士🧀:', '迷你黑安格斯牛肉漢堡🍔:', '迷你辣薄餅🍕:'],
+      description: ['👇🏻特色鹹點🥐\n\
+水牛芝士及番茄迷你串🍅:\n\
+成個感覺好清新好開胃，仲有少少香料味幾特別', '雖然中間慕拉士但係食到有芝士嘅鹹香味，薯蓉揸得香脆可口👍🏻', '勁勁勁好味😝三文治已經烘好，外皮香脆，入面有生菜、蕃茄、煙肉🤤', '你話佢似多事我又唔覺得好似但係就覺得佢好好味，上面有魚子醬鋪面用咗煙三文魚包住有香草忌廉芝士，令芝士更上一層樓🫶🏻', '雖然佢係迷你但係漢堡嘅份量都唔使，好多汁好Juice一啖咬落去咇晒啲汁出嚟🤣', '第一次見到Pizza上面嘅配料係放咗午餐肉😆一份有四件，份量我覺得都算幾多😋'],
+      overallprice: 2,
+      overallyummy: 4,
+      overallenv: 5,
+      location: "	Social Bar & Grill (西灣河)	",
+      overalltitle: "	《又 飽 又 抵 食 嘅 下 午 茶》	",
+      overalldescription: "	佢可能係我食過最平嘅八婆塔😏除翻開百幾蚊，加加埋埋仲有9️⃣款野食😝屬於新開嘅餐廳來講人流唔算話非常之多🆕，啱晒大家可以靜靜地享用下午茶時間🫖兩個人傾吓計食吓嘢坐吓真係幾舒服㗎🫶🏻	",
+      address: "	西灣河太康街45號地舖	",
+
+
+
+
+    }
+    uploadPost(post, 'public')
+  }
+}
 
 function getAuth() {
   return firebase.auth()
 }
 /* Getters */
 export function getMyUid() {
+  if (Testing) return testUID
   return getAuth().currentUser.email
 }
 
@@ -44,7 +120,8 @@ export async function checkIfNewUser(navigation) {
           pushtoken: token,
           followerCount: 0,
           block: [],
-          bookmarks:[]
+          bookmarks: [],
+          status: '我在用FoodieByChloe尋找美食!'
 
         })
     ).then(() => navigation.replace("MainScreen", { screen: "GalleryTab" }));
@@ -52,22 +129,24 @@ export async function checkIfNewUser(navigation) {
 
   }
 }
-export async function getUser(id = getMyUid(), refresh = true) {
+export async function getUser(id = getMyUid(), refresh = false) {
   var doc
+  let today = new Date().toLocaleDateString()
 
   if (refresh) {
+    console.log('refresh', id)
     doc = (await firebase.firestore().collection('users').doc(id).get()).data()
     const jsonValue = JSON.stringify(doc)
-    AsyncStorage.setItem('@foodiebychloe:usercache:' + id, jsonValue)
+    AsyncStorage.setItem('@foodiebychloe:usercache:' + id + today, jsonValue)
   } else {
-    doc = await AsyncStorage.getItem('@foodiebychloe:usercache:' + id);
+    doc = await AsyncStorage.getItem('@foodiebychloe:usercache:' + id + today);
     if (doc !== null) {
       return JSON.parse(doc);
     } else {
       // not cached
       doc = (await firebase.firestore().collection('users').doc(id).get()).data()
       const jsonValue = JSON.stringify(doc)
-      AsyncStorage.setItem('@foodiebychloe:usercache:' + id, jsonValue)
+      AsyncStorage.setItem('@foodiebychloe:usercache:' + id + today, jsonValue)
     }
   }
   return doc
@@ -200,6 +279,30 @@ export async function getPostById(id) {
 
 }
 
+export async function getDishPollByRestaurant(id) {
+  var snapshot = await firebase.firestore()
+    .collection('dishPoll')
+    .doc(id)
+    .get()
+  if (snapshot.exists) {
+    return snapshot.data()
+  } else {
+    return {}
+  }
+
+}
+export async function getDishPollByUser( restaurant) {
+  var snapshot = await firebase.firestore()
+    .collection('userPolled')
+    .doc(getMyUid())
+    .get()
+  if (snapshot.exists) {
+    return snapshot.data()[restaurant]
+  } else {
+    return 'not voted'
+  }
+
+}
 function convertTimestampToDate(post) {
   post.dateObj = post.date.toDate()
   post.postDate = post.postDate.toDate().toLocaleDateString('en-US')
@@ -292,50 +395,29 @@ export async function uploadPost(post, publicOrFriends) {
       total: 0,
       average: 0
     }
-    if (post.place_id == '' || typeof (post.place_id) == 'undefined') {
-      if (post.location != '') {
-        var location = (await firebase.firestore().collection('location').doc(post.location).get())
-        if (!location.exists) {
-          firebase.firestore()
-            .collection("location").doc(post.location).set({
-              ...yummytemplate,
-              name: post.location,
-              ['star' + post.overallyummy]: 1,
-              total: 1,
-              average: post.overallyummy
-            })
-        } else {
-          firebase.firestore()
-            .collection("location").doc(post.location).update({
-              ['star' + post.overallyummy]: firebase.firestore.FieldValue.increment(1),
-              total: firebase.firestore.FieldValue.increment(1),
-              average: (location.data().average * location.data().total + post.overallyummy) / parseFloat(location.data().total + 1)
-            })
-        }
-      }
 
+    var location = (await firebase.firestore().collection('location').doc(post.place_id).get())
+    if (!location.exists) {
+      firebase.firestore()
+        .collection("location").doc(post.place_id).set({
+          ...yummytemplate,
+          name: post.location,
+          address: post.address,
+          ['star' + post.overallyummy]: 1,
+          total: 1,
+          average: post.overallyummy,
+          pic: post.image[0]
+        })
     } else {
-      var location = (await firebase.firestore().collection('location').doc(post.place_id).get())
-      if (!location.exists) {
-        firebase.firestore()
-          .collection("location").doc(post.place_id).set({
-            ...yummytemplate,
-            name: post.location,
-            address: post.address,
-            ['star' + post.overallyummy]: 1,
-            total: 1,
-            average: post.overallyummy
-          })
-      } else {
-        firebase.firestore()
-          .collection("location").doc(post.place_id).update({
-            ['star' + post.overallyummy]: firebase.firestore.FieldValue.increment(1),
-            total: firebase.firestore.FieldValue.increment(1),
-            average: (location.data().average * location.data().total + post.overallyummy) / parseFloat(location.data().total + 1)
-          })
-      }
-
+      firebase.firestore()
+        .collection("location").doc(post.place_id).update({
+          ['star' + post.overallyummy]: firebase.firestore.FieldValue.increment(1),
+          total: firebase.firestore.FieldValue.increment(1),
+          average: (location.data().average * location.data().total + post.overallyummy) / parseFloat(location.data().total + 1)
+        })
     }
+
+
 
   }
 
@@ -475,14 +557,26 @@ async function addPostToFeeds(id, publicOrFriends) {
 }
 
 export async function uploadImage(imageUri) {
-  console.log(imageUri)
-  const fileExtension = imageUri.split('.').pop();
-  console.log("EXT: " + fileExtension);
+  //resize first
+  const getSize = () => new Promise(
+    (resolve, reject) => {
+      Image.getSize(imageUri, (width, height) => { resolve({ width, height }) });
+    }
+  )
+  const { width, height } = await getSize()
+  if (width > 1000 || height > 2000) {
+    const manipResult = await manipulateAsync(
+      imageUri,
+      [{ resize: { width: 1000 } }],
+      { format: SaveFormat.JPEG }
+    );
+    imageUri = manipResult.uri
+  }
 
+
+  const fileExtension = imageUri.split('.').pop();
   var uuid = uuidv4();
   const fileName = `${uuid}.${fileExtension}`;
-  console.log(fileName);
-
 
   const response = await fetch(imageUri);
   const blob = await response.blob();
@@ -628,6 +722,59 @@ export async function followUser(id) {
   return
 }
 
+/* Ｐｏｌｌ */
+export async function pollDish(id, dish, myOldVotedDish) {
+
+  /* 1. update restaurant poll */
+  var snapshot = await firebase.firestore()
+    .collection('dishPoll')
+    .doc(id)
+    .get()
+  if (snapshot.exists) {
+    var updateObj = myOldVotedDish != 'not voted'&&myOldVotedDish!=undefined ?
+    {
+      [dish]: firebase.firestore.FieldValue.increment(1),
+      [myOldVotedDish]: firebase.firestore.FieldValue.increment(-1)
+      } :
+      {
+        [dish]: firebase.firestore.FieldValue.increment(1)
+      }
+    await firebase.firestore()
+      .collection('dishPoll')
+      .doc(id)
+      .update(updateObj);
+  } else {
+    await firebase.firestore()
+      .collection('dishPoll')
+      .doc(id)
+      .set({
+        [dish]: 1
+      });
+  }
+  /* 2. update userPolled */
+  var snapshot = await firebase.firestore()
+    .collection('userPolled') 
+    .doc(getMyUid())
+    .get()
+  if (snapshot.exists) {
+    await firebase.firestore()
+      .collection('userPolled')
+      .doc(getMyUid())
+      .update({
+        [id]: dish
+      });
+  } else {
+    await firebase.firestore()
+      .collection('userPolled')
+      .doc(getMyUid())
+      .set({
+        [id]: dish
+      });
+  }
+
+
+}
+
 export async function getAllUsers() {
 
   var postList = [];
@@ -690,7 +837,7 @@ export async function getRestaurantsMap(searchName = '', searchAddress = '', sea
 
   snapshot.forEach((doc) => {
     const singlePost = doc.data();
-    
+
     /* then Re-filter ALL */
     if (!singlePost.hasOwnProperty('lat')) return
     if (!singlePost.name.includes(searchName)) return
@@ -703,7 +850,10 @@ export async function getRestaurantsMap(searchName = '', searchAddress = '', sea
     singlePost.place_id = doc.id;
     postList.push(singlePost);
   });
-  console.log(1, postList)
+
+  // sort 
+  postList.sort((a, b) => parseFloat(a.average) - parseFloat(b.average));
+
   return (postList);
 }
 export function UIbeautifyDateString(datestring) {
@@ -733,5 +883,20 @@ export async function unblockUser(uid) {
     .doc(getMyUid())
     .update({
       "block": firebase.firestore.FieldValue.arrayRemove(uid)
+    });
+}
+
+/* Update user 
+  Only update necessary fields to avoid overwritting other fields
+ 
+*/
+export async function updateUser(user) {
+  firebase.firestore()
+    .collection('users')
+    .doc(getMyUid())
+    .update({
+      "status": user.status,
+      'name': user.name,
+      'propic': user.propic
     });
 }

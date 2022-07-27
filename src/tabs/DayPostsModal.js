@@ -47,7 +47,8 @@ export default function DayPostModal({ navigation, route }) {
                 overallyummy: 0,
                 overallenv: 0,
                 overalltitle: '',
-                overalldescription:''
+                overalldescription: '',
+                address:''
             }
         })
     }

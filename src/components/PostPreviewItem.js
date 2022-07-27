@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import {
-    View,  Image,  TouchableHighlight
+    View, Image, TouchableHighlight
 } from 'react-native';
 import {
-    HStack, Text, 
+    HStack, Text,
     VStack
 } from "native-base";
-import {  AntDesign, Ionicons } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import {
     getUser, getMyUid
 } from '../utils/FirebaseUtil'
@@ -38,34 +38,28 @@ export default function Post(props) {
             || post.userid == getMyUid()
             || post.publicOrFriends == 'public'
         )
-        && <TouchableHighlight activeOpacity={1}underlayColor="#e6e6e6"
+        && <TouchableHighlight activeOpacity={1} underlayColor="#e6e6e6"
             onPress={() => props.navigation.push('StoryStack', { post: post, currImg: 0 })} >
-                <VStack mx={5} py={3} borderBottomWidth={1} borderBottomColor='coolGray.300'>
-                {post.overalltitle != '' ?
-                            <Text fontSize={'lg'} fontWeight={'bold'} 
-                                flexWrap='wrap' flex={1}
-                        >{post.overalltitle}</Text>
-                        :
-                        <View />
-                    }
+            <VStack mx={5} py={3} borderBottomWidth={1} borderBottomColor='coolGray.300'>
+                
                 <HStack justifyContent='space-between' alignItems='center' mb={1}>
-                { props.showLocation?<LocationButton disabled
-                    location={post.location}
-                    place_id={post.place_id}
-                            navigation={props.navigation} />
-                            :
-                            <Text fontWeight={'semibold'}  textAlign='center'>{user.name}</Text>
+                {post.overalltitle != '' ?
+                    <Text fontSize={'lg'} fontWeight={'bold'}
+                        flexWrap='wrap' flex={1}
+                    >{post.overalltitle}</Text>
+                    :
+                    <View />
                 }
-                   
+
                     {post.overallyummy != 0 && <StarRating
                         fullStarColor='#ff9636'
                         rating={post.overallyummy}
                         starSize={18}
-                        />
-                        }
+                    />
+                    }
 
                 </HStack>
-               
+
                 {post.overalldescription != '' && <Text numberOfLines={3} >{post.overalldescription}</Text>}
                 <View style={{ flexWrap: 'wrap', flexDirection: 'row' }} >
                     {post.image.map(

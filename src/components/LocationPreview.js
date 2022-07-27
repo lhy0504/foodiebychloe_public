@@ -35,7 +35,7 @@ export default function RestaurantTileFromID(props) {
     }, [])
 
     const openProfile = (location, place_id) => {
-        props.navigation.navigate('LocationProfileStack', {
+        props.navigation.push('LocationProfileStack', {
             location: location,
             place_id: place_id
         })

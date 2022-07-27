@@ -61,7 +61,8 @@ export default function ImageEditorStack({ navigation, route }) {
                 overallyummy: 0,
                 overallenv: 0,
                 overalltitle: '',
-                overalldescription: ''
+                overalldescription: '',
+                address:''
             }
         }
     }
@@ -96,7 +97,7 @@ export default function ImageEditorStack({ navigation, route }) {
     /* Re-editing, deleting and adding images */
     function reedit() {
         Image.getSize(post.image[page - 1], (w, h) => {
-            navigation.navigate('ImageEditorStack', {
+            navigation.push('ImageEditorStack', {
                 uri: post.image[page - 1],
                 post: post,
                 reeditindex: page - 1,
@@ -109,7 +110,7 @@ export default function ImageEditorStack({ navigation, route }) {
     }
     function retakepic() {
 
-        navigation.navigate('AddMediaStack', {
+        navigation.push('AddMediaStack', {
             uri: post.image[page - 1],
             post: post,
             reeditindex: page - 1,
@@ -117,7 +118,7 @@ export default function ImageEditorStack({ navigation, route }) {
 
     }
     function addPage() {
-        navigation.navigate('AddMediaStack', {
+        navigation.push('AddMediaStack', {
             uri: post.image[page - 1],
             post: post,
             reeditindex: post.image.length,
@@ -142,8 +143,9 @@ export default function ImageEditorStack({ navigation, route }) {
             title: title,
             description: description,
             price: price,
-            image: route.params.images.map(a => ({ ...a })) //deep clone
+            image: route.params.images.map(a => (a)) //deep clone
         });
+        console.log( route.params.images.map(a => (a)))
     }
     async function submitPost() {
 
@@ -429,12 +431,12 @@ export default function ImageEditorStack({ navigation, route }) {
                                         defaultValue={post.title[index]}
                                         onChangeText={text => setTitle(index, text)}
                                     />
-                                    <TextInput
+                                   {/*  <TextInput
                                         placeholder="$$"
                                         keyboardType="numeric"
                                         defaultValue={post.price[index]}
                                         onChangeText={text => setPrice(index, text)}
-                                    />
+                                    /> */}
                                     <TextInput
                                         placeholder="說明..."
                                         defaultValue={post.description[index]}

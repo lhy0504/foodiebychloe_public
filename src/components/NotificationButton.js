@@ -47,7 +47,7 @@ export default class LocationButton extends React.Component {
             
                     <IconButton
                         onPress={() => {
-                            this.props.navigation.navigate('NotificationsStack')
+                            this.props.navigation.push('NotificationsStack')
                             this.setState({ newnoti: false })
                         }
                         }

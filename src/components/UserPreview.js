@@ -25,17 +25,18 @@ export default function RestaurantTileFromID(props) {
     const [data, setData] = React.useState(props.hasOwnProperty('user') ? props.user : null)
 
     async function getData() {
+        console.log(props.userid)
         var dat = await getUser(props.userid, false)
         setData(dat)
     }
 
     React.useEffect(() => {
-        if (!props.hasOwnProperty('user')) getData()
-    }, [])
+        if (props.hasOwnProperty('userid')) getData()
+    }, [props.user])
 
     const openProfile = () => {
-        props.navigation.navigate('UserProfileStack', {
-            userid: data.uid
+        props.navigation.push('UserProfileStack', {
+            userid:props.userid
         })
     }
 
@@ -48,12 +49,11 @@ export default function RestaurantTileFromID(props) {
 
                 <VStack>
                     <Text fontSize='sm' fontWeight='bold' >{data.name}</Text>
-                    <Text color='coolGray.500'>{"加入於 " + data.joined}</Text>
-                    <Text color='#FF9636'>
-                        {data.friends.length + data.requests.length + ' 追蹤者 • '}
-                        {data.following.length + ' 追蹤中'}
-                        {data.hasOwnProperty('bookmarks') && ' • '+data.bookmarks.length + ' 個收藏'}
+                    <Text color='coolGray.500'>
+                        {data.friends.length + data.requests.length + ' 追蹤者  '}
                     </Text>
+                    <Text color='#ff9636'>{data.status}</Text>
+                   
                 </VStack>
 
             </HStack>

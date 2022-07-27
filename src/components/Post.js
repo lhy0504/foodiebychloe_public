@@ -14,9 +14,6 @@ import {
 import LocationButton from '../components/LocationButton'
 import StarRating from 'react-native-star-rating';
 
-import Swiper from 'react-native-swiper/src';
-
-
 var { width, height } = Dimensions.get('window')
 const delayPressIn = 200
 
@@ -47,13 +44,13 @@ export default function Post(props) {
     }, [])
 
     const openStory = () => {
-        props.navigation.navigate('StoryStack', {
+        props.navigation.push('StoryStack', {
             post: item, openedFromStory: false
         })
     }
 
     const openComment = () => {
-        props.navigation.navigate('CommentStack', {
+        props.navigation.push('CommentStack', {
             item: item
         })
     }
@@ -72,7 +69,7 @@ export default function Post(props) {
     }
 
     const openProfile = () => {
-        props.navigation.navigate('UserProfileStack', {
+        props.navigation.push('UserProfileStack', {
             userid: item.userid
         })
     }
@@ -90,17 +87,18 @@ export default function Post(props) {
 
                     <View style={{ flexShrink: 1 }}>
 
-                        <HStack alignItems='center' flex={1}>
-                            <TouchableHighlight activeOpacity={1} underlayColor="#e6e6e6" onPress={openProfile}>
-                                <Text fontSize='xs' color='coolGray.500' mr={1}>{item.name}{" 給了 "}</Text>
-                            </TouchableHighlight>
 
-                            {item.overallyummy != 0 && <StarRating
-                                fullStarColor='#ff9636'
-                                rating={item.overallyummy}
-                                starSize={16} />}
+                        <TouchableHighlight activeOpacity={1} underlayColor="#e6e6e6" onPress={openProfile}>
+                            <HStack alignItems='center' flex={1} my={.5}>
+                                <Text fontSize='xs' color='coolGray.500' >{item.name}{" 給了  "}</Text>
+                                {item.overallyummy != 0 && <StarRating
+                                    fullStarColor='#ff9636'
+                                    rating={item.overallyummy}
+                                    starSize={16} disabled />}
+                            </HStack>
+                        </TouchableHighlight>
 
-                        </HStack>
+
 
                         {item.overalltitle != '' && <Text
                             fontSize={'lg'}
@@ -113,28 +111,28 @@ export default function Post(props) {
 
                 </HStack>{/* '#f3f4f6' */}
 
-                {item.overalldescription != '' && <Text  fontSize='sm'
+                {item.overalldescription != '' && <Text fontSize='sm'
                     numberOfLines={3} mx={3} mb={2}>{item.overalldescription}</Text>}
 
 
-                <View style={{ flexWrap: 'wrap', flexDirection: 'row' , margin:-2}} >
+                <View style={{ flexWrap: 'wrap', flexDirection: 'row', }} >
                     {item.image.length > 2 ?
                         item.image.map(
-                            img => (<View style={{ flexBasis: '33%', padding: 2 }}>
+                            img => (<View style={{ flexBasis: '33.33%', padding: 2 }}>
                                 <Image source={{ uri: img }} style={{ height: width / 3, width: '100%', }} />
                             </View>
                             )
                         )
                         :
                         item.image.map(
-                            img => (<View style={{ flex:1 , padding: 2 }}>
-                                <Image source={{ uri: img }} style={{ height: width / item.image.length , width: '100%', }} />
+                            img => (<View style={{ flex: 1, padding: 2 }}>
+                                <Image source={{ uri: img }} style={{ height: width / item.image.length, width: '100%', }} />
                             </View>
                             )
                         )}
                 </View>
 
-                <HStack justifyContent='space-between' alignItems='center' px={4} mt={2}>
+                <HStack justifyContent='space-between' alignItems='center' px={4} mt={3}>
                     <LocationButton
                         location={item.location}
                         place_id={item.place_id}
@@ -143,11 +141,11 @@ export default function Post(props) {
 
                 <Box>
 
-                    <Box px={5} mb={2} mt={4}>
+                    <Box px={5} mb={2} mt={3}>
                         <HStack justifyContent='space-between'>
                             <HStack alignContent='center' mb={1}>
                                 <TouchableOpacity onPress={doLike}>
-                                    <HStack>
+                                    <HStack p={1}>
                                         <AntDesign name={liked ? "like1" : "like2"} size={22} color='#555' />
                                         {item.likes.length != 0 &&
                                             <Text color='#555'>  {item.likes.length} </Text>}
@@ -159,7 +157,7 @@ export default function Post(props) {
                                 <TouchableOpacity onPress={() => {
                                     openComment();
                                 }}>
-                                    <HStack>
+                                    <HStack p={1}>
                                         <Ionicons name={"chatbox-outline"} size={22} color='#555' />
                                         {item.comment.length != 0 &&
                                             <Text color='#555'>  {item.comment.length} </Text>}

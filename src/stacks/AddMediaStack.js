@@ -57,7 +57,7 @@ export default class AddMediaTab extends React.Component {
     handleBackButtonClick() {
         if (this.props.route.params !== undefined) {
             if (this.props.route.params.hasOwnProperty('reeditindex')) {
-                this.props.navigation.navigate('PostEditorStack', {
+                this.props.navigation.push('PostEditorStack', {
                     images:this.props.route.params.post.image,
                     post: this.props.route.params.post,
                     reeditindex: this.props.route.params.reeditindex,
@@ -99,7 +99,7 @@ export default class AddMediaTab extends React.Component {
 
                 if (this.props.route.params !== undefined) {
                     if (this.props.route.params.hasOwnProperty('reeditindex')) {
-                        this.props.navigation.navigate('ImageEditorStack', {
+                        this.props.navigation.push('ImageEditorStack', {
                             ...data,
                             post: this.props.route.params.post,
                             reeditindex: this.props.route.params.reeditindex,
@@ -107,7 +107,7 @@ export default class AddMediaTab extends React.Component {
                         })
                     }
                 } else {
-                    this.props.navigation.navigate('ImageEditorStack', data)
+                    this.props.navigation.push('ImageEditorStack', data)
                 }
             }
         }
@@ -115,16 +115,16 @@ export default class AddMediaTab extends React.Component {
     submitMultipleImage() {
         if (this.props.route.params !== undefined) {
             if (this.props.route.params.hasOwnProperty('reeditindex')) {
-                this.props.navigation.navigate('PostEditorStack', {
+                this.props.navigation.push('PostEditorStack', {
                     images: this.state.multipleImages,
                     post: this.props.route.params.post,
                     reeditindex: this.props.route.params.reeditindex,
                 })
             }else {
-                this.props.navigation.navigate('PostEditorStack', { images: this.state.multipleImages })
+                this.props.navigation.push('PostEditorStack', { images: this.state.multipleImages })
             }
         } else {
-            this.props.navigation.navigate('PostEditorStack', { images: this.state.multipleImages })
+            this.props.navigation.push('PostEditorStack', { images: this.state.multipleImages })
         }
     }
     chooseFromGallery() {

@@ -11,7 +11,7 @@ import {
     StatusBar,
 } from 'react-native';
 import {
-    HStack, IconButton, Text,
+    HStack, IconButton, Text, Box,
     VStack, NativeBaseProvider
 } from "native-base";
 import {
@@ -22,7 +22,7 @@ import StarRating from 'react-native-star-rating';
 
 import Gallery from 'react-native-image-gallery';
 import { Feather, AntDesign, Ionicons } from '@expo/vector-icons';
-
+const { width } = Dimensions.get('window');
 
 
 export default function StoryStack({ navigation, route }) {
@@ -87,7 +87,7 @@ export default function StoryStack({ navigation, route }) {
     }
 
     const openComment = () => {
-        navigation.navigate('CommentStack', {
+        navigation.push('CommentStack', {
             item: content
         })
     }
@@ -121,22 +121,106 @@ export default function StoryStack({ navigation, route }) {
 
             </Gallery>
 
-            <View style={{
+            <Animated.View style={{
                 zIndex: 1, // works on ios
                 elevation: 1,
+                width: width,
                 position: 'absolute',
-                top: 0,
+                bottom: 0,
                 backgroundColor: 'rgba(0,0,0,0.6)',
+                opacity: visibility,
             }}>
 
+                {/********** Start of Description Pane ********/}
+                <VStack padding={2} mx={2} mt={1}>
+
+
+
+
+                    <HStack justifyContent='space-between'>
+                        <Text fontWeight='semibold' color='white' fontSize={'md'}>{content.title[currImgId]}    {content.price[currImgId] != 0 &&
+                            content.price[currImgId] > 0 && '$' + content.price[currImgId]}</Text>
+                    </HStack>
+                    <VStack>
+
+                        {content.yummystar[currImgId] != 0 &&
+
+                            <HStack alignItems='center' >
+
+                                <StarRating disabled={true} iconSet='FontAwesome' halfStar={'star-half'}
+                                    emptyStar={''}
+                                    starSize={15}
+                                    starStyle={{ marginRight: 5 }}
+                                    fullStarColor='#ff9636'
+                                    rating={content.yummystar[currImgId]}
+                                    containerStyle={{ marginTop: 6, marginBottom: 6 }}
+                                />
+                            </HStack>
+                        }
+
+                    </VStack>
+
+                </VStack>
+                <HStack mt={1} mx={3} borderTopWidth={1} borderTopColor='coolGray.500' />
+                <HStack py={2} >
+                    <TouchableOpacity
+                        style={{ alignItems: 'center', flex: 1, }}
+                        onPress={doLike}
+                    >
+
+                        <HStack alignItems='center' h={30}>
+                            <AntDesign name={liked ? "like1" : "like2"}
+                                size={16}
+                                color={liked ? "#ff9636" : "white"} />
+                            <Text ml={2} color={liked ? "#ff9636" : "white"} >
+                                {"讚好"}</Text>
+                        </HStack>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={{  alignItems: 'center', flex: 1, }}
+
+                        onPress={openComment}>
+
+                        <HStack alignItems='center' h={30}>
+                            <Feather name="message-square" size={16} color="white" />
+                            <Text ml={1} color="white"  >
+                                回應</Text>
+                        </HStack>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={{  alignItems: 'center', flex: 1, }}
+                        onPress={() => openStory()}>
+                        {route.params.openedFromStory ?
+                            <HStack alignItems='center' h={30}>
+                                <Ionicons name="ios-return-up-back" size={16} color="white" />
+                                <Text ml={1} color="white" fontSize='xs' >
+                                    返回貼文</Text>
+                            </HStack>
+                            :
+                            <HStack alignItems='center'>
+                                <Feather name="align-left" size={16} color="white" />
+                                <Text ml={1} color="white" fontSize='xs' >
+                                    查看貼文</Text>
+                            </HStack>
+                        }
+
+                    </TouchableOpacity>
+
+                </HStack>
+
+                {/********** End of Description Pane ********/}
+
+            </Animated.View >
+            <Box position='absolute' right={5} top={5}>
                 <TouchableOpacity
                     onPress={() => {
                         close();
                     }}>
-                    <Feather name="x" size={20} color="white" />
-                </TouchableOpacity>
-            </View >
 
+                    <Feather name="x" size={40} color="white" />
+
+                </TouchableOpacity>
+            </Box>
         </NativeBaseProvider >
     );
 }

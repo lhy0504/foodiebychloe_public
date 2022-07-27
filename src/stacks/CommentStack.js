@@ -61,7 +61,7 @@ export default function CommentModal({ navigation, route }) {
         //no need refresh post
     }
     const openProfile = (id) => {
-        navigation.navigate('UserProfileStack', {
+        navigation.push('UserProfileStack', {
             userid: id
         })
     }

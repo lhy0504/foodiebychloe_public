@@ -74,7 +74,7 @@ export default function Feed({ navigation, route }) {
 
                         return (
 
-                            <TouchableOpacity onPress={() => navigation.navigate(data.data.screen, data.data)}>
+                            <TouchableOpacity onPress={() => navigation.push(data.data.screen, data.data)}>
                                 <HStack py={4} alignItems='center'
                                     borderBottomColor='coolGray.100'
                                     borderBottomWidth={1}

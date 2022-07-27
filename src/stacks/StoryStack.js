@@ -22,7 +22,6 @@ import {
 import LocationButton from '../components/LocationButton'
 import StarRating from 'react-native-star-rating';
 
-
 /* 
 Props:
 -  post  (whole post)
@@ -58,9 +57,9 @@ export default function StoryStack({ navigation, route }) {
 
     }, []);
     const _openStory = (imgIndex) => {
-        /*   navigation.navigate('StoryStackIGstyle', {
-              post: content, currImg: imgIndex, openedFromStory: true
-          }) */
+        navigation.push('StoryStackIGstyle', {
+            post: content, currImg: imgIndex, openedFromStory: true
+        })
     }
     const openStory = _openStory.bind(this);
 
@@ -71,24 +70,16 @@ export default function StoryStack({ navigation, route }) {
         setLiked(newdata.likes.includes(getMyUid()))
 
         //get writer propic and name
-        var u = await getUser(newdata.userid,false)
+        var u = await getUser(newdata.userid, false)
         setAuthor(u)
 
         //get commenter propic and names
         var newStateArray = [];
         for (var i in newdata.comment) {
-            var u = await getUser(newdata.comment[i].userid,false)
+            var u = await getUser(newdata.comment[i].userid, false)
             newStateArray.push(u);
         }
         setCommentUsers(newStateArray);
-
-        /*     // Preload images
-            let preFetchTasks = [];
-            content.image.forEach((p) => {
-                preFetchTasks.push(Image.prefetch(p));
-            });
-            Promise.all(preFetchTasks) */
-
 
     }
     const doComment = async () => {
@@ -110,7 +101,7 @@ export default function StoryStack({ navigation, route }) {
         setContent({ ...content, ...newdata })
     }
     const openLiked = () => {
-        navigation.navigate('LikedStack', {
+        navigation.push('LikedStack', {
             item: content
         })
     }
@@ -124,7 +115,7 @@ export default function StoryStack({ navigation, route }) {
 
 
         console.log(content)
-        navigation.navigate('PostEditorStack', {
+        navigation.push('PostEditorStack', {
             images: content.image,
             post: newContent,
             reeditindex: 0
@@ -149,9 +140,9 @@ export default function StoryStack({ navigation, route }) {
             ],
 
         );
-    const openProfile = () => {
-        navigation.navigate('UserProfileStack', {
-            userid: content.userid
+    const openProfile = (id=content.userid) => {
+        navigation.push('UserProfileStack', {
+            userid: id
         })
     }
     var { width, height } = useWindowDimensions()
@@ -163,7 +154,7 @@ export default function StoryStack({ navigation, route }) {
             [
                 {
                     text: "檢舉", onPress: () => {
-                        Alert.alert("已檢舉貼文，謝謝",'我們會檢查貼文和其作者')
+                        Alert.alert("已檢舉貼文，謝謝", '我們會檢查貼文和其作者')
                     }
                 },
                 {
@@ -182,7 +173,7 @@ export default function StoryStack({ navigation, route }) {
                 height: 50
             }}>
                 <HStack alignItems='center'
-                        borderBottomWidth={2} borderBottomColor='#ff9636'
+                    borderBottomWidth={2} borderBottomColor='#ff9636'
                     backgroundColor='white' px={2}
                     justifyContent='space-between'
                 >
@@ -238,21 +229,9 @@ export default function StoryStack({ navigation, route }) {
                 <HStack padding={2} ml={3} >
 
                     <VStack flex={1}>
-                        <HStack justifyContent='space-between' alignItems='center' mb={1}>
-                            <LocationButton disabled
-                                location={content.location}
-                                place_id={content.place_id}
-                                navigation={navigation} />
 
-                            {content.overallyummy != 0 && <StarRating
-                                fullStarColor='#ff9636'
-                                rating={content.overallyummy}
-                                starSize={20}
-                            />}
-
-                        </HStack>
                         {content.overalltitle != '' && <Text fontSize='lg' fontWeight={'bold'} >{content.overalltitle}</Text>}
-                        {content.overalldescription != '' && <Text  >{content.overalldescription}</Text>}
+                        {content.overalldescription != '' && <Text fontSize={'md'} >{content.overalldescription}</Text>}
 
                         {content.with[0] != '' &&
                             <HStack alignItems='center'>
@@ -283,76 +262,86 @@ export default function StoryStack({ navigation, route }) {
                         <TouchableWithoutFeedback onPress={() => openStory(index)} >
                             <View style={{ width: width, backgroundColor: '#f0f0ed' }}>
                                 <Image source={{ uri: item }} style={{
-                                    height: width, width: null, flex: 1, resizeMode: 'contain',
-
+                                    height: width, width: '100%', flex: 1,
                                 }} />
                             </View>
+
+                            {content.title[index]  &&
+                                <Box width={width} position='absolute' bottom={0} px={5} py={1} pb={2} backgroundColor='rgba(44,44,44,.8)'>
+                                    <HStack pt={1} justifyContent='space-between' pb={1} alignItems='center'>
+                                        <Text fontWeight='semibold' fontSize='lg' color='white'>{content.title[index]}</Text>
+                                        {content.price[index] > 0 &&
+                                            <Text color='white'>
+                                                {'$' + content.price[index]}
+                                            </Text>
+                                        }
+                                    </HStack>
+
+                                    {content.yummystar[index] > 0 &&
+
+                                        <HStack alignItems='center' >
+                                            <StarRating disabled={true} halfStar={'star-half'}
+                                                starSize={15}
+                                                starStyle={{ marginRight: 5 }}
+                                                fullStarColor='#ff9636'
+                                                rating={content.yummystar[index]}
+
+                                            />
+                                        </HStack>
+                                    }
+                                </Box>
+                            }
                         </TouchableWithoutFeedback>
 
-                        <Box px={5} mb={6}>
-                            <HStack pt={1} justifyContent='space-between'>
-                                <Text fontWeight='bold' fontSize='lg' color='black'>{content.title[index]}</Text>
-                                {content.price[index] > 0 &&
-                                    <Text color='coolGray.500'>
-                                        <Feather name="dollar-sign" size={16} color="grey" />
-                                        {content.price[index]}
-                                    </Text>
-                                }
-
-                            </HStack>
-
-                            {content.yummystar[index] > 0 &&
-
-                                <HStack alignItems='center' >
-                                    <Text>😋  </Text>
-                                    <StarRating disabled={true} halfStar={'star-half'}
-                                        starSize={15}
-                                        fullStarColor='#ff9636'
-                                        rating={content.yummystar[index]}
-
-                                    />
-                                </HStack>
+                        <Box mb={4}>
+                        {content.description[index] &&
+                            <Text px={4} mt={1} mb={2} fontSize={'md'}>{content.description[index]}</Text>
                             }
+                            </Box>
 
-                            <Text mt={1}>{content.description[index]}</Text>
-
-                        </Box>
                     </View>
 
                 )}
 
-                <VStack px={5} >
+                <VStack mx={5} py={4} my={2} borderTopWidth={1} borderBottomWidth={1} borderColor='coolGray.300'>
                     {/* Rating */}
                     {(content.overallyummy > 0 ||
                         content.overallprice > 0 ||
                         content.overallenv > 0) &&
-                        <Text mt={4} fontSize='lg' fontWeight='bold'>餐廳整體的...</Text>}
-                    {content.overallyummy > 0 && <HStack mt={4} alignItems='center'>
-                        <Text fontWeight='bold' color='coolGray.500' mr={3}>🛎️ 味道</Text>
-                        <StarRating
-                            fullStarColor='#ff9636'
-                            rating={content.overallyummy}
-                            starSize={24}
-                            disabled
-                        />
-                    </HStack>}
-                    {content.overallprice > 0 && <HStack mt={4} alignItems='center'>
-                        <Text fontWeight='bold' color='coolGray.500' mr={3}>🤑 價錢</Text>
-                        <StarRating
-                            fullStarColor='#ff9636'
-                            rating={content.overallprice}
-                            disabled starSize={24}
-                        />
-                    </HStack>}
-                    {content.overallenv > 0 && <HStack mt={4} mb={8} alignItems='center'>
-                        <Text fontWeight='bold' color='coolGray.500' mr={3}>🕯️ 環境</Text>
-                        <StarRating
-                            fullStarColor='#ff9636'
-                            rating={content.overallenv}
-                            disabled starSize={24}
-                        />
+                        <HStack justifyContent='space-between' alignItems='center' mb={3} >
+                            <LocationButton disabled
+                                location={content.location}
+                                place_id={content.place_id}
+                                navigation={navigation} />
 
-                    </HStack>}
+                            {/*   {content.overallyummy != 0 && <StarRating
+                                fullStarColor='#ff9636'
+                                rating={content.overallyummy}
+                                starSize={20}
+                            />} */}
+
+                        </HStack>}
+                    <HStack>
+                        {content.overallyummy > 0 && <VStack alignItems='center' flex={1}>
+                            <Text fontWeight={'semibold'} color='#ff9636' fontSize={36}>{content.overallyummy}</Text>
+                            <Text fontWeight='bold' color='coolGray.500' >味道</Text>
+
+                        </VStack>}
+
+                        {content.overallyummy > 0 && <VStack alignItems='center' flex={1}>
+                            <Text fontWeight={'semibold'} color='#ff9636' fontSize={36}>{content.overallenv}</Text>
+                            <Text fontWeight='bold' color='coolGray.500' >環境</Text>
+
+                        </VStack>}
+
+                        {content.overallyummy > 0 && <VStack alignItems='center' flex={1}>
+                            <Text fontWeight={'semibold'} color='#ff9636' fontSize={36}>{content.overallprice}</Text>
+                            <Text fontWeight='bold' color='coolGray.500' >抵食</Text>
+
+                        </VStack>}
+                    </HStack>
+
+
                 </VStack>
 
                 {/********** Footer part ********/}
@@ -365,10 +354,12 @@ export default function StoryStack({ navigation, route }) {
                     }
 
                     {commentUsers.map((item, index) =>
-                        <Text color='black' key={index}>
-                            <Text fontWeight='bold'>{item.name} </Text>
-                            {content.comment[index].comment}
-                        </Text>
+                        <HStack  key={index}>
+                            <TouchableOpacity onPress={() => openProfile(item.id)}>
+                                <Text fontWeight='bold' >{item.name} </Text>
+                            </TouchableOpacity>
+                            <Text>{content.comment[index].comment}</Text>
+                        </HStack>
 
                     )
                     }
@@ -411,12 +402,9 @@ export default function StoryStack({ navigation, route }) {
                 <IconButton onPress={doComment}
                     icon={<Feather name="send" size={24}
                         color={comment == '' ? "#dddddd" : 'black'} />} />
-                <IconButton icon={<Feather name="share" size={24} color="black" />} />
+                {/*  <IconButton icon={<Feather name="share" size={24} color="black" />} /> */}
 
             </HStack>
-
-
-
 
 
         </NativeBaseProvider>

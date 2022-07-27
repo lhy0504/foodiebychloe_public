@@ -35,14 +35,14 @@ export default function RestaurantTileFromID(props) {
     }, [])
 
     const openProfile = (location, place_id) => {
-        props.navigation.navigate('LocationProfileStack', {
+        props.navigation.push('LocationProfileStack', {
             location: location,
             place_id: place_id
         })
     }
 
     return (data ? <TouchableHighlight activeOpacity={0.6} underlayColor="#e6e6e6" onPress={() => openProfile(data.name, data.place_id)}>
-        <HStack alignItems='center' backgroundColor='white'
+        <HStack alignItems='center' backgroundColor='white' 
             borderBottomColor='coolGray.100' borderBottomWidth={1} borderRadius={10}>
 
             <Box m={3} borderRadius={5} overflow='hidden'>

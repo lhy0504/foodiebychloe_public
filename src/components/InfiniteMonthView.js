@@ -6,6 +6,7 @@ import {
 } from "native-base";
 import { getUserPostsMonthly, getMyUid, getUser } from '../utils/FirebaseUtil'
 
+import { Feather, Ionicons, } from '@expo/vector-icons';
 
 
 
@@ -63,32 +64,32 @@ export class InfiniteMonthView extends React.Component {
         return (
             <>
                 {this.state.user &&
-                      <ImageBackground
-                      source={require("./../../assets/gallery_bg.png")}
-                      style={{ width: width, height: height }}
-                  >
-                    <FlatList
-                        horizontal
-                        pagingEnabled
-                        showsHorizontalScrollIndicator={false}
-                        ref={el => this.list = el}
+                    <ImageBackground
+                        source={require("./../../assets/gallery_bg.png")}
+                        style={{ width: width, height: height }}
+                    >
+                        <FlatList
+                            horizontal
+                            pagingEnabled
+                            showsHorizontalScrollIndicator={false}
+                            ref={el => this.list = el}
 
-                        data={monthIndexList}
-                        initialScrollIndex={startMonthIndex}
-                        keyExtractor={(item, index) => index}
+                            data={monthIndexList}
+                            initialScrollIndex={startMonthIndex}
+                            keyExtractor={(item, index) => index}
 
-                        getItemLayout={(data, index) => ({
-                            length: width,
-                            offset: width * index,
-                            index,
-                        })}
-                        windowSize={3}
-                        maxToRenderPerBatch={3}
-                        initialNumToRender={1}
-                        renderItem={this._renderPage}
+                            getItemLayout={(data, index) => ({
+                                length: width,
+                                offset: width * index,
+                                index,
+                            })}
+                            windowSize={3}
+                            maxToRenderPerBatch={3}
+                            initialNumToRender={1}
+                            renderItem={this._renderPage}
                         />
                     </ImageBackground>
-                    }
+                }
             </>
         )
     }
@@ -137,19 +138,25 @@ class MonthView extends React.Component {
             style={{ flex: 1, padding: 2 }}
             onPress={() => this.viewPost(day)}>
             <View style={{ flex: 1 }}>
-                <View style={{ flex: 1, backgroundColor: '#d9d7cf', opacity:0.8 }}>
+                <View style={{ flex: 1, backgroundColor: '#d9d7cf', opacity: 0.8 }}>
                     <Text style={{
                         backgroundColor: this.isToday(day) ? '#FF9636' : '#6F6F71',
                         textAlign: 'center',
                         color: '#d5d3ca'
                     }}>{day}</Text>
+                    {this.isToday(day) && getMyUid() == this.props.uid &&
+                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                            <Feather name='plus' size={24} color='#666' />
+                        </View>
+                    }
                 </View>
+
             </View>
         </TouchableOpacity>
     }
 
-    viewPost = (day, posts=[]) => {
-       
+    viewPost = (day, posts = []) => {
+
         // give date in case posts is empty
         var date = this.state.date
         date.setDate(day)
@@ -226,7 +233,7 @@ class MonthView extends React.Component {
                             }
                             {
                                 week.map((day) => {
-                                   
+
                                     if (this.state.data.length > 0) {
 
                                         while (currSearchId < this.state.data.length) {
@@ -236,22 +243,22 @@ class MonthView extends React.Component {
                                                 ) {
                                                     currSearchId++
                                                     continue
-                                                } 
+                                                }
 
                                                 var id = currSearchId
                                                 currSearchId++
 
                                                 /* 
                                                 Get all post on the day
-                                                */  
-                                                 let posts=[]
+                                                */
+                                                let posts = []
                                                 for (let i = id; i < this.state.data.length; i++) {
                                                     if (this.state.data[i].dateObj.getDate() == day) {
                                                         posts.push(this.state.data[i])
                                                     } else if (this.state.data[i].dateObj.getDate() > day) {
                                                         break
                                                     }
-                                                } 
+                                                }
                                                 return (
                                                     <TouchableOpacity
                                                         style={{ flex: 3, padding: 2 }}

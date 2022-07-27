@@ -18,7 +18,7 @@ function Feed(props) {
 
     async function getData() {
         setRefreshing(true);
-        var dat = await getUserPosts(props.userid)
+        var dat = await getUserPosts(props.userid,true)
         setData(dat)
 
         setRefreshing(false);
@@ -62,7 +62,7 @@ function Header(props) {
     const [myself, setMyself] = useState({ friends: [], requests: [], following: [] })
 
     async function getData() {
-        var u = await getUser(props.userid)
+        var u = await getUser(props.userid,true)
         setUser(u)
         var u = await getUser(getMyUid())
         setMyself(u)
@@ -75,31 +75,36 @@ function Header(props) {
     const browseBookmark = () => { 
         props.navigation.push('LocationPreviewStack',{locationIDs:user.bookmarks, title:`${user.name}的收藏`})
     }
+    const browseFriends= () => { 
+       props. navigation.push('UserPreviewStack',{user:user})
+
+    }
     return <VStack >
         <ImageBackground
             source={require("./../../assets/gallery_bg.png")}
             style={{ width: width }}>
             <VStack>
                 <HStack pt={3} px={6} justifyContent='space-between' alignItems={'center'}>
-                    <Avatar size={20} source={{ uri: user.propic, }} />
+                    <Avatar size={16} source={{ uri: user.propic, }} />
 
-                    <VStack>
+                    <TouchableOpacity onPress={browseFriends}>
                         <HStack justifyContent={'flex-end'} >
-                            <VStack mr={10}
+                            <VStack mr={6}
                                 alignItems='center' justifyContent='flex-end'>
-                                <Text color='white'>追蹤者</Text>
+                                <Text color='white'>粉絲</Text>
                                 <Text color='white' fontWeight='bold' fontSize='xl'>{user.friends.length + user.requests.length}</Text>
                             </VStack>
                             <VStack
                                 alignItems='center' justifyContent='flex-end'>
-                                <Text color='white'>追蹤中</Text>
+                                <Text color='white'>關注</Text>
                                 <Text color='white' fontWeight='bold' fontSize='xl'>{user.following.length}</Text>
                             </VStack>
                         </HStack>
 
-                    </VStack>
+                    </TouchableOpacity>
                 </HStack>
-                <HStack justifyContent={'flex-end'}>
+                <HStack justifyContent={'space-between'} mx={6} my={2} alignItems='center'>
+                        <Text fontWeight={'bold'} fontSize={16} color='white'>{user.name}</Text>  
                     {
                         props.userid != getMyUid() && (user.friends.includes(getMyUid())
                             ?
@@ -107,10 +112,10 @@ function Header(props) {
                             <View style={{
                                 borderColor: "#d1d5db", borderRadius: 5,
                                 borderWidth: 1, padding: 5,
-                                margin: 15
+                               
                             }}>
                                 <Text textAlign='center' fontSize='sm' color='white'
-                                    width='200'>朋友</Text>
+                                    width='100'>朋友</Text>
                             </View>
 
                             :
@@ -120,10 +125,10 @@ function Header(props) {
                                 <View style={{
                                     borderColor: "#d1d5db", borderRadius: 5,
                                     borderWidth: 1, padding: 5,
-                                    margin: 15
+                                  
                                 }}><TouchableOpacity>
                                         <Text textAlign='center' fontSize='sm' color='white'
-                                            width='200'>追蹤中</Text></TouchableOpacity>
+                                            width='100'>追蹤中</Text></TouchableOpacity>
                                 </View>
 
                                 :
@@ -132,27 +137,28 @@ function Header(props) {
                                     <View style={{
                                         borderColor: "#d1d5db", borderRadius: 5,
                                         borderWidth: 1, padding: 5,
-                                        margin: 15
+                                        
                                     }}>
                                         <TouchableOpacity onPress={async () => { await followUser(props.userid); getData(); }}>
                                             <Text textAlign='center' fontSize='sm' color='white'
-                                                width='200'>接受追蹤請求</Text></TouchableOpacity>
+                                                width='100'>接受追蹤請求</Text></TouchableOpacity>
                                     </View>
 
                                     :
                                     <View style={{
                                         borderColor: "#d1d5db", borderRadius: 5,
                                         borderWidth: 1, padding: 5,
-                                        margin: 15
+                                       
                                     }}>
                                         <TouchableOpacity onPress={async () => { await followUser(props.userid); getData(); }}>
                                             <Text textAlign='center' fontSize='sm' color='white'
-                                                width='200'>要求追蹤</Text></TouchableOpacity>
+                                                width='100'>要求追蹤</Text></TouchableOpacity>
                                     </View>
                                 )
                             ))
                     }
                 </HStack>
+                {user.status && <Text mx={6} mb={2} fontSize={16} color='white'>{user.status}</Text>}
             </VStack>
         </ImageBackground>
 
@@ -175,7 +181,7 @@ export default class GalleryTab extends React.Component {
 
     async getData() {
         /* Check block */
-        var me = await getUser(undefined)
+        var me = await getUser(undefined,true)
         if (me.block.includes(this.props.route.params.userid)) {
             Alert.alert(
                 '已封鎖用戶', '解除封鎖?',
@@ -198,7 +204,7 @@ export default class GalleryTab extends React.Component {
         /* check block end */
 
 
-        var u = await getUser(this.props.route.params.userid)
+        var u = await getUser(this.props.route.params.userid,true)
         this.setState({ ...this.state, user: u })
     }
 

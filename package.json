@@ -63,6 +63,7 @@
     "react-native-modalbox": "^2.0.2",
     "react-native-pager-view": "5.4.9",
     "react-native-pell-rich-editor": "^1.8.8",
+    "react-native-poll": "^0.1.2",
     "react-native-reanimated": "~2.3.1",
     "react-native-redash": "^16.2.3",
     "react-native-safe-area-context": "3.3.2",

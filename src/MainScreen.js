@@ -2,11 +2,13 @@ import React, { useRef, useEffect } from 'react';
 import { StyleSheet, Text, View, StatusBar } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeTab from './tabs/HomeTab';
-import MapTab from './tabs/MapTab';
+import ExploreTab from './tabs/ExploreTab';
 import GalleryTab from './tabs/GalleryTab';
+import AccountTab from './tabs/AccountTab';
+import AddMediaStack from './stacks/AddMediaStack';
 
 import { Feather, Ionicons, } from '@expo/vector-icons';
-import { checkIfNewUser } from './utils/FirebaseUtil'
+import { checkIfNewUser,TestingPurpose } from './utils/FirebaseUtil'
 
 import { registerForPushNotificationsAsync } from './utils/PushNotifications'
 import * as Noti from './utils/SaveNotifications'
@@ -16,6 +18,7 @@ import * as Notifications from 'expo-notifications';
 const Tab = createBottomTabNavigator();
 
 export default function MainScreen({ navigation, route }) {
+    TestingPurpose()
 
     Notifications.setNotificationHandler({
         handleNotification: async () => ({
@@ -79,7 +82,11 @@ export default function MainScreen({ navigation, route }) {
             animated={true}
             backgroundColor="#fff"
             barStyle="dark-content" />
-            <Tab.Navigator screenOptions={{
+            <Tab.Navigator
+                 tabBarOptions={{
+                    keyboardHidesTabBar: true
+                }}
+                screenOptions={{
                 headerShown: false,
                 tabBarShowLabel: false,
                 tabBarStyle: {
@@ -105,18 +112,18 @@ export default function MainScreen({ navigation, route }) {
                             }
                         }
                     }} />
-                <Tab.Screen name="GalleryTab" component={GalleryTab} navigation={navigation}
+                   <Tab.Screen name="ExploreTab" component={ExploreTab}
                     options={{
                         tabBarActiveTintColor: 'black',
                         tabBarIcon: (props) => {
                             if (props.focused) {
-                                return <Ionicons name="albums" size={24} color="black" />;
+                                return <Ionicons name="search" size={24} color="black" />;
                             } else {
-                                return <Ionicons name="albums-outline" size={24} color='grey' />;
+                                return <Ionicons name="search-outline" size={24} color='grey' />;
                             }
                         }
                     }} />
-               {/*  <Tab.Screen name="New" component={AddMediaTab}
+                  <Tab.Screen name="New" component={AddMediaStack}
                     options={{
                         tabBarActiveTintColor: 'black',
                         tabBarButton: (props) => {
@@ -124,21 +131,34 @@ export default function MainScreen({ navigation, route }) {
                                 <Ionicons
                                     style={{ paddingTop: 10, paddingLeft: 15, paddingRight: 15 }}
                                     name="add-circle-outline" size={24} color="grey"
-                                    onPress={() => navigation.navigate('AddMediaStack')} />
+                                    onPress={() => navigation.push('AddMediaStack')} />
                             </View>;
                         }
-                    }} /> */}
-                 <Tab.Screen name="Map" component={MapTab}
+                    }} />
+                <Tab.Screen name="GalleryTab" component={GalleryTab} navigation={navigation}
                     options={{
                         tabBarActiveTintColor: 'black',
                         tabBarIcon: (props) => {
                             if (props.focused) {
-                                return <Ionicons name="map" size={24} color="black" />;
+                                return <Ionicons name="calendar" size={24} color="black" />;
                             } else {
-                                return <Ionicons name="map-outline" size={24} color='grey' />;
+                                return <Ionicons name="calendar-outline" size={24} color='grey' />;
                             }
                         }
                     }} />
+                 <Tab.Screen name="AccountTab" component={AccountTab} navigation={navigation}
+                    options={{
+                        tabBarActiveTintColor: 'black',
+                        tabBarIcon: (props) => {
+                            if (props.focused) {
+                                return <Ionicons name='person' size={24} color="black" />;
+                            } else {
+                                return <Ionicons name="person-outline" size={24} color='grey' />;
+                            }
+                        }
+                    }} />
+               {/* */}
+              
                
 
             </Tab.Navigator></>

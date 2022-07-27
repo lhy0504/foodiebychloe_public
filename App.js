@@ -17,12 +17,15 @@ import LoadingStack from './src/stacks/LoadingStack'
 import LocationProfileStack from './src/stacks/LocationProfileStack'
 import LocationProfileFriendPostStack from './src/stacks/LocationProfileFriendPostStack'
 import LocationPreviewStack from './src/stacks/LocationPreviewStack'
+import UserPreviewStack from './src/stacks/UserPreviewStack'
+import UserEditStack from './src/stacks/UserEditStack'
+import MapStack from './src/stacks/MapStack'
 
 import DayPostsModal from './src/tabs/DayPostsModal'
 import NotificationsStack from './src/stacks/NotificationsStack'
 
 import { useAuthentication } from './src/utils/UseAuth';
-import { NavigationContainer,useNavigationContainerRef,} from '@react-navigation/native';
+import { NavigationContainer, useNavigationContainerRef, } from '@react-navigation/native';
 
 import { TransitionPresets } from '@react-navigation/stack';
 const Stack = createStackNavigator();
@@ -31,38 +34,38 @@ const Stack = createStackNavigator();
 export default function App() {
   const { user } = useAuthentication();
 
- /*  const notificationListener = useRef();
-  const responseListener = useRef();
-
-  const navigationRef = useNavigationContainerRef(); 
-
-  useEffect(() => {
-    registerForPushNotificationsAsync().then(token => console.log(token))
-   
-    // fired whenever a notification is received while the app is foregrounded
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      //save noti
-      Noti.addnotification(notification)
-    });
-
-    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
-
-     var data=response.notification.request.content.data
-      if (data.screen) {
-        console.log('nav', data)
-        if(navigationRef)
-        navigationRef.current.navigate(data.screen,data)
-      }
-      
-    });
-
-    return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current);
-      Notifications.removeNotificationSubscription(responseListener.current);
-    };
-  }, []); */
+  /*  const notificationListener = useRef();
+   const responseListener = useRef();
+ 
+   const navigationRef = useNavigationContainerRef(); 
+ 
+   useEffect(() => {
+     registerForPushNotificationsAsync().then(token => console.log(token))
+    
+     // fired whenever a notification is received while the app is foregrounded
+     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+       //save noti
+       Noti.addnotification(notification)
+     });
+ 
+     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+       console.log(response);
+ 
+      var data=response.notification.request.content.data
+       if (data.screen) {
+         console.log('nav', data)
+         if(navigationRef)
+         navigationRef.current.navigate(data.screen,data)
+       }
+       
+     });
+ 
+     return () => {
+       Notifications.removeNotificationSubscription(notificationListener.current);
+       Notifications.removeNotificationSubscription(responseListener.current);
+     };
+   }, []); */
 
   return (
     user == "loading" ?
@@ -88,7 +91,7 @@ export default function App() {
               screenOptions={{
                 headerShown: false,
                 backgroundColor: "transparent",
-                ...TransitionPresets.SlideFromRightIOS ,
+                ...TransitionPresets.SlideFromRightIOS,
               }}
             >
 
@@ -128,7 +131,7 @@ export default function App() {
                 name="LocationProfileFriendPostStack"
                 component={LocationProfileFriendPostStack}
               />
-               <Stack.Screen
+              <Stack.Screen
                 name="LocationPreviewStack"
                 component={LocationPreviewStack}
               />
@@ -143,20 +146,24 @@ export default function App() {
                 name="PostEditorStack"
                 component={PostEditorStack}
               />
-
+           
               <Stack.Screen
                 name='ImageBrowser'
                 component={ImageBrowserStack}
                 options={{
                   title: '已選取0張圖片',
                   headerShown: true,
-                  headerTintColor:'black' 
+                  headerTintColor: 'black'
                 }}
               />
               <Stack.Screen
                 name="CommentStack"
                 component={CommentStack}
                 options={modalOptions}
+              />
+              <Stack.Screen
+                name="UserEditStack"
+                component={UserEditStack}
               />
               <Stack.Screen
                 name="DayPostsModal"
@@ -168,6 +175,14 @@ export default function App() {
                 name="LikedStack"
                 component={LikedStack}
                 options={modalOptions}
+              />
+              <Stack.Screen
+                name="MapStack"
+                component={MapStack}
+              />
+              <Stack.Screen
+                name="UserPreviewStack"
+                component={UserPreviewStack}
               />
             </Stack.Navigator>
           </NavigationContainer>
