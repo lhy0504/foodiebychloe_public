@@ -13,6 +13,7 @@ import {
 } from '../utils/FirebaseUtil'
 import LocationButton from '../components/LocationButton'
 import StarRating from 'react-native-star-rating';
+import YummyRankView from './../components/YummyRankView'
 
 var { width, height } = Dimensions.get('window')
 const delayPressIn = 200
@@ -80,39 +81,39 @@ export default function Post(props) {
             || item.publicOrFriends == 'public'
         ) && <><TouchableHighlight activeOpacity={1} underlayColor="#e6e6e6" onPress={openStory}>
             <Box>
-                <HStack mt={2}>
-                    <TouchableOpacity onPress={openProfile}>
-                        <Avatar m={2} ml={3} size={10} source={{ uri: item.propic, }} />
-                    </TouchableOpacity>
 
-                    <View style={{ flexShrink: 1 }}>
+                <TouchableHighlight activeOpacity={1} underlayColor="#e6e6e6" onPress={openProfile}>
+                    <HStack mt={0.5} alignItems='center' mx={5} ml={4}>
+                        <Avatar m={2} size={10} source={{ uri: item.propic, }} />
 
+                        <HStack alignItems='center' flex={1} my={.5} justifyContent='space-between'>
+                            <Text >
+                                {item.name}
+                                <Text fontSize='xs' color='coolGray.500' >{" 評價了  "}</Text>
+                            </Text>
 
-                        <TouchableHighlight activeOpacity={1} underlayColor="#e6e6e6" onPress={openProfile}>
-                            <HStack alignItems='center' flex={1} my={.5}>
-                                <Text fontSize='xs' color='coolGray.500' >{item.name}{" 給了  "}</Text>
-                                {item.overallyummy != 0 && <StarRating
-                                    fullStarColor='#ff9636'
-                                    rating={item.overallyummy}
-                                    starSize={16} disabled />}
-                            </HStack>
-                        </TouchableHighlight>
+                            <Box >
+                                <YummyRankView overallyummy={item.overallyummy} />
+                            </Box>
 
+                        </HStack>
+                    </HStack>{/* '#f3f4f6' */}
 
-
-                        {item.overalltitle != '' && <Text
-                            fontSize={'lg'}
-                            fontWeight={'bold'}
-                            flex={1}
-                            flexWrap='wrap'>{item.overalltitle}</Text>}
+                </TouchableHighlight>
 
 
-                    </View>
 
-                </HStack>{/* '#f3f4f6' */}
+
+
+
+                {item.overalltitle != '' && <Text
+                    fontSize={'lg'}
+                    fontWeight={'bold'}
+                    flex={1} mx={5} mb={2}
+                    flexWrap='wrap'>{item.overalltitle}</Text>}
 
                 {item.overalldescription != '' && <Text fontSize='sm'
-                    numberOfLines={3} mx={3} mb={2}>{item.overalldescription}</Text>}
+                    numberOfLines={2} mx={5} mb={2}>{item.overalldescription}</Text>}
 
 
                 <View style={{ flexWrap: 'wrap', flexDirection: 'row', }} >
@@ -132,7 +133,7 @@ export default function Post(props) {
                         )}
                 </View>
 
-                <HStack justifyContent='space-between' alignItems='center' px={4} mt={3}>
+                <HStack justifyContent='space-between' alignItems='center' px={6} mt={3}>
                     <LocationButton
                         location={item.location}
                         place_id={item.place_id}

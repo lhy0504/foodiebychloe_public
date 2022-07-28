@@ -21,7 +21,7 @@ import {
 } from '../utils/FirebaseUtil'
 import LocationButton from '../components/LocationButton'
 import StarRating from 'react-native-star-rating';
-
+import YummyRankView from '../components/YummyRankView';
 /* 
 Props:
 -  post  (whole post)
@@ -140,7 +140,7 @@ export default function StoryStack({ navigation, route }) {
             ],
 
         );
-    const openProfile = (id=content.userid) => {
+    const openProfile = (id = content.userid) => {
         navigation.push('UserProfileStack', {
             userid: id
         })
@@ -260,44 +260,45 @@ export default function StoryStack({ navigation, route }) {
 
                     <View key={index}>
                         <TouchableWithoutFeedback onPress={() => openStory(index)} >
-                            <View style={{ width: width, backgroundColor: '#f0f0ed' }}>
+                            <View style={{ width: width - 32, marginLeft: 16, marginRight: 16, backgroundColor: '#f0f0ed' }}>
                                 <Image source={{ uri: item }} style={{
                                     height: width, width: '100%', flex: 1,
                                 }} />
+                                {content.title[index] &&
+                                    <Box width={'100%'} position='absolute' bottom={0} px={4} py={1} pb={2} backgroundColor='rgba(44,44,44,.6)'>
+                                        <HStack pt={1} justifyContent='space-between' pb={1} alignItems='center'>
+                                            <Text fontWeight='semibold' fontSize='lg' color='white'>{content.title[index]}</Text>
+                                            {content.price[index] > 0 &&
+                                                <Text color='white'>
+                                                    {'$' + content.price[index]}
+                                                </Text>
+                                            }
+                                        </HStack>
+
+                                        {content.yummystar[index] > 0 &&
+
+                                            <HStack alignItems='center' >
+                                                <StarRating disabled={true} halfStar={'star-half'}
+                                                    starSize={15}
+                                                    starStyle={{ marginRight: 5 }}
+                                                    fullStarColor='#ff9636'
+                                                    rating={content.yummystar[index]}
+
+                                                />
+                                            </HStack>
+                                        }
+                                    </Box>
+                                }
                             </View>
 
-                            {content.title[index]  &&
-                                <Box width={width} position='absolute' bottom={0} px={5} py={1} pb={2} backgroundColor='rgba(44,44,44,.8)'>
-                                    <HStack pt={1} justifyContent='space-between' pb={1} alignItems='center'>
-                                        <Text fontWeight='semibold' fontSize='lg' color='white'>{content.title[index]}</Text>
-                                        {content.price[index] > 0 &&
-                                            <Text color='white'>
-                                                {'$' + content.price[index]}
-                                            </Text>
-                                        }
-                                    </HStack>
 
-                                    {content.yummystar[index] > 0 &&
-
-                                        <HStack alignItems='center' >
-                                            <StarRating disabled={true} halfStar={'star-half'}
-                                                starSize={15}
-                                                starStyle={{ marginRight: 5 }}
-                                                fullStarColor='#ff9636'
-                                                rating={content.yummystar[index]}
-
-                                            />
-                                        </HStack>
-                                    }
-                                </Box>
-                            }
                         </TouchableWithoutFeedback>
 
-                        <Box mb={4}>
-                        {content.description[index] &&
-                            <Text px={4} mt={1} mb={2} fontSize={'md'}>{content.description[index]}</Text>
+                        <Box mb={8}>
+                            {content.description[index] &&
+                                <Text px={4} mt={1} mb={2} fontSize={'md'}>{content.description[index]}</Text>
                             }
-                            </Box>
+                        </Box>
 
                     </View>
 
@@ -354,7 +355,7 @@ export default function StoryStack({ navigation, route }) {
                     }
 
                     {commentUsers.map((item, index) =>
-                        <HStack  key={index}>
+                        <HStack key={index}>
                             <TouchableOpacity onPress={() => openProfile(item.id)}>
                                 <Text fontWeight='bold' >{item.name} </Text>
                             </TouchableOpacity>

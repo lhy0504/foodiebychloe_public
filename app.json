@@ -22,7 +22,7 @@
     },
     "android": {
       "package": "com.foodiebychloe",
-      "versionCode": 13,
+      "versionCode": 14,
       "permissions": [
         "CAMERA_ROLL",
         "CAMERA",

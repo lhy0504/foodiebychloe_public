@@ -99,3 +99,6 @@ export const priceRanges = [
         id: '800+',
     }
 ];
+export const yummyRank = [
+    { name: 'A+', id: 5 }, { name: 'A', id: 4 }, { name: 'A-', id: 3 }, { name: 'B', id: 2 }, { name: 'C', id: 1 }
+]

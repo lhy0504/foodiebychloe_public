@@ -9,13 +9,16 @@ import {
     Button, NativeBaseProvider
 } from 'native-base';
 import StarRating from 'react-native-star-rating';
-import { Feather } from '@expo/vector-icons';
+import { Feather, MaterialIcons } from '@expo/vector-icons';
 import PagerView from 'react-native-pager-view';
 import Dots from 'react-native-dots-pagination';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Autocomplete from 'react-native-autocomplete-input'
 import { getAuth } from 'firebase/auth';
 import { uploadPost } from '../utils/FirebaseUtil'
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+import { yummyRank } from './../consts/dishes'
+import YummyRankView from './../components/YummyRankView'
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height
@@ -58,11 +61,11 @@ export default function ImageEditorStack({ navigation, route }) {
                 hashtag: '',
                 comment: [],
                 overallprice: 0,
-                overallyummy: 0,
+                overallyummy: 1,
                 overallenv: 0,
                 overalltitle: '',
                 overalldescription: '',
-                address:''
+                address: ''
             }
         }
     }
@@ -145,7 +148,7 @@ export default function ImageEditorStack({ navigation, route }) {
             price: price,
             image: route.params.images.map(a => (a)) //deep clone
         });
-        console.log( route.params.images.map(a => (a)))
+        console.log(route.params.images.map(a => (a)))
     }
     async function submitPost() {
 
@@ -307,7 +310,6 @@ export default function ImageEditorStack({ navigation, route }) {
                                     <Feather name="calendar" size={16} color="#ff9636" />
                                     {" "}{typeof (post.date) == 'string' ? post.date : post.date.toLocaleDateString('en-US')}
                                 </Text>
-
                             </TouchableOpacity>
 
                             {dateopen && <DateTimePicker
@@ -353,11 +355,19 @@ export default function ImageEditorStack({ navigation, route }) {
 
                             <Text mt={4} fontSize='lg' fontWeight='bold'>餐廳整體的...</Text>
                             <HStack mt={4} justifyContent='space-between' alignItems='center'>
-                                <Text fontWeight='bold' color='coolGray.500'>🛎️ 味道</Text>
-                                <StarRating
-                                    fullStarColor='#ff9636'
-                                    rating={post.overallyummy}
-                                    selectedStar={(rating) => setPost({ ...post, overallyummy: rating })}
+                                <HStack alignItems={'center'}>
+                                    <Text fontWeight='bold' color='coolGray.500'>{'🛎️ 味道               '}</Text>
+                                    <YummyRankView overallyummy={post.overallyummy} />
+                                </HStack>
+                                <SectionedMultiSelect
+                                    single hideConfirm hideSearch
+                                    items={yummyRank} IconRenderer={MaterialIcons}
+                                    showDropDowns={true}
+                                    uniqueKey="id"
+                                    subKey="children"
+                                    onSelectedItemsChange={(item) => setPost({ ...post, overallyummy: item[0] })}
+                                    selectedItems={[post.overallyummy]}
+                                    key={'as2'}
                                 />
                             </HStack>
                             <HStack mt={4} justifyContent='space-between' alignItems='center'>
@@ -431,7 +441,7 @@ export default function ImageEditorStack({ navigation, route }) {
                                         defaultValue={post.title[index]}
                                         onChangeText={text => setTitle(index, text)}
                                     />
-                                   {/*  <TextInput
+                                    {/*  <TextInput
                                         placeholder="$$"
                                         keyboardType="numeric"
                                         defaultValue={post.price[index]}

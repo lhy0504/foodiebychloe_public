@@ -8,6 +8,7 @@ import { Feather, AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons'
 
 import { getAllRestaurants, getMyUid, getRestaurantsMap, getAllUsers } from '../utils/FirebaseUtil'
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import YummyRankView from './../components/YummyRankView'
 
 import { dishes } from './../consts/dishes'
 
@@ -91,7 +92,7 @@ export default function Maptab({ navigation, route }) {
                                 textShadowRadius: 10
                             }}
                             color='white'>{index + 1}</Text>
-                        <VStack position={'absolute'} bottom={0} left={0} width={200} h={110}
+                        <VStack position={'absolute'} bottom={0} left={0} width={200} h={115}
                             backgroundColor='rgba(44,44,44, 0.8)' px={4} py={2}>
 
 
@@ -104,9 +105,9 @@ export default function Maptab({ navigation, route }) {
                                 </Text>
                             }
                             {item.hasOwnProperty('average') &&
-                                <HStack mt={1}>
-                                    <Feather name='star' style={{ marginRight: 8 }} color='white' size={20} />
-                                    <Text color='white' fontWeight='bold'>{(item.average).toFixed(1)}</Text>
+                                <HStack mt={1} alignItems='center'>
+                                     <YummyRankView overallyummy={item.average}/>
+                                    <Text ml={2}  color='white' fontWeight='bold'>{(item.average).toFixed(1)}</Text>
                                     <Text color='white'>{"  (" + item.total + ")"}</Text>
                                 </HStack>}
                         </VStack>

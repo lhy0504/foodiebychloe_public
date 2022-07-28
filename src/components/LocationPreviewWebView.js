@@ -12,6 +12,7 @@ import {
 } from '../utils/FirebaseUtil'
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { WebView } from 'react-native-webview';
+import YummyRankView from './../components/YummyRankView'
 
 /* 
 props:
@@ -74,11 +75,11 @@ export default function RestaurantTileFromID(props) {
                     </Text>
                 }
                 {data.hasOwnProperty('average') &&
-                    <HStack>
-                        <Feather name='star' style={{ marginRight: 8 }} size={20} />
-                        <Text fontWeight='bold'>{(data.average).toFixed(1)}</Text>
-                        <Text>{"  (" + data.total + ")"}</Text>
-                    </HStack>}
+                     <HStack alignItems={'center'}>
+                     <YummyRankView overallyummy={data.average}/>
+                     <Text ml={2}  fontWeight='bold'>{(data.average).toFixed(1)}</Text>
+                     <Text>{"  (" + data.total + ")"}</Text>
+                 </HStack>}
                 <Text color='#bbb'>{data.address}</Text>
             </VStack>
 
