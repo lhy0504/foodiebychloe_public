@@ -3,7 +3,7 @@
     "name": "foodieByChloe",
     "slug": "foodieByChloe",
     "scheme": "foodiebychloe",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -18,11 +18,14 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.foodiebychloe",
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "usesAppleSignIn": true
     },
     "android": {
       "package": "com.foodiebychloe",
-      "versionCode": 14,
+      "versionCode": 17,
       "permissions": [
         "CAMERA_ROLL",
         "CAMERA",

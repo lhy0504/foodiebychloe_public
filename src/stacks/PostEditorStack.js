@@ -15,7 +15,7 @@ import Dots from 'react-native-dots-pagination';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Autocomplete from 'react-native-autocomplete-input'
 import { getAuth } from 'firebase/auth';
-import { uploadPost } from '../utils/FirebaseUtil'
+import { getMyUid, uploadPost } from '../utils/FirebaseUtil'
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import { yummyRank } from './../consts/dishes'
 import YummyRankView from './../components/YummyRankView'
@@ -43,9 +43,9 @@ export default function ImageEditorStack({ navigation, route }) {
             return obj
         } else {
 
-            // If edit, also apply to DayPostModal.js and StoryStack
+            // If edit, also apply to DayPostModal.js 
             return {
-                userid: getAuth().currentUser.email,
+                userid: getMyUid(),
                 image: route.params.images,
                 yummystar: Array(route.params.images.length).fill(0),
 

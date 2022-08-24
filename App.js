@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { SafeAreaView } from 'react-native';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import MainScreen from './src/MainScreen';
@@ -84,108 +85,110 @@ export default function App() {
       </NavigationContainer>
       : (
         user ?
-          <NavigationContainer >
+          <SafeAreaView style={{flex:1}}>
+            <NavigationContainer >
 
-            <Stack.Navigator
-              initialRouteName="MainScreen"
-              screenOptions={{
-                headerShown: false,
-                backgroundColor: "transparent",
-                ...TransitionPresets.SlideFromRightIOS,
-              }}
-            >
-
-              <Stack.Screen
-                name="MainScreen"
-                component={MainScreen}
-              />
-              <Stack.Screen
-                name="NotificationsStack"
-                component={NotificationsStack}
-              />
-              <Stack.Screen
-                name="LoadingStack2"
-                component={LoadingStack}
-              />
-              <Stack.Screen
-                name="StoryStack"
-                component={StoryStack}
-              />
-              <Stack.Screen
-                name="StoryStackIGstyle"
-                component={StoryStackIGstyle}
-              />
-              <Stack.Screen
-                name="UserProfileStack"
-                component={UserProfileStack}
-              />
-              <Stack.Screen
-                name="AddMediaStack"
-                component={AddMediaStack}
-              />
-              <Stack.Screen
-                name="LocationProfileStack"
-                component={LocationProfileStack}
-              />
-              <Stack.Screen
-                name="LocationProfileFriendPostStack"
-                component={LocationProfileFriendPostStack}
-              />
-              <Stack.Screen
-                name="LocationPreviewStack"
-                component={LocationPreviewStack}
-              />
-              <Stack.Screen
-                name="ImageEditorStack"
-                component={ImageEditorStack}
-                options={{
-                  animationEnabled: false,
+              <Stack.Navigator
+                initialRouteName="MainScreen"
+                screenOptions={{
+                  headerShown: false,
+                  backgroundColor: "transparent",
+                  ...TransitionPresets.SlideFromRightIOS,
                 }}
-              />
-              <Stack.Screen
-                name="PostEditorStack"
-                component={PostEditorStack}
-              />
-           
-              <Stack.Screen
-                name='ImageBrowser'
-                component={ImageBrowserStack}
-                options={{
-                  title: '已選取0張圖片',
-                  headerShown: true,
-                  headerTintColor: 'black'
-                }}
-              />
-              <Stack.Screen
-                name="CommentStack"
-                component={CommentStack}
-                options={modalOptions}
-              />
-              <Stack.Screen
-                name="UserEditStack"
-                component={UserEditStack}
-              />
-              <Stack.Screen
-                name="DayPostsModal"
-                component={DayPostsModal}
-                options={modalOptions}
+              >
 
-              />
-              <Stack.Screen
-                name="LikedStack"
-                component={LikedStack}
-                options={modalOptions}
-              />
-              <Stack.Screen
-                name="MapStack"
-                component={MapStack}
-              />
-              <Stack.Screen
-                name="UserPreviewStack"
-                component={UserPreviewStack}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
+                <Stack.Screen
+                  name="MainScreen"
+                  component={MainScreen}
+                />
+                <Stack.Screen
+                  name="NotificationsStack"
+                  component={NotificationsStack}
+                />
+                <Stack.Screen
+                  name="LoadingStack2"
+                  component={LoadingStack}
+                />
+                <Stack.Screen
+                  name="StoryStack"
+                  component={StoryStack}
+                />
+                <Stack.Screen
+                  name="StoryStackIGstyle"
+                  component={StoryStackIGstyle}
+                />
+                <Stack.Screen
+                  name="UserProfileStack"
+                  component={UserProfileStack}
+                />
+                <Stack.Screen
+                  name="AddMediaStack"
+                  component={AddMediaStack}
+                />
+                <Stack.Screen
+                  name="LocationProfileStack"
+                  component={LocationProfileStack}
+                />
+                <Stack.Screen
+                  name="LocationProfileFriendPostStack"
+                  component={LocationProfileFriendPostStack}
+                />
+                <Stack.Screen
+                  name="LocationPreviewStack"
+                  component={LocationPreviewStack}
+                />
+                <Stack.Screen
+                  name="ImageEditorStack"
+                  component={ImageEditorStack}
+                  options={{
+                    animationEnabled: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="PostEditorStack"
+                  component={PostEditorStack}
+                />
+
+                <Stack.Screen
+                  name='ImageBrowser'
+                  component={ImageBrowserStack}
+                  options={{
+                    title: '已選取0張圖片',
+                    headerShown: true,
+                    headerTintColor: 'black'
+                  }}
+                />
+                <Stack.Screen
+                  name="CommentStack"
+                  component={CommentStack}
+                  options={modalOptions}
+                />
+                <Stack.Screen
+                  name="UserEditStack"
+                  component={UserEditStack}
+                />
+                <Stack.Screen
+                  name="DayPostsModal"
+                  component={DayPostsModal}
+                  options={modalOptions}
+
+                />
+                <Stack.Screen
+                  name="LikedStack"
+                  component={LikedStack}
+                  options={modalOptions}
+                />
+                <Stack.Screen
+                  name="MapStack"
+                  component={MapStack}
+                />
+                <Stack.Screen
+                  name="UserPreviewStack"
+                  component={UserPreviewStack}
+                />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </SafeAreaView>
           :
           <NavigationContainer>
             <Stack.Navigator

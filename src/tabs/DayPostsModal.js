@@ -10,6 +10,7 @@ import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { Feather } from '@expo/vector-icons';
 import { getAuth } from 'firebase/auth';
 import  PostPreview from '../components/PostPreview'
+import { getMyUid } from "../utils/FirebaseUtil";
 
 /* 
 props:
@@ -26,7 +27,7 @@ export default function DayPostModal({ navigation, route }) {
             fromCalendar: true,
             image: [],
             post: {
-                userid: getAuth().currentUser.email,
+                userid: getMyUid(),
                 image: [],
                 yummystar: [],
                 title: [],
@@ -44,7 +45,7 @@ export default function DayPostModal({ navigation, route }) {
                
                 
                 overallprice: 0,
-                overallyummy: 0,
+                overallyummy: 1,
                 overallenv: 0,
                 overalltitle: '',
                 overalldescription: '',

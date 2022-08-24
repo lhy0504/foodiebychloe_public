@@ -88,7 +88,7 @@ function getAuth() {
 /* Getters */
 export function getMyUid() {
   if (Testing) return testUID
-  return getAuth().currentUser.email
+  return getAuth().currentUser.uid
 }
 
 export async function checkIfNewUser(navigation) {
@@ -98,33 +98,37 @@ export async function checkIfNewUser(navigation) {
   1 - save user data to 'user'
   2 - 
   */
+  console.log(getAuth().currentUser) 
+  console.log('xxx')
   var userExist = (await firebase.firestore().collection('users').doc(
-    getAuth().currentUser.email
+    getAuth().currentUser.uid
   ).get()).exists
   if (!userExist) {
     registerForPushNotificationsAsync().then(async (token) =>
       await firebase.firestore()
-        .collection("users").doc(getAuth().currentUser.email).set({
+        .collection("users").doc(getAuth().currentUser.uid).set({
           name: getAuth().currentUser.displayName,
           email: getAuth().currentUser.email,
-          uid: getAuth().currentUser.email,
+          uid: getAuth().currentUser.uid,
           joined: new Date().toLocaleDateString(),
-          propic: getAuth().currentUser.photoURL,
+          propic: getAuth().currentUser.photoURL
+            || 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/facebook/65/clinking-beer-mugs_1f37b.png',
           foodieScore: 20,
-          following: [],
+          following: [], 
           friends: [],
           scorehistory: [],
           feed: [],
           post: [],
           requests: [],
-          pushtoken: token,
+          pushtoken: token || 'error',
           followerCount: 0,
           block: [],
           bookmarks: [],
           status: '我在用FoodieByChloe尋找美食!'
 
         })
-    ).then(() => navigation.replace("MainScreen", { screen: "GalleryTab" }));
+        .catch(e=>console.log(e))
+    ).then(() => navigation.replace("MainScreen", { screen: "Home" }));
 
 
   }
@@ -181,7 +185,7 @@ export async function getPublicPosts() {
   return (postList);
 }
 
-export async function getUserPostsMonthly(year, month, uid = getAuth().currentUser.email) {
+export async function getUserPostsMonthly(year, month, uid = getMyUid()) {
 
   //monthly, ascending
   var firstDay = new Date(year, month - 1, 1);
@@ -291,7 +295,7 @@ export async function getDishPollByRestaurant(id) {
   }
 
 }
-export async function getDishPollByUser( restaurant) {
+export async function getDishPollByUser(restaurant) {
   var snapshot = await firebase.firestore()
     .collection('userPolled')
     .doc(getMyUid())
@@ -331,7 +335,8 @@ export async function uploadPost(post, publicOrFriends) {
   var parts = post.date.split('/');
   // Please pay attention to the month (parts[1]); JavaScript counts months from 0:
   // January - 0, February - 1, etc.
-  post.date = new Date('20' + parts[2], parts[0] - 1, parts[1]);
+  if (parts[2].length == 2) parts[2] = '20' + parts[2]
+  post.date = new Date(parts[2], parts[0] - 1, parts[1]);
 
   console.log(post)
   //upload img
@@ -371,56 +376,57 @@ export async function uploadPost(post, publicOrFriends) {
       .then((docRef) => {
         addPostToFeeds(docRef.id, publicOrFriends)
         setUserVisited(post.place_id)
+        voteToLocation(post)
       })
-
-
-    //
-    /*
-    vote to location.
-    if 
-       (0) no  place_id:   vote to doc with id = location name; create if inexist
-       (1) has place_id:   vote to docuemnt with id = place_id; create if inexist
-    */
-    /*
-    todo:check user has voted?
-    */
-
-    var yummytemplate = {
-      star0: 0,
-      star1: 0,
-      star2: 0,
-      star3: 0,
-      star4: 0,
-      star5: 0,
-      total: 0,
-      average: 0
-    }
-
-    var location = (await firebase.firestore().collection('location').doc(post.place_id).get())
-    if (!location.exists) {
-      firebase.firestore()
-        .collection("location").doc(post.place_id).set({
-          ...yummytemplate,
-          name: post.location,
-          address: post.address,
-          ['star' + post.overallyummy]: 1,
-          total: 1,
-          average: post.overallyummy,
-          pic: post.image[0]
-        })
-    } else {
-      firebase.firestore()
-        .collection("location").doc(post.place_id).update({
-          ['star' + post.overallyummy]: firebase.firestore.FieldValue.increment(1),
-          total: firebase.firestore.FieldValue.increment(1),
-          average: (location.data().average * location.data().total + post.overallyummy) / parseFloat(location.data().total + 1)
-        })
-    }
-
-
+      .catch(e => console.log('err', e))
+      .finally(() => console.log('finally'))
 
   }
 
+}
+async function voteToLocation(post) {
+  //
+  /*
+  vote to location.
+  if 
+     (0) no  place_id:   vote to doc with id = location name; create if inexist
+     (1) has place_id:   vote to docuemnt with id = place_id; create if inexist
+  */
+  /*
+  todo:check user has voted?
+  */
+
+  var yummytemplate = {
+    star0: 0,
+    star1: 0,
+    star2: 0,
+    star3: 0,
+    star4: 0,
+    star5: 0,
+    total: 0,
+    average: 0
+  }
+
+  var location = (await firebase.firestore().collection('location').doc(post.place_id).get())
+  if (!location.exists) {
+    firebase.firestore()
+      .collection("location").doc(post.place_id).set({
+        ...yummytemplate,
+        name: post.location,
+        address: post.address,
+        ['star' + post.overallyummy]: 1,
+        total: 1,
+        average: post.overallyummy,
+        pic: post.image[0]
+      })
+  } else {
+    firebase.firestore()
+      .collection("location").doc(post.place_id).update({
+        ['star' + post.overallyummy]: firebase.firestore.FieldValue.increment(1),
+        total: firebase.firestore.FieldValue.increment(1),
+        average: (location.data().average * location.data().total + post.overallyummy) / parseFloat(location.data().total + 1)
+      })
+  }
 }
 async function setUserVisited(place_id) {
   var doc = firebase.firestore()
@@ -731,10 +737,10 @@ export async function pollDish(id, dish, myOldVotedDish) {
     .doc(id)
     .get()
   if (snapshot.exists) {
-    var updateObj = myOldVotedDish != 'not voted'&&myOldVotedDish!=undefined ?
-    {
-      [dish]: firebase.firestore.FieldValue.increment(1),
-      [myOldVotedDish]: firebase.firestore.FieldValue.increment(-1)
+    var updateObj = myOldVotedDish != 'not voted' && myOldVotedDish != undefined ?
+      {
+        [dish]: firebase.firestore.FieldValue.increment(1),
+        [myOldVotedDish]: firebase.firestore.FieldValue.increment(-1)
       } :
       {
         [dish]: firebase.firestore.FieldValue.increment(1)
@@ -753,7 +759,7 @@ export async function pollDish(id, dish, myOldVotedDish) {
   }
   /* 2. update userPolled */
   var snapshot = await firebase.firestore()
-    .collection('userPolled') 
+    .collection('userPolled')
     .doc(getMyUid())
     .get()
   if (snapshot.exists) {

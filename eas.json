@@ -25,10 +25,19 @@
       "android": {
         "image" : "latest",
         "autoIncrement":true
+      },
+      "ios": {
+        "cocoapods": "1.11.2"
       }
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "hylee09.1173@gmail.com",
+        "ascAppId": "1641305949",
+        "appleTeamId": "Z2HKN233LX"
+      }
+    }
   }
 }

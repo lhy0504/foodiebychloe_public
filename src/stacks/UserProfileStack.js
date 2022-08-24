@@ -78,7 +78,7 @@ function Header(props) {
     const browseFriends= () => { 
        props. navigation.push('UserPreviewStack',{user:user})
 
-    }
+    } 
     return <VStack >
         <ImageBackground
             source={require("./../../assets/gallery_bg.png")}
@@ -203,7 +203,7 @@ export default class GalleryTab extends React.Component {
         }
         /* check block end */
 
-
+console.log(this.props.route.params)
         var u = await getUser(this.props.route.params.userid,true)
         this.setState({ ...this.state, user: u })
     }

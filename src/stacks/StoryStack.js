@@ -140,9 +140,10 @@ export default function StoryStack({ navigation, route }) {
             ],
 
         );
-    const openProfile = (id = content.userid) => {
+    const openProfile = (authorid ) => {
+        console.log(content)
         navigation.push('UserProfileStack', {
-            userid: id
+            userid: authorid || content.userid 
         })
     }
     var { width, height } = useWindowDimensions()
@@ -181,7 +182,7 @@ export default function StoryStack({ navigation, route }) {
                         <IconButton onPress={() => navigation.goBack()}
                             icon={<Ionicons name="ios-chevron-back" size={24} color="black" />} />
 
-                        <TouchableOpacity onPress={openProfile}>
+                        <TouchableOpacity onPress={()=>openProfile()}>
                             <HStack height='50px' alignItems='center'>
                                 <Image source={{ uri: author.propic }} style={{ height: 40, width: 40, borderRadius: 20 }} />
                                 <Text fontWeight='bold' color='black' fontSize='sm'>  {author.name}</Text>
@@ -264,42 +265,38 @@ export default function StoryStack({ navigation, route }) {
                                 <Image source={{ uri: item }} style={{
                                     height: width, width: '100%', flex: 1,
                                 }} />
-                                {content.title[index] &&
-                                    <Box width={'100%'} position='absolute' bottom={0} px={4} py={1} pb={2} backgroundColor='rgba(44,44,44,.6)'>
-                                        <HStack pt={1} justifyContent='space-between' pb={1} alignItems='center'>
-                                            <Text fontWeight='semibold' fontSize='lg' color='white'>{content.title[index]}</Text>
-                                            {content.price[index] > 0 &&
-                                                <Text color='white'>
-                                                    {'$' + content.price[index]}
-                                                </Text>
-                                            }
-                                        </HStack>
-
-                                        {content.yummystar[index] > 0 &&
-
-                                            <HStack alignItems='center' >
-                                                <StarRating disabled={true} halfStar={'star-half'}
-                                                    starSize={15}
-                                                    starStyle={{ marginRight: 5 }}
-                                                    fullStarColor='#ff9636'
-                                                    rating={content.yummystar[index]}
-
-                                                />
-                                            </HStack>
+                                {content.title.length > index && <Box width={'100%'}
+                                    position='absolute'
+                                    bottom={0}
+                                    px={4} py={1} pb={2}
+                                    backgroundColor='rgba(44,44,44,.6)'>
+                                    <HStack pt={1} justifyContent='space-between' pb={1} alignItems='center'>
+                                        <Text fontWeight='semibold' fontSize='lg' color='white'>{content.title[index]}</Text>
+                                        {content.price[index] > 0 &&
+                                            <Text color='white'>{'$' + content.price[index]}</Text>
                                         }
-                                    </Box>
+                                    </HStack>
+
+                                    {content.yummystar[index] > 0 &&
+                                        <HStack alignItems='center' >
+                                            <StarRating disabled={true} halfStar={'star-half'}
+                                                starSize={15}
+                                                starStyle={{ marginRight: 5 }}
+                                                fullStarColor='#ff9636'
+                                                rating={content.yummystar[index]}
+
+                                            />
+                                        </HStack>
+                                    }
+                                </Box>
                                 }
                             </View>
-
-
                         </TouchableWithoutFeedback>
-
                         <Box mb={8}>
                             {content.description[index] &&
                                 <Text px={4} mt={1} mb={2} fontSize={'md'}>{content.description[index]}</Text>
                             }
                         </Box>
-
                     </View>
 
                 )}

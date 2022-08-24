@@ -1,5 +1,5 @@
 import React, { setState, useEffect } from 'react';
-import { Dimensions, StyleSheet,BackHandler, View, TouchableOpacity, StatusBar } from 'react-native';
+import { Dimensions, StyleSheet, BackHandler, View, TouchableOpacity, StatusBar } from 'react-native';
 import { Camera } from 'expo-camera';
 import {
     ScrollView, HStack, IconButton, Text, Spinner, Box,
@@ -7,7 +7,7 @@ import {
 } from "native-base";
 import { Feather, Ionicons } from '@expo/vector-icons';
 
-const {width,height} = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 export default class AddMediaTab extends React.Component {
 
@@ -32,11 +32,11 @@ export default class AddMediaTab extends React.Component {
         });
         this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
         this.permisionFunction()
-        
+
     }
-     permisionFunction = async () => {
+    permisionFunction = async () => {
         // here is how you can get the camera permission
-        const cameraPermission = await Camera.requestPermissionsAsync();
+        const cameraPermission = await Camera.requestCameraPermissionsAsync();
     }
     /* componentWillMount() {
         if (this.props.route.params !== undefined) {
@@ -58,7 +58,7 @@ export default class AddMediaTab extends React.Component {
         if (this.props.route.params !== undefined) {
             if (this.props.route.params.hasOwnProperty('reeditindex')) {
                 this.props.navigation.push('PostEditorStack', {
-                    images:this.props.route.params.post.image,
+                    images: this.props.route.params.post.image,
                     post: this.props.route.params.post,
                     reeditindex: this.props.route.params.reeditindex,
                 })
@@ -68,7 +68,7 @@ export default class AddMediaTab extends React.Component {
         } else {
             this.props.navigation.goBack();
         }
-        
+
         return true;
     }
 
@@ -93,7 +93,7 @@ export default class AddMediaTab extends React.Component {
 
                 var arr = this.state.multipleImages
                 arr.push(data.uri)
-               this.setState({...this.state,multipleImages:arr})
+                this.setState({ ...this.state, multipleImages: arr })
             } else {
                 //single image: preserve params
 
@@ -120,7 +120,7 @@ export default class AddMediaTab extends React.Component {
                     post: this.props.route.params.post,
                     reeditindex: this.props.route.params.reeditindex,
                 })
-            }else {
+            } else {
                 this.props.navigation.push('PostEditorStack', { images: this.state.multipleImages })
             }
         } else {
@@ -184,11 +184,11 @@ export default class AddMediaTab extends React.Component {
                         < IconButton onPress={() => this.setState({ ...this.state, isMultipleImg: !this.state.isMultipleImg })}
                             icon={< Ionicons name="ios-images" size={36} color={this.state.isMultipleImg ? "#ff9636" : "white"} />} />
                         <Text fontSize='xs'
-                            style={{position:'absolute',top:48}}
+                            style={{ position: 'absolute', top: 48 }}
                             color={this.state.isMultipleImg ? "#ff9636" : "white"}>{"多圖模式"}</Text>
                     </>
                     :
-                    <TouchableOpacity onPress={()=>this.submitMultipleImage()}>
+                    <TouchableOpacity onPress={() => this.submitMultipleImage()}>
                         <HStack padding={2}
                             backgroundColor='white' borderRadius={18}>
                             <Box padding={2} height={36} width={36}
@@ -216,13 +216,12 @@ export default class AddMediaTab extends React.Component {
                     />
                     {
                         this.state.loaded &&
-                        <Box height={height}
-                            width='100%'
-                            style={{ borderRadius: 20, overflow: 'hidden' }}>
+                        <Box flex={1}
+                            style={{ borderRadius: 20, overflow: 'hidden' }}
+                        >
                             <Camera
                                 ratio="16:9"
-                                height={height}
-                                width='100%'
+                                flex={1}
 
 
                                 justifyContent='space-between' ref={this.camera} >
@@ -232,29 +231,31 @@ export default class AddMediaTab extends React.Component {
                                     <IconButton icon={<Feather name={this.state.flashIconName} size={24} color="white" />} /> */}
                                 </View>
 
-                                <HStack width='100%' height={100}>
-                                    <Box flex={1} alignItems='center'>
-                                        <IconButton
-                                            onPress={() => this.chooseFromGallery()}
 
-                                            icon={<Feather name="image" size={36} color="white" />} />
-                                    </Box>
-                                    <Box flex={1} alignItems='center'>
-                                        <TouchableOpacity onPress={() => this.takePicture()}>
-                                            <View style={styles.snapButton}>
-                                                <View style={styles.innerSnapButton}>
-                                                </View>
-                                            </View>
-                                        </TouchableOpacity>
-                                    </Box>
-                                    <Box flex={1} alignItems='center'>
-
-
-                                        {this.renderMultipleImgBtn()}
-                                    </Box>
-                                </HStack>
                             </Camera>
-                        </Box>}
+                            <HStack width='100%' height={100} position='absolute' bottom={0}>
+                                <Box flex={1} alignItems='center'>
+                                    <IconButton
+                                        onPress={() => this.chooseFromGallery()}
+
+                                        icon={<Feather name="image" size={36} color="white" />} />
+                                </Box>
+                                <Box flex={1} alignItems='center'>
+                                    <TouchableOpacity onPress={() => this.takePicture()}>
+                                        <View style={styles.snapButton}>
+                                            <View style={styles.innerSnapButton}>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                </Box>
+                                <Box flex={1} alignItems='center'>
+
+
+                                    {this.renderMultipleImgBtn()}
+                                </Box>
+                            </HStack>
+                        </Box>
+                    }
                 </Box>
             </NativeBaseProvider >
         )

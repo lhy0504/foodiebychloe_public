@@ -30,7 +30,7 @@ export default function YummyRankView(props) {
     
     */
  var score = Math.floor(props.overallyummy)
-
+console.log(score)
     return <Box
        
         w={16}

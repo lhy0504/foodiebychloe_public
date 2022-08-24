@@ -126,10 +126,10 @@ export default function MainScreen({ navigation, route }) {
                   <Tab.Screen name="New" component={AddMediaStack}
                     options={{
                         tabBarActiveTintColor: 'black',
-                        tabBarButton: (props) => {
+                        tabBarIcon: (props) => {
                             return <View >
                                 <Ionicons
-                                    style={{ paddingTop: 10, paddingLeft: 15, paddingRight: 15 }}
+                                    
                                     name="add-circle-outline" size={24} color="grey"
                                     onPress={() => navigation.push('AddMediaStack')} />
                             </View>;
