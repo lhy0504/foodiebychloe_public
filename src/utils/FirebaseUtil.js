@@ -107,7 +107,7 @@ export async function checkIfNewUser(navigation) {
     registerForPushNotificationsAsync().then(async (token) =>
       await firebase.firestore()
         .collection("users").doc(getAuth().currentUser.uid).set({
-          name: getAuth().currentUser.displayName,
+          name: getAuth().currentUser.displayName || getAuth().currentUser.email.split('@')[0],
           email: getAuth().currentUser.email,
           uid: getAuth().currentUser.uid,
           joined: new Date().toLocaleDateString(),
@@ -167,7 +167,15 @@ export async function getLocation(location, place_id, refresh = true) {
 
   return result;
 }
+export async function deleteUser() {
+  
+  console.log(getMyUid())
 
+  await firebase.firestore().collection('users').doc(getMyUid()).delete()
+  await firebase.auth().signOut()
+
+  return 
+}
 export async function getPublicPosts() {
 
   //descending, limit 30

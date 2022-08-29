@@ -27,7 +27,8 @@
         "autoIncrement":true
       },
       "ios": {
-        "cocoapods": "1.11.2"
+        "cocoapods": "1.11.2",
+        "autoIncrement": true
       }
     }
   },

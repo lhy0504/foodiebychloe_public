@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Dimensions, Share, ImageBackground, Button, ScrollView, TextInput } from 'react-native';
+import { View, Dimensions, Share, ImageBackground, Button, Alert, TextInput } from 'react-native';
 import {
     HStack, IconButton, Text,
     VStack, NativeBaseProvider, Box, Avatar,
 } from "native-base";
 import { Feather, Ionicons } from '@expo/vector-icons';
-import { getUser, updateUser,uploadImage } from '../utils/FirebaseUtil'
+import { deleteUser, getUser, updateUser,uploadImage } from '../utils/FirebaseUtil'
 import * as ImagePicker from 'expo-image-picker';
 /* 
 
@@ -56,6 +56,27 @@ export default function X({ navigation, route }) {
         setUser({ ...user,propic:cloudURL })
 
     }
+    const deleteAcc = () =>{
+        Alert.alert(
+            "確定刪除帳戶？",
+            "您所有貼文和資料將消失:",
+            [
+                {
+                    text: "取消",
+                    onPress: () => { },
+                    style: "destructive",
+                },
+                {
+                    text: "確定", onPress: async () => {
+                        
+                        await deleteUser()
+                        
+                    }
+                }
+            ],
+
+        );
+    }
     return (
         <NativeBaseProvider>
             {/*  Header Bar  */}
@@ -101,6 +122,7 @@ export default function X({ navigation, route }) {
                     />
                 </Box>
                 <Button title="更改照片" onPress={changePic} />
+                <Button backgroundColor='red' title="刪除帳戶" onPress={deleteAcc} />
             </VStack >}
 
         </NativeBaseProvider >

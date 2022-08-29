@@ -21,7 +21,14 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.foodiebychloe",
       "googleServicesFile": "./GoogleService-Info.plist",
-      "usesAppleSignIn": true
+      "usesAppleSignIn": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "foodieByChloe拍攝美食照片來加到您的帖文中",
+        "NSPhotoLibraryUsageDescription": "從圖片庫上載美食照片來加到您的帖文中",
+        "NSPhotoLibraryAddUsageDescription": "foodieByChloe下載美食照片到您的圖庫中",
+        "NSLocationWhenInUseUsageDescription": "foodieByChloe以位置搜尋附近餐廳"
+      },
+      "buildNumber": "4"
     },
     "android": {
       "package": "com.foodiebychloe",
