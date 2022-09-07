@@ -61,7 +61,7 @@ export default function ImageEditorStack({ navigation, route }) {
                 hashtag: '',
                 comment: [],
                 overallprice: 0,
-                overallyummy: 1,
+                overallyummy: 0,
                 overallenv: 0,
                 overalltitle: '',
                 overalldescription: '',
@@ -355,20 +355,11 @@ export default function ImageEditorStack({ navigation, route }) {
 
                             <Text mt={4} fontSize='lg' fontWeight='bold'>餐廳整體的...</Text>
                             <HStack mt={4} justifyContent='space-between' alignItems='center'>
-                                <HStack alignItems={'center'}>
-                                    <Text fontWeight='bold' color='coolGray.500'>{'🛎️ 味道               '}</Text>
-                                    <YummyRankView overallyummy={post.overallyummy} />
-                                </HStack>
-                                <SectionedMultiSelect
-                                    single hideConfirm hideSearch
-                                    items={yummyRank} IconRenderer={MaterialIcons}
-                                    showDropDowns={true}
-                                    uniqueKey="id"
-                                    subKey="children"
-                                    onSelectedItemsChange={(item) => setPost({ ...post, overallyummy: item[0] })}
-                                    selectedItems={[post.overallyummy]}
-                                    key={'as2'}
-                                />
+                                <Text fontWeight='bold' color='coolGray.500'>🛎️ 味道</Text>
+                                <StarRating
+                                    fullStarColor='#ff9636'
+                                    rating={post.overallyummy}
+                                    selectedStar={(rating) => setPost({ ...post, overallyummy: rating })} />
                             </HStack>
                             <HStack mt={4} justifyContent='space-between' alignItems='center'>
                                 <Text fontWeight='bold' color='coolGray.500'>🤑 價錢</Text>

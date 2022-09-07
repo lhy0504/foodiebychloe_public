@@ -171,10 +171,13 @@ export default function StoryStack({ navigation, route }) {
         <NativeBaseProvider>
             {/*  Header Bar  */}
             <View style={{
-                height: 50
+                height: 50,
+                zIndex:-1,
+                elevation:-1,
+              
             }}>
                 <HStack alignItems='center'
-                    borderBottomWidth={2} borderBottomColor='#ff9636'
+                    
                     backgroundColor='white' px={2}
                     justifyContent='space-between'
                 >
@@ -194,7 +197,7 @@ export default function StoryStack({ navigation, route }) {
 
                 </HStack>
             </View>
-            <ScrollView flex={1} >
+            <ScrollView flex={1} borderTopColor='#ff9636' borderTopWidth={2} >
 
 
 

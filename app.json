@@ -3,7 +3,7 @@
     "name": "foodieByChloe",
     "slug": "foodieByChloe",
     "scheme": "foodiebychloe",
-    "version": "1.0.3",
+    "version": "1.0.5",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -28,7 +28,7 @@
         "NSPhotoLibraryAddUsageDescription": "foodieByChloe下載美食照片到您的圖庫中",
         "NSLocationWhenInUseUsageDescription": "foodieByChloe以位置搜尋附近餐廳"
       },
-      "buildNumber": "4"
+      "buildNumber": "5"
     },
     "android": {
       "package": "com.foodiebychloe",

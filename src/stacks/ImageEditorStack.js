@@ -324,7 +324,7 @@ export default function ImageEditorStack({ navigation, route }) {
             </View>
 
             {/* Adj Pane */}
-            {currTabIndex == 1 &&
+            {/* {currTabIndex == 1 &&
                 <ScrollView style={{
                     position: 'absolute',
                     bottom: 50,
@@ -362,7 +362,7 @@ export default function ImageEditorStack({ navigation, route }) {
                         })
                     }
                 </ScrollView>
-            }
+            } */}
 
             {/*  CropperModal */}
             {editorState.isCropperVisible && <View

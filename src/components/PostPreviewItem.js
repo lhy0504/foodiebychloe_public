@@ -51,7 +51,12 @@ export default function Post(props) {
                         <View />
                     }
 
-                    <YummyRankView overallyummy={post.overallyummy} />
+                    {post.overallyummy != 0 && <StarRating
+                        fullStarColor='#ff9636'
+                        rating={post.overallyummy}
+                        starSize={18}
+                    />
+                    }
 
                 </HStack>
 

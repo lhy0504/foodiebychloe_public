@@ -1,173 +1,173 @@
 import React, { setState, useEffect } from 'react';
-import { Dimensions, StyleSheet, BackHandler, View, TouchableOpacity, StatusBar } from 'react-native';
+import { Dimensions, StyleSheet, BackHandler, View, TouchableOpacity } from 'react-native';
 import { Camera } from 'expo-camera';
+import * as Permissions from "expo-permissions";
+
 import {
     ScrollView, HStack, IconButton, Text, Spinner, Box,
     VStack, NativeBaseProvider, Button
 } from "native-base";
 import { Feather, Ionicons } from '@expo/vector-icons';
+import { StatusBar } from 'expo-status-bar';
+import * as ImageManipulator from 'expo-image-manipulator';
+
 
 const { width, height } = Dimensions.get("window");
 
-export default class AddMediaTab extends React.Component {
+export default function AddMediaTab({ navigation, route }) {
 
-    state = {
+    const [state, setState] = React.useState({
         multipleImages: [],
         flashmode: Camera.Constants.FlashMode.off,
         flashIconName: 'zap-off',
         loaded: true,
 
         isMultipleImg: false
-    }
-    constructor(props) {
-        super(props);
+    })
+    const [permission, requestPermission] = Camera.useCameraPermissions();
 
-        this.camera = React.createRef(null);
 
-        props.navigation.addListener('focus', () => {
-            this.setState({ ...this.state, loaded: true });
-        });
-        props.navigation.addListener('blur', () => {
-            this.setState({ ...this.state, loaded: false });
-        });
-        this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
-        this.permisionFunction()
+    const camera = React.createRef(null);
 
-    }
-    permisionFunction = async () => {
-        // here is how you can get the camera permission
-        const cameraPermission = await Camera.requestCameraPermissionsAsync();
-    }
-    /* componentWillMount() {
-        if (this.props.route.params !== undefined) {
-            if (this.props.route.params.hasOwnProperty('reeditindex')) {
-                BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+    navigation.addListener('focus', () => {
+        setState({ ...state, loaded: true });
+        console.log('fc')
+    });
+    navigation.addListener('blur', () => {
+        setState({ ...state, loaded: false });
+        console.log('bl')
+    });
+    useEffect(async() => {
+        const { status } = await Permissions.askAsync(Permissions.CAMERA);
+        console.log(status)
+        const cameraPermission = await Camera.requestPermissionsAsync();
 
-            }
-        }
-    }
-    componentWillUnmount() {
-        if (this.props.route.params !== undefined) {
-            if (this.props.route.params.hasOwnProperty('reeditindex')) {
-                BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+    })
 
-            }
-        }
-    } */
-    handleBackButtonClick() {
-        if (this.props.route.params !== undefined) {
-            if (this.props.route.params.hasOwnProperty('reeditindex')) {
-                this.props.navigation.push('PostEditorStack', {
-                    images: this.props.route.params.post.image,
-                    post: this.props.route.params.post,
-                    reeditindex: this.props.route.params.reeditindex,
+    function handleBackButtonClick() {
+        if (route.params !== undefined) {
+            if (route.params.hasOwnProperty('reeditindex')) {
+                navigation.push('PostEditorStack', {
+                    images: route.params.post.image,
+                    post: route.params.post,
+                    reeditindex: route.params.reeditindex,
                 })
             } else {
-                this.props.navigation.goBack();
+                navigation.goBack();
             }
         } else {
-            this.props.navigation.goBack();
+            navigation.goBack();
         }
 
         return true;
     }
 
-    toggleFlash() {
+    function toggleFlash() {
 
-        this.setState({
-            ...this.state,
-            flashmode: this.flashmode == Camera.Constants.FlashMode.off ?
+        setState({
+            ...state,
+            flashmode: state.flashmode == Camera.Constants.FlashMode.off ?
                 Camera.Constants.FlashMode.on :
                 Camera.Constants.FlashMode.off,
-            flashIconName: this.flashmode == Camera.Constants.FlashMode.off ?
+            flashIconName: state.flashmode == Camera.Constants.FlashMode.off ?
                 'zap-off' :
                 'zap',
         })
 
     }
 
-    async takePicture() {
-        if (this.camera) {
-            const data = await this.camera.current.takePictureAsync(null);
-            if (this.state.isMultipleImg) {
+    async function takePicture() {
+        if (camera) {
+            var data = await camera.current.takePictureAsync({exif:true});
+            
+            /* workaround for ios wrong photo orientation */
+            if(data.width != data.exif.ImageWidth){
+                data = await ImageManipulator.manipulateAsync(data.uri, 
+                    [{ rotate: data.exif.Orientation === 6 ? -90 : 90 }],   { compress: 1 });
+            }
 
-                var arr = this.state.multipleImages
+            if (state.isMultipleImg) {
+
+                var arr = state.multipleImages
                 arr.push(data.uri)
-                this.setState({ ...this.state, multipleImages: arr })
+                setState({ ...state, multipleImages: arr })
             } else {
                 //single image: preserve params
 
-                if (this.props.route.params !== undefined) {
-                    if (this.props.route.params.hasOwnProperty('reeditindex')) {
-                        this.props.navigation.push('ImageEditorStack', {
+                if (route.params !== undefined) {
+                    if (route.params.hasOwnProperty('reeditindex')) {
+                        
+                        navigation.push('ImageEditorStack', {
                             ...data,
-                            post: this.props.route.params.post,
-                            reeditindex: this.props.route.params.reeditindex,
+                            post: route.params.post,
+                            reeditindex: route.params.reeditindex,
 
                         })
                     }
                 } else {
-                    this.props.navigation.push('ImageEditorStack', data)
+                    console.log(data)
+                    navigation.push('ImageEditorStack', data)
+                    
                 }
             }
         }
     }
-    submitMultipleImage() {
-        if (this.props.route.params !== undefined) {
-            if (this.props.route.params.hasOwnProperty('reeditindex')) {
-                this.props.navigation.push('PostEditorStack', {
-                    images: this.state.multipleImages,
-                    post: this.props.route.params.post,
-                    reeditindex: this.props.route.params.reeditindex,
+    function submitMultipleImage() {
+        if (route.params !== undefined) {
+            if (route.params.hasOwnProperty('reeditindex')) {
+                navigation.push('PostEditorStack', {
+                    images: state.multipleImages,
+                    post: route.params.post,
+                    reeditindex: route.params.reeditindex,
                 })
             } else {
-                this.props.navigation.push('PostEditorStack', { images: this.state.multipleImages })
+                navigation.push('PostEditorStack', { images: state.multipleImages })
             }
         } else {
-            this.props.navigation.push('PostEditorStack', { images: this.state.multipleImages })
+            navigation.push('PostEditorStack', { images: state.multipleImages })
         }
     }
-    chooseFromGallery() {
-        if (this.props.route.params !== undefined) {
-            if (this.props.route.params.hasOwnProperty('reeditindex')) {
+    function chooseFromGallery() {
+        if (route.params !== undefined) {
+            if (route.params.hasOwnProperty('reeditindex')) {
 
 
-                this.props.navigation.replace('ImageBrowser', {
-                    post: this.props.route.params.post,
-                    reeditindex: this.props.route.params.reeditindex,
+                navigation.replace('ImageBrowser', {
+                    post: route.params.post,
+                    reeditindex: route.params.reeditindex,
                 });
             } else {
-                this.props.navigation.replace('ImageBrowser')
+                navigation.replace('ImageBrowser')
             }
         }
         else {
-            this.props.navigation.replace('ImageBrowser')
+            navigation.replace('ImageBrowser')
         }
 
 
     }
-    renderMultipleImgBtn() {
-        if (this.props.route.params !== undefined) {
-            if (this.props.route.params.hasOwnProperty('reeditindex')) {
+    function renderMultipleImgBtn() {
+        if (route.params !== undefined) {
+            if (route.params.hasOwnProperty('reeditindex')) {
                 // multi pic not allowed
                 return <View />
             } else {
                 return (
-                    this.state.multipleImages.length == 0 ?
+                    state.multipleImages.length == 0 ?
                         <>
-                            < IconButton onPress={() => this.setState({ ...this.state, isMultipleImg: !this.state.isMultipleImg })}
-                                icon={< Ionicons name="ios-images" size={36} color={this.state.isMultipleImg ? "#ff9636" : "white"} />} />
-                            <Text fontSize='xs' mt={-5} color={this.state.isMultipleImg ? "#ff9636" : "white"}>多圖模式</Text>
+                            < IconButton onPress={() => setState({ ...state, isMultipleImg: !state.isMultipleImg })}
+                                icon={< Ionicons name="ios-images" size={36} color={state.isMultipleImg ? "#ff9636" : "white"} />} />
+                            <Text fontSize='xs' mt={-5} color={state.isMultipleImg ? "#ff9636" : "white"}>多圖模式</Text>
                         </>
                         :
 
-                        <TouchableOpacity onPress={() => this.submitMultipleImage()}>
+                        <TouchableOpacity onPress={() => submitMultipleImage()}>
                             <HStack padding={2}
                                 backgroundColor='white' borderRadius={18}>
                                 <Box padding={2} height={36} width={36}
                                     backgroundColor={'blue.500'} borderRadius={18}
                                     alignItems='center'>
-                                    <Text color='white'>{this.state.multipleImages.length}</Text>
+                                    <Text color='white'>{state.multipleImages.length}</Text>
                                 </Box>
                                 <Box padding={2} borderRadius={18}>
                                     <Text color='grey'>{">"}</Text>
@@ -179,22 +179,22 @@ export default class AddMediaTab extends React.Component {
             }
         } else {
             return (
-                this.state.multipleImages.length == 0 ?
+                state.multipleImages.length == 0 ?
                     <>
-                        < IconButton onPress={() => this.setState({ ...this.state, isMultipleImg: !this.state.isMultipleImg })}
-                            icon={< Ionicons name="ios-images" size={36} color={this.state.isMultipleImg ? "#ff9636" : "white"} />} />
+                        < IconButton onPress={() => setState({ ...state, isMultipleImg: !state.isMultipleImg })}
+                            icon={< Ionicons name="ios-images" size={36} color={state.isMultipleImg ? "#ff9636" : "white"} />} />
                         <Text fontSize='xs'
                             style={{ position: 'absolute', top: 48 }}
-                            color={this.state.isMultipleImg ? "#ff9636" : "white"}>{"多圖模式"}</Text>
+                            color={state.isMultipleImg ? "#ff9636" : "white"}>{"多圖模式"}</Text>
                     </>
                     :
-                    <TouchableOpacity onPress={() => this.submitMultipleImage()}>
+                    <TouchableOpacity onPress={() => submitMultipleImage()}>
                         <HStack padding={2}
                             backgroundColor='white' borderRadius={18}>
                             <Box padding={2} height={36} width={36}
                                 backgroundColor={'blue.500'} borderRadius={18}
                                 alignItems='center'>
-                                <Text color='white'>{this.state.multipleImages.length}</Text>
+                                <Text color='white'>{state.multipleImages.length}</Text>
                             </Box>
                             <Box padding={2} borderRadius={18}>
                                 <Text color='grey'>{">"}</Text>
@@ -205,61 +205,55 @@ export default class AddMediaTab extends React.Component {
         }
 
     }
-    render() {
-        return (
-            <NativeBaseProvider>
-                <Box flex={1} backgroundColor='black'>
-                    <StatusBar
-                        animated={true}
-                        backgroundColor="#000"
-                        barStyle="light-content"
-                    />
-                    {
-                        this.state.loaded &&
-                        <Box flex={1}
-                            style={{ borderRadius: 20, overflow: 'hidden' }}
-                        >
-                            <Camera
-                                ratio="16:9"
-                                flex={1}
+    return <NativeBaseProvider>
+        <Box flex={1} backgroundColor='black'>
+            <StatusBar style="dark" />
+            {
+                state.loaded &&
+                <Box flex={1}
+                    style={{ borderRadius: 20, overflow: 'hidden' }}
+                >
+                    <Camera
+                        ratio="16:9"
+                        style={{flex:1}}
+                        type={Camera.Constants.Type.back}
 
-
-                                justifyContent='space-between' ref={this.camera} >
-                                <View style={styles.bar}>
-                                    {/* <IconButton disabled icon={<Feather name="image" size={24} color="white" />} />
+                        justifyContent='space-between' ref={camera} >
+                        <View style={styles.bar}>
+                            {/* <IconButton disabled icon={<Feather name="image" size={24} color="white" />} />
                                     <IconButton disabled icon={<Feather name="image" size={24} color="white" />} />
-                                    <IconButton icon={<Feather name={this.state.flashIconName} size={24} color="white" />} /> */}
-                                </View>
+                                    <IconButton icon={<Feather name={state.flashIconName} size={24} color="white" />} /> */}
+                        </View>
 
 
-                            </Camera>
-                            <HStack width='100%' height={100} position='absolute' bottom={0}>
-                                <Box flex={1} alignItems='center'>
-                                    <IconButton
-                                        onPress={() => this.chooseFromGallery()}
+                    </Camera>
+                    <HStack width='100%' height={100} position='absolute' bottom={0}>
+                        <Box flex={1} alignItems='center'>
+                            <IconButton
+                                onPress={() => chooseFromGallery()}
 
-                                        icon={<Feather name="image" size={36} color="white" />} />
-                                </Box>
-                                <Box flex={1} alignItems='center'>
-                                    <TouchableOpacity onPress={() => this.takePicture()}>
-                                        <View style={styles.snapButton}>
-                                            <View style={styles.innerSnapButton}>
-                                            </View>
-                                        </View>
-                                    </TouchableOpacity>
-                                </Box>
-                                <Box flex={1} alignItems='center'>
-
-
-                                    {this.renderMultipleImgBtn()}
-                                </Box>
-                            </HStack>
+                                icon={<Feather name="image" size={36} color="white" />} />
                         </Box>
-                    }
+                        <Box flex={1} alignItems='center'>
+                            <TouchableOpacity onPress={() => takePicture()}>
+                                <View style={styles.snapButton}>
+                                    <View style={styles.innerSnapButton}>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        </Box>
+                        <Box flex={1} alignItems='center'>
+
+
+                            {renderMultipleImgBtn()}
+                        </Box>
+                    </HStack>
                 </Box>
-            </NativeBaseProvider >
-        )
-    }
+            }
+        </Box>
+    </NativeBaseProvider >
+
+
 
 }
 const styles = StyleSheet.create({

@@ -43,7 +43,7 @@ export default function RestaurantTileFromID(props) {
     }
 
     return (data ? <TouchableHighlight activeOpacity={0.6} underlayColor="#e6e6e6" onPress={() => openProfile(data.name, data.place_id)}>
-        <HStack alignItems='center' backgroundColor='white' 
+        <HStack alignItems='center' backgroundColor='white'
             borderBottomColor='coolGray.100' borderBottomWidth={1} borderRadius={10}>
 
             <Box m={3} borderRadius={5} overflow='hidden'>
@@ -75,11 +75,11 @@ export default function RestaurantTileFromID(props) {
                     </Text>
                 }
                 {data.hasOwnProperty('average') &&
-                     <HStack alignItems={'center'}>
-                     <YummyRankView overallyummy={data.average}/>
-                     <Text ml={2}  fontWeight='bold'>{(data.average).toFixed(1)}</Text>
-                     <Text>{"  (" + data.total + ")"}</Text>
-                 </HStack>}
+                    <HStack>
+                        <Feather name='star' style={{ marginRight: 8 }} size={20} />
+                        <Text fontWeight='bold'>{(data.average).toFixed(1)}</Text>
+                        <Text>{"  (" + data.total + ")"}</Text>
+                    </HStack>}
                 <Text color='#bbb'>{data.address}</Text>
             </VStack>
 

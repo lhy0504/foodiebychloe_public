@@ -86,16 +86,12 @@ export default function Post(props) {
                     <HStack mt={0.5} alignItems='center' mx={5} ml={4}>
                         <Avatar m={2} size={10} source={{ uri: item.propic, }} />
 
-                        <HStack alignItems='center' flex={1} my={.5} justifyContent='space-between'>
-                            <Text >
-                                {item.name}
-                                <Text fontSize='xs' color='coolGray.500' >{" 評價了  "}</Text>
-                            </Text>
-
-                            <Box >
-                                <YummyRankView overallyummy={item.overallyummy} />
-                            </Box>
-
+                        <HStack alignItems='center' flex={1} my={.5}>
+                            <Text fontSize='xs' color='coolGray.500' >{item.name}{" 給了  "}</Text>
+                            {item.overallyummy != 0 && <StarRating
+                                fullStarColor='#ff9636'
+                                rating={item.overallyummy}
+                                starSize={16} disabled />}
                         </HStack>
                     </HStack>{/* '#f3f4f6' */}
 
@@ -113,7 +109,7 @@ export default function Post(props) {
                     flexWrap='wrap'>{item.overalltitle}</Text>}
 
                 {item.overalldescription != '' && <Text fontSize='sm'
-                    numberOfLines={2} mx={5} mb={2}>{item.overalldescription}</Text>}
+                    numberOfLines={3} mx={5} mb={2}>{item.overalldescription}</Text>}
 
 
                 <View style={{ flexWrap: 'wrap', flexDirection: 'row', }} >

@@ -43,11 +43,11 @@ export default function RestaurantTileFromID(props) {
     }
 
     return (data ? <TouchableHighlight activeOpacity={0.6} underlayColor="#e6e6e6" onPress={() => openProfile(data.name, data.place_id)}>
-        <HStack alignItems='center' 
+        <HStack alignItems='center'
             borderBottomColor='coolGray.100' borderBottomWidth={1} borderRadius={10}>
 
             <Box m={3} borderRadius={5} overflow='hidden'>
-              
+
                 <Image style={{ height: 90, width: 90, }} source={{
                     uri: data.pic ||
                         'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/facebook/65/clinking-beer-mugs_1f37b.png'
@@ -63,10 +63,9 @@ export default function RestaurantTileFromID(props) {
                         {data.hasOwnProperty('price') && " / $" + data.price}
                     </Text>
                 }
-                {data.hasOwnProperty('average') &&
-                    <HStack alignItems={'center'}>
-                        <YummyRankView overallyummy={data.average}/>
-                        <Text ml={2}  fontWeight='bold'>{(data.average).toFixed(1)}</Text>
+                {data.hasOwnProperty('average') && <HStack>
+                        <Feather name='star' style={{ marginRight: 8 }} size={20} />
+                        <Text fontWeight='bold'>{(data.average).toFixed(1)}</Text>
                         <Text>{"  (" + data.total + ")"}</Text>
                     </HStack>}
                 <Text color='#bbb'>{data.address}</Text>

@@ -55,7 +55,7 @@ export default function Maptab({ navigation, route }) {
     const searchByDish = (dish) => {
         console.log(dish)
         navigation.push('MapStack', {
-          dish:dish
+            dish: dish
         })
     }
     const renderRestaurantItem = ({ item, index }) => {
@@ -94,9 +94,6 @@ export default function Maptab({ navigation, route }) {
                             color='white'>{index + 1}</Text>
                         <VStack position={'absolute'} bottom={0} left={0} width={200} h={115}
                             backgroundColor='rgba(44,44,44, 0.8)' px={4} py={2}>
-
-
-
                             <Text color={'#ff9639'} lineHeight={20} numberOfLines={2}
                                 fontWeight='bold' fontSize={16}>{item.name}</Text>
                             {item.hasOwnProperty('tag') && item.tag.length > 0 &&
@@ -105,13 +102,12 @@ export default function Maptab({ navigation, route }) {
                                 </Text>
                             }
                             {item.hasOwnProperty('average') &&
-                                <HStack mt={1} alignItems='center'>
-                                     <YummyRankView overallyummy={item.average}/>
-                                    <Text ml={2}  color='white' fontWeight='bold'>{(item.average).toFixed(1)}</Text>
+                                <HStack mt={1}>
+                                    <Feather name='star' style={{ marginRight: 8 }} color='white' size={20} />
+                                    <Text color='white' fontWeight='bold'>{(item.average).toFixed(1)}</Text>
                                     <Text color='white'>{"  (" + item.total + ")"}</Text>
                                 </HStack>}
                         </VStack>
-
                     </ImageBackground>
                 </Box>
             </TouchableOpacity>
@@ -176,7 +172,7 @@ export default function Maptab({ navigation, route }) {
                 </HStack>
                 <HStack flexWrap={'wrap'} mx={6}>
                     {dishes[1].children.map(item => (
-                        <TouchableOpacity onPress={()=>searchByDish(item.name)}>
+                        <TouchableOpacity onPress={() => searchByDish(item.name)}>
                             <Text borderRadius={10} borderWidth={1} borderColor="#c9c9c9" mx={2} px={2} my={2}>
                                 {item.name}
                             </Text>
