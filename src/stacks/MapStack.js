@@ -33,7 +33,8 @@ export default function Maptab({ navigation, route }) {
     const [searchPrice, setSearchPrice] = useState([])
     const [searchStar, setSearchStar] = useState(0)
 
-    const [showAdvanced, setShowAdvanced] = useState(true)
+    //hide if have route params
+    const [showAdvanced, setShowAdvanced] = useState( !route.params)
     const [showTextResult, setShowTextResult] = useState(true)
 
 

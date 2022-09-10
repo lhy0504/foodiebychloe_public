@@ -4,6 +4,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeTab from './tabs/HomeTab';
 import ExploreTab from './tabs/ExploreTab';
 import GalleryTab from './tabs/GalleryTab';
+import SocialTab from './tabs/SocialTab';
+
 import AccountTab from './tabs/AccountTab';
 import AddMediaStack from './stacks/AddMediaStack';
 
@@ -123,12 +125,11 @@ export default function MainScreen({ navigation, route }) {
                             }
                         }
                     }} />
-                <Tab.Screen name="New"
+               {/*  <Tab.Screen name="New"
                     component={() => null}
                     listeners={() => ({
                         tabPress: (e) => {
-                            e.preventDefault(); // Prevents navigation
-                            // Your code here for when you press the tab
+                            e.preventDefault();
                         },
                     })}
                     options={{
@@ -140,6 +141,17 @@ export default function MainScreen({ navigation, route }) {
                                     name="add-circle-outline" size={24} color="grey"
                                     onPress={() => navigation.push('AddMediaStack')} />
                             </View>;
+                        }
+                    }} /> */}
+                     <Tab.Screen name="SocialTab" component={SocialTab} navigation={navigation}
+                    options={{
+                        tabBarActiveTintColor: 'black',
+                        tabBarIcon: (props) => {
+                            if (props.focused) {
+                                return <Ionicons name="ios-people" size={24} color="black" />;
+                            } else {
+                                return <Ionicons name="ios-people-outline" size={24} color='grey' />;
+                            }
                         }
                     }} />
                 <Tab.Screen name="GalleryTab" component={GalleryTab} navigation={navigation}
@@ -158,9 +170,9 @@ export default function MainScreen({ navigation, route }) {
                         tabBarActiveTintColor: 'black',
                         tabBarIcon: (props) => {
                             if (props.focused) {
-                                return <Ionicons name='person' size={24} color="black" />;
+                                return <Ionicons name='ios-person' size={24} color="black" />;
                             } else {
-                                return <Ionicons name="person-outline" size={24} color='grey' />;
+                                return <Ionicons name="ios-person-outline" size={24} color='grey' />;
                             }
                         }
                     }} />

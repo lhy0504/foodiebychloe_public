@@ -66,6 +66,9 @@ export default function Feed({ navigation, route }) {
                     }
                     showsVerticalScrollIndicator={false}
                     data={noti}
+                    ListEmptyComponent={
+                        <Text width={'100%'} textAlign='center' my={10}>沒有最近動態</Text>
+                    }
                     renderItem={({ item, index }) => {
 
                         var data = item.request.content

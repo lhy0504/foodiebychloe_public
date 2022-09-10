@@ -262,7 +262,10 @@ console.log(this.props.route.params)
                                 }
                             </HStack>
                             <HStack>
-                                <IconButton onPress={this.changeViewStyle.bind(this)} mr={2} icon={<Feather name="grid" size={24} color="black" />} />
+                                <IconButton onPress={this.changeViewStyle.bind(this)} mr={2} 
+                                icon={this.state.viewStyle == 'small'?
+                                <Ionicons name="list" size={24} color="black" />
+                                :<Ionicons name="calendar" size={24} color="black" />} />
                                 {this.props.route.params.userid != getMyUid() &&
                                     <IconButton onPress={this.block}
                                         icon={<Entypo name="block" size={24} color="black" />} />

@@ -81,10 +81,11 @@ export default function AddMediaTab({ navigation, route }) {
             var data = await camera.current.takePictureAsync({exif:true});
             
             /* workaround for ios wrong photo orientation */
-            if(data.width != data.exif.ImageWidth){
+           /*  if(data.width != data.exif.ImageWidth  ){
+                console.log('oritation',data.exif.Orientation)
                 data = await ImageManipulator.manipulateAsync(data.uri, 
-                    [{ rotate: data.exif.Orientation === 6 ? -90 : 90 }],   { compress: 1 });
-            }
+                    [{ rotate: 0 }],   { compress: 1 });
+            } */
 
             if (state.isMultipleImg) {
 
@@ -98,15 +99,25 @@ export default function AddMediaTab({ navigation, route }) {
                     if (route.params.hasOwnProperty('reeditindex')) {
                         
                         navigation.push('ImageEditorStack', {
-                            ...data,
+                          uri:data.uri,
+                            width:data.exif.width || data.width,
+                            height:data.exif.height || data.height,
                             post: route.params.post,
                             reeditindex: route.params.reeditindex,
 
                         })
                     }
                 } else {
-                    console.log(data)
-                    navigation.push('ImageEditorStack', data)
+                    console.log({
+                        uri:data.uri,
+                          width:data.exif.width || data.width,
+                          height:data.exif.height || data.height,
+                    })
+                    navigation.push('ImageEditorStack', {
+                        uri:data.uri,
+                          width:data.exif.width || data.width,
+                          height:data.exif.height || data.height,
+                    })
                     
                 }
             }
@@ -251,6 +262,16 @@ export default function AddMediaTab({ navigation, route }) {
                 </Box>
             }
         </Box>
+        <Box position='absolute' right={5} top={5}>
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.goBack()
+                    }}>
+
+                    <Feather name="x" size={40} color="white" />
+
+                </TouchableOpacity>
+            </Box>
     </NativeBaseProvider >
 
 

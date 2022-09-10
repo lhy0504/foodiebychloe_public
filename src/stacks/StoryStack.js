@@ -172,13 +172,12 @@ export default function StoryStack({ navigation, route }) {
             {/*  Header Bar  */}
             <View style={{
                 height: 50,
-                zIndex:-1,
-                elevation:-1,
+              
               
             }}>
                 <HStack alignItems='center'
-                    
-                    backgroundColor='white' px={2}
+                    borderBottomWidth={2} borderBottomColor='#ff9636'
+                    backgroundColor='white' height='50px' px={2}
                     justifyContent='space-between'
                 >
                     <HStack alignItems='center'>
@@ -197,7 +196,8 @@ export default function StoryStack({ navigation, route }) {
 
                 </HStack>
             </View>
-            <ScrollView flex={1} borderTopColor='#ff9636' borderTopWidth={2} >
+           {/*  <Box backgroundColor={'#ff9636'} width={width} height={.5}/> */}
+            <ScrollView flex={1}  >
 
 
 
@@ -234,8 +234,8 @@ export default function StoryStack({ navigation, route }) {
 
                     <VStack flex={1}>
 
-                        {content.overalltitle != '' && <Text fontSize='lg' fontWeight={'bold'} >{content.overalltitle}</Text>}
-                        {content.overalldescription != '' && <Text fontSize={'md'} >{content.overalldescription}</Text>}
+                        {content.overalltitle != '' && <Text fontSize='lg' fontWeight={'bold'} >{content.overalltitle.trim()}</Text>}
+                        {content.overalldescription != '' && <Text fontSize={'md'} >{content.overalldescription.trim()}</Text>}
 
                         {content.with[0] != '' &&
                             <HStack alignItems='center'>

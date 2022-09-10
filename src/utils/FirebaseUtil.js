@@ -615,7 +615,7 @@ export async function likePost(post, authorid) {
   console.log("like", authorid, getMyUid())
 
   if (authorid != getMyUid()) {
-    var author = await getUser(authorid)
+    var author = await getUser(authorid,true)
     var myself = await getUser()
     sendPushNotification(author.pushtoken,
       `${myself.name} 讚好了你的帖文！`,
@@ -824,7 +824,7 @@ export async function getAllRestaurants(limit = 10) {
   });
   return (postList);
 }
-export async function getRestaurantsMap(searchName = '', searchAddress = '', searchDishes = [],
+export async function getRestaurantsMap(searchName = '', searchRegion = '', searchDishes = [],
   searchPrice = [], searchStar = 0) {
 
   var postList = [];
@@ -852,10 +852,13 @@ export async function getRestaurantsMap(searchName = '', searchAddress = '', sea
   snapshot.forEach((doc) => {
     const singlePost = doc.data();
 
+    /* for region search, avoid undefined */
+    if(!singlePost.region) singlePost.region=''
+
     /* then Re-filter ALL */
     if (!singlePost.hasOwnProperty('lat')) return
     if (!singlePost.name.includes(searchName)) return
-    if (!singlePost.address.includes(searchAddress)) return
+    if ( !singlePost.region.includes(searchRegion)) return
     if (searchDishes.length > 0 && !singlePost.tag.some(ai => searchDishes.includes(ai))) return
     if (searchPrice.length > 0 && !singlePost.tag.some(ai => searchPrice.includes(ai))) return
     if (singlePost.average < searchStar) return

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
 
-    RefreshControl, ScrollView, ImageBackground, Dimensions
+    RefreshControl, ScrollView, ImageBackground, Dimensions,
 } from 'react-native';
 import {
     FlatList, HStack, IconButton, Text, Box,
@@ -15,12 +15,75 @@ import {
 import Post from '../components/Post'
 import LocationPreview from './../components/LocationPreview'
 import UserPreview from './../components/UserPreview'
+import { Feather, Ionicons, } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import NotificationButton from './../components/NotificationButton'
 
 const Tab = createMaterialTopTabNavigator();
 var { width, height } = Dimensions.get('window')
 
+function SuggestedFoodiesView(props) {
+    const [allusers, setAllusers] = useState([])
+    async function getData() {
+
+        var dat = await getAllUsers()
+        setAllusers(dat)
+
+    }
+    React.useEffect(() => {
+        getData()
+    }, [])
+    const openUserProfile = (id) => {
+        props.navigation.push('UserProfileStack', {
+            userid: id
+        })
+    }
+    const renderUserItem = ({ item, index }) => {
+        return (
+            <TouchableOpacity activeOpacity={.8}
+                onPress={() => openUserProfile(item.id)}>
+                <VStack width={140} h={200} borderRadius={15} overflow='hidden' mx={3.5} mr={1} my={5} px={2}
+                    borderColor='#d9d9d9' borderWidth={1} alignItems='center' pt={25}
+                    style={{
+                        shadowColor: "#000",
+                        shadowOffset: {
+                            width: 8,
+                            height: 8,
+                        },
+                        shadowOpacity: 0.25,
+                        shadowRadius: 3.84,
+                        elevation: 8,
+                        backgroundColor: '#fff'
+                    }}
+                >
+
+                    <Avatar ml='15px' mr='8px' size={45} source={{ uri: item.propic, }} />
+
+                    <Text fontSize='md' fontWeight='bold' textAlign={'center'}>{item.name}</Text>
+                    <Text fontSize={12} color='#888' mb={1}>{"("}{item.friends.length + item.requests.length}{")"}</Text>
+                    <Text fontSize={12} color='#888' textAlign={'center'}>{item.status}</Text>
+
+
+                </VStack>
+            </TouchableOpacity>
+        )
+    }
+    return (
+        <Box backgroundColor={'coolGray.200'}>
+            <HStack ml={6} mt={4} justifyContent='space-between' alignItems='center' >
+                <Text fontSize={20} fontWeight={'bold'} color='#ff9639'  >為您推薦的熱門Foodies</Text>
+            </HStack>
+
+            <FlatList
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                data={allusers}
+                renderItem={renderUserItem}
+            />
+        </Box>
+    )
+}
 function Feed(props) {
 
     const [data, setData] = useState([])
@@ -53,6 +116,9 @@ function Feed(props) {
                 renderItem={({ item, index }) => (
                     <Post postid={item.id} index={index} navigation={props.navigation} />
                 )}
+                ListHeaderComponent={
+                    <SuggestedFoodiesView navigation={props.navigation} />
+                }
             />
         </VStack>
 
@@ -197,16 +263,21 @@ export default class HomeTab extends React.Component {
 
                 {/*  Header Bar  */}
                 <HStack alignItems='center' justifyContent='space-between'
-                    borderBottomWidth='1px' borderBottomColor='coolGray.300'
-                    backgroundColor='#fff'
+                    borderBottomWidth={2} borderBottomColor='#ff9636'
+                    backgroundColor='white'
                     py={2}
                 >
-{/* color='coolGray.500' */}
                     <Text ml={5} fontSize='lg' color='coolGray.600' fontWeight={'semibold'} textAlign='center'>ғᴏᴏᴅɪᴇ ʙʏ ᴄʜʟᴏᴇ🍺</Text>
-                    <NotificationButton navigation={this.props.navigation} />
+
+                    <HStack alignItems={'center'}>
+                        <Ionicons
+                            name="add-circle-outline" size={24} color="black"
+                            onPress={() => this.props.navigation.push('AddMediaStack')} />
+                        <NotificationButton navigation={this.props.navigation} />
+                    </HStack>
                 </HStack>
 
-                <Feed navigation={ this.props.navigation }/>
+                <Feed navigation={this.props.navigation} />
             </NativeBaseProvider>
         );
     }

@@ -74,6 +74,24 @@ export default function Post(props) {
             userid: item.userid
         })
     }
+    const ImageDesc = (props) => {
+        return (
+            <VStack backgroundColor='gray.700' pl={2} py={1}>
+                <Text numberOfLines={1} px={0} fontSize='sm' color='white'>{props.title}</Text>
+                {props.yummystar > 0 &&
+                    <HStack alignItems='center' pl={0.2}>
+                        <StarRating disabled={true} halfStar={'star-half'}
+                            starSize={10}
+                            starStyle={{ marginRight: 2 }}
+                            fullStarColor='#ff9636'
+                            rating={props.yummystar}
+
+                        />
+                    </HStack>
+                }
+            </VStack>
+        )
+    }
     return (
         item &&
         (item.publicOrFriends == 'friends' && item.friends.includes(getMyUid())
@@ -100,33 +118,41 @@ export default function Post(props) {
 
 
 
+                <VStack mx={6}>
 
+                    {item.overalltitle != '' && <Text
+                        fontSize={'lg'}
+                        fontWeight={'bold'}
+                        mb={2}
+                        flexWrap='wrap'>{item.overalltitle.trim()}</Text>}
 
-                {item.overalltitle != '' && <Text
-                    fontSize={'lg'}
-                    fontWeight={'bold'}
-                    flex={1} mx={5} mb={2}
-                    flexWrap='wrap'>{item.overalltitle}</Text>}
+                    {item.overalldescription != '' && <Text fontSize='sm'
+                        numberOfLines={3} mb={2}>{item.overalldescription.trim()}</Text>}
 
-                {item.overalldescription != '' && <Text fontSize='sm'
-                    numberOfLines={3} mx={5} mb={2}>{item.overalldescription}</Text>}
-
-
-                <View style={{ flexWrap: 'wrap', flexDirection: 'row', }} >
-                    {item.image.length > 2 ?
-                        item.image.map(
-                            img => (<View style={{ flexBasis: '33.33%', padding: 2 }}>
-                                <Image source={{ uri: img }} style={{ height: width / 3, width: '100%', }} />
+                </VStack>
+                <View style={{ flexDirection: 'row', marginTop: 2, marginBottom: 2 }} >
+                    {item.image.length > 1 ?
+                        (<>
+                            <View style={{ flex: 1, marginRight: 2, overflow: 'hidden' }}>
+                                <Image source={{ uri: item.image[0] }}
+                                    style={{ height: width / 2, width: width / 2, overflow: 'hidden' }} />
+                                <ImageDesc yummystar={item.yummystar[0]} title={item.title[0]} />
                             </View>
-                            )
+
+                            <View style={{ flex: 1, }}>
+                                <Image source={{ uri: item.image[1] }} style={{ height: width / 2, width: width / 2, }} />
+                                <ImageDesc yummystar={item.yummystar[1]} title={item.title[1]} />
+
+                            </View></>
                         )
+
                         :
-                        item.image.map(
-                            img => (<View style={{ flex: 1, padding: 2 }}>
-                                <Image source={{ uri: img }} style={{ height: width / item.image.length, width: '100%', }} />
-                            </View>
-                            )
-                        )}
+
+                        <View style={{ flex: 1, }}>
+                            <Image source={{ uri: item.image[0] }} style={{ height: width , width: '100%', }} />
+                            <ImageDesc yummystar={item.yummystar[0]} title={item.title[0]} />
+                        </View>
+                    }
                 </View>
 
                 <HStack justifyContent='space-between' alignItems='center' px={6} mt={3}>

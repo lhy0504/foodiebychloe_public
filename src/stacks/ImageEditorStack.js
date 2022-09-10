@@ -9,7 +9,7 @@ import {
 import { Surface } from 'gl-react-expo';
 import ImageFilters, { Utils } from 'react-native-gl-image-filters';
 import { ImageManipulator } from 'expo-image-crop'
-import { Feather } from '@expo/vector-icons';
+import { Ionicons, Feather } from '@expo/vector-icons';
 import * as MediaLibrary from 'expo-media-library';
 import Slider from '@react-native-community/slider';
 
@@ -130,7 +130,6 @@ function styleContain(w, h, maxW = width, maxH = (height - 220 - 85)) {
 export default function ImageEditorStack({ navigation, route }) {
 
     const { user } = useAuthentication();
-    console.log(user)
 
 
 
@@ -176,18 +175,18 @@ export default function ImageEditorStack({ navigation, route }) {
                     var obj = route.params.post.image
                     obj[route.params.reeditindex] = result.uri
 
-                    navigation.replace('PostEditorStack', {
+                    navigation.push('PostEditorStack', {
                         images: obj,
                         post: route.params.post,
                         reeditindex: route.params.reeditindex
                     })
                 } else {
-                    navigation.replace('PostEditorStack', {
+                    navigation.push('PostEditorStack', {
                         images: [result.uri]
                     })
                 }
             } else {
-                navigation.replace('PostEditorStack', {
+                navigation.push('PostEditorStack', {
                     images: [result.uri]
                 })
             }
@@ -217,193 +216,199 @@ export default function ImageEditorStack({ navigation, route }) {
 
     return (
         <NativeBaseProvider>
-            {/*  Header Bar  */}
-           
+            <View style={{ flex: 1 }}>
+                {/*  Header Bar  */}
+
                 <HStack alignItems='center' justifyContent='space-between'
-                        borderBottomWidth={2} borderBottomColor='#ff9636'
-                backgroundColor='white' px={3}
-                
+                    borderBottomWidth={2} borderBottomColor='#ff9636'
+                    backgroundColor='white' px={3}
+
                 >
-                    <IconButton
-                        onPress={toggleCropper}
-                        icon={<Feather name="crop" size={24} color="black" />} />
-                    <Text fontSize='lg' textAlign='center'>Edit</Text>
-                    <IconButton
+                    <HStack flex={1}>
+                        <IconButton onPress={() => navigation.goBack()} key={1}
+                            icon={<Ionicons name="ios-chevron-back" size={24} color="black" />} />
+                        <IconButton key={2}
+                            onPress={toggleCropper}
+                            icon={<Feather name="crop" size={24} color="black" />} />
+                    </HStack>
+                    <Text flex={1} fontSize='lg' textAlign='center'>Edit</Text>
+                    <Box flex={1} alignItems='flex-end'><IconButton
                         onPress={saveImage}
                         icon={<Feather name="send" size={24} color="black" />} />
+                    </Box>
                 </HStack>
-         
 
-            {/*  Canvas */}
-            <Box flex={1} alignItems='center' justifyContent='center'>
-                <Surface style={{
-                    width: styleContain(route.params.width, route.params.height).width,
-                    height: styleContain(route.params.width, route.params.height).height
-                }} ref={image}>
-                    <ImageFilters {...state}
-                        width={editorState.width}
-                        height={editorState.height}
-                    >
-                        {{ uri: editorState.uri }}
-                    </ImageFilters>
+                {/*  Canvas */}
+                <Box flex={1} alignItems='center' justifyContent='center'>
+                    <Surface style={{
+                        width: styleContain(route.params.width, route.params.height).width,
+                        height: styleContain(route.params.width, route.params.height).height
+                    }} ref={image}>
+                        <ImageFilters {...state}
+                            width={editorState.width}
+                            height={editorState.height}
+                        >
+                            {{ uri: editorState.uri }}
+                        </ImageFilters>
 
-                </Surface>
-            </Box>
+                    </Surface>
+                </Box>
 
 
-            {/*  Pane  */}
-            <View style={{
-                width: width,
-                height: 260,
-            }}>
-                <View style={{ height: 210 }} backgroundColor='#e9e9e9' >
-                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                        {
-                            presets.map((item, index) => (
-                                <TouchableWithoutFeedback backgroundColor={currFilterIndex == index ? '#eeeeee' : '#e9e9e9'}
-                                    onPress={() => useFilter(index, -999)}>
-                                    <Box height={140} width={120} mr={4} justifyContent='center'>
-                                        <Box alignItems='center' >
-                                            <Text color={currFilterIndex == index ? '#ff9636' : 'black'}
-                                                py={2}>{item.name}</Text>
-                                            <Surface style={{
-                                                width: filterWidth,
-                                                height: filterHeight,
-                                            }} >
-                                                <ImageFilters {...item.filter}
-                                                    width={editorState.width}
-                                                    height={editorState.height}
-                                                >
-                                                    {{ uri: editorState.uri }}
-                                                </ImageFilters>
+                {/*  Pane  */}
+                <View style={{
+                    width: width,
+                    height: 260,
+                }}>
+                    <View style={{ height: 210 }} backgroundColor='#e9e9e9' >
+                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                            {
+                                presets.map((item, index) => (
+                                    <TouchableWithoutFeedback key={index}
+                                        backgroundColor={currFilterIndex == index ? '#eeeeee' : '#e9e9e9'}
+                                        onPress={() => useFilter(index, -999)}>
+                                        <Box height={140} width={120} mr={4} justifyContent='center'>
+                                            <Box alignItems='center' >
+                                                <Text color={currFilterIndex == index ? '#ff9636' : 'black'}
+                                                    py={2}>{item.name}</Text>
+                                                <Surface style={{
+                                                    width: filterWidth,
+                                                    height: filterHeight,
+                                                }} >
+                                                    <ImageFilters {...item.filter}
+                                                        width={editorState.width}
+                                                        height={editorState.height}
+                                                    >
+                                                        {{ uri: editorState.uri }}
+                                                    </ImageFilters>
 
-                                            </Surface>
-                                        </Box></Box>
-                                </TouchableWithoutFeedback>
-                            ))
-                        }
+                                                </Surface>
+                                            </Box></Box>
+                                    </TouchableWithoutFeedback>
+                                ))
+                            }
 
-                    </ScrollView>
-                    <View style={{ height: 50 }} backgroundColor='#e9e9e9' >
+                        </ScrollView>
+                        <View style={{ height: 50 }} backgroundColor='#e9e9e9' >
 
-                        <Slider
-                            ref={filterPercentageSliderRef}
-                            disabled={currFilterIndex == 0}
-                            style={{ flex: 1 }}
-                            value={1}
-                            minimumValue={0}
-                            maximumValue={2}
-                            onValueChange={value => useFilter(currFilterIndex, value)}
-                        />
+                            <Slider
+                                ref={filterPercentageSliderRef}
+                                disabled={currFilterIndex == 0}
+                                style={{ flex: 1 }}
+                                value={1}
+                                minimumValue={0}
+                                maximumValue={2}
+                                onValueChange={value => useFilter(currFilterIndex, value)}
+                            />
+                        </View>
                     </View>
+
+                    <HStack height={50} >
+
+                        <Box flex={1} justifyContent='center'
+                            borderBottomColor='#ff9636'
+                            borderBottomWidth={currTabIndex == 0 ? 1 : 0}>
+                            <TouchableOpacity
+                                onPress={() => setCurrTabIndex(0)}>
+                                <Text textAlign='center'
+                                    color={currTabIndex == 0 ? '#ff9636' : 'black'}>濾鏡</Text>
+                            </TouchableOpacity>
+
+                        </Box>
+                        <Box flex={1} justifyContent='center'
+                            borderBottomColor='#ff9636'
+                            borderBottomWidth={currTabIndex == 1 ? 1 : 0}>
+                            <TouchableOpacity
+                                onPress={() => setCurrTabIndex(1)}>
+                                <Text textAlign='center'
+                                    color={currTabIndex == 1 ? '#ff9636' : 'black'}>調整</Text>
+                            </TouchableOpacity>
+
+                        </Box>
+                    </HStack>
                 </View>
 
-                <HStack height={50} >
+                {/* Adj Pane */}
+                {currTabIndex == 1 &&
+                    <ScrollView style={{
+                        position: 'absolute',
+                        bottom: 50,
+                        backgroundColor: '#e9e9e9',
+                        height: 210,
+                        width: width,
+                        padding: 5
+                    }}>
+                        {
+                            settings.map((filter, index) => {
+                                let defaultval = originalPreset[filter.name]
+                                if (presets[currFilterIndex].filter[filter.name])
+                                    defaultval = originalPreset[filter.name] +
+                                        presets[currFilterIndex].filter[filter.name] * filterPercentage
 
-                    <Box flex={1} justifyContent='center'
-                        borderBottomColor='#ff9636'
-                        borderBottomWidth={currTabIndex == 0 ? 1 : 0}>
-                        <TouchableOpacity
-                            onPress={() => setCurrTabIndex(0)}>
-                            <Text textAlign='center'
-                                color={currTabIndex == 0 ? '#ff9636' : 'black'}>濾鏡</Text>
-                        </TouchableOpacity>
+                                return (
+                                    <View style={styles.container} key={index}>
+                                        <Text style={styles.text}>{filter.chinese}</Text>
+                                        <Slider
+                                            style={styles.slider}
+                                            value={(defaultval - filter.minValue) / (filter.maxValue - filter.minValue)}
+                                            minimumValue={0}
+                                            maximumValue={1}
+                                            onValueChange={value => {
+                                                setState({
+                                                    ...state,
+                                                    [filter.name]: filter.minValue + value * (filter.maxValue - filter.minValue)
+                                                })
+                                            }}
 
-                    </Box>
-                    <Box flex={1} justifyContent='center'
-                        borderBottomColor='#ff9636'
-                        borderBottomWidth={currTabIndex == 1 ? 1 : 0}>
-                        <TouchableOpacity
-                            onPress={() => setCurrTabIndex(1)}>
-                            <Text textAlign='center'
-                                color={currTabIndex == 1 ? '#ff9636' : 'black'}>調整</Text>
-                        </TouchableOpacity>
+                                        />
+                                    </View>
 
-                    </Box>
-                </HStack>
-            </View>
+                                )
+                            })
+                        }
+                    </ScrollView>
+                }
 
-            {/* Adj Pane */}
-            {/* {currTabIndex == 1 &&
-                <ScrollView style={{
-                    position: 'absolute',
-                    bottom: 50,
-                    backgroundColor: '#e9e9e9',
-                    height: 210,
-                    width: width,
-                    padding: 5
-                }}>
-                    {
-                        settings.map((filter, index) => {
-                            let defaultval = originalPreset[filter.name]
-                            if (presets[currFilterIndex].filter[filter.name])
-                                defaultval = originalPreset[filter.name] +
-                                    presets[currFilterIndex].filter[filter.name] * filterPercentage
+                {/*  CropperModal */}
+                {editorState.isCropperVisible && <View
+                    style={{
+                        zIndex: 99, elevation: 99,
+                        position: 'absolute', width: width, height: height
+                    }}>
+                    <ImageEditor
+                        visible={editorState.isCropperVisible}
+                        onCloseEditor={() => setEditorState({ ...editorState, isCropperVisible: false })}
+                        imageUri={editorState.uri}
+                        fixedCropAspectRatio={16 / 9}
+                        minimumCropDimensions={{
+                            width: 100,
+                            height: 100,
+                        }}
+                        asView={true}
+                        onEditingComplete={(result) => {
 
-                            return (
-                                <View style={styles.container}>
-                                    <Text style={styles.text}>{filter.chinese}</Text>
-                                    <Slider
-                                        style={styles.slider}
-                                        value={(defaultval - filter.minValue) / (filter.maxValue - filter.minValue)}
-                                        minimumValue={0}
-                                        maximumValue={1}
-                                        onValueChange={value => {
-                                            setState({
-                                                ...state,
-                                                [filter.name]: filter.minValue + value * (filter.maxValue - filter.minValue)
-                                            })
-                                        }}
-
-                                    />
-                                </View>
-
-                            )
-                        })
-                    }
-                </ScrollView>
-            } */}
-
-            {/*  CropperModal */}
-            {editorState.isCropperVisible && <View
-                style={{
-                    zIndex: 99, elevation: 99,
-                    position: 'absolute', width: width, height: height
-                }}>
-                <ImageEditor
-                    visible={editorState.isCropperVisible}
-                    onCloseEditor={() => setEditorState({ ...editorState, isCropperVisible: false })}
-                    imageUri={editorState.uri}
-                    fixedCropAspectRatio={16 / 9}
-                    minimumCropDimensions={{
-                        width: 100,
-                        height: 100,
-                    }}
-                    asView={true}
-                    onEditingComplete={(result) => {
-
-                        if (route.params !== undefined) {
-                            if (route.params.hasOwnProperty('reeditindex')) {
-                                navigation.replace('ImageEditorStack', {
-                                    post: route.params.post,
-                                    reeditindex: route.params.reeditindex,
-                                    ...result
-                                })
+                            if (route.params !== undefined) {
+                                if (route.params.hasOwnProperty('reeditindex')) {
+                                    navigation.replace('ImageEditorStack', {
+                                        post: route.params.post,
+                                        reeditindex: route.params.reeditindex,
+                                        ...result
+                                    })
 
 
+                                } else {
+                                    navigation.replace('ImageEditorStack', result)
+                                }
                             } else {
                                 navigation.replace('ImageEditorStack', result)
                             }
-                        } else {
-                            navigation.replace('ImageEditorStack', result)
-                        }
-                    }}
-                    mode="full"
-                />
-            </View>
-            }
-            
-           {/*  <ImageManipulator
+                        }}
+                        mode="full"
+                    />
+                </View>
+                }
+
+                {/*  <ImageManipulator
                 photo={{ uri: editorState.uri }}
 
                 isVisible={editorState.isCropperVisible}
@@ -431,6 +436,7 @@ export default function ImageEditorStack({ navigation, route }) {
 
                 }}
             /> */}
+            </View>
         </NativeBaseProvider>
     );
 

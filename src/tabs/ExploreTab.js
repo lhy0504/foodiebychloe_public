@@ -6,7 +6,7 @@ import {
 } from "native-base";
 import { Feather, AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
 
-import { getAllRestaurants, getMyUid, getRestaurantsMap, getAllUsers } from '../utils/FirebaseUtil'
+import { getAllRestaurants, getUser, getRestaurantsMap, getAllUsers } from '../utils/FirebaseUtil'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import YummyRankView from './../components/YummyRankView'
 
@@ -18,23 +18,27 @@ var { width, height } = Dimensions.get('window')
 export default function Maptab({ navigation, route }) {
 
     const [allrestaurants, setAllrestaurants] = useState([])
-    const [bookmarks, setBookmarks] = useState([])
-    const [refreshing, setRefreshing] = React.useState(false);
-    const [allusers, setAllusers] = useState([])
 
-    async function getData() {
-        setRefreshing(true);
+    const tagList = ['一周熱門', '旺角', '銅鑼灣']
+    const [listRestaurantKey, setListRestaurantKey] = useState(0)
+    const restaurantList = React.createRef()
 
-        var dat = await getAllRestaurants()
+    async function getData(key = 0) {
+        setListRestaurantKey(key)
+        var dat
+        if (key == 0) {
+            //all
+            dat = await getAllRestaurants()
+        } else {
+            dat = await getRestaurantsMap('', [tagList[key]],)
+        }
+        console.log(key, dat)
         setAllrestaurants(dat)
 
-        var dat = await getAllUsers()
-        setAllusers(dat)
-
-        var dat = await getUser()
-        setBookmarks(dat.bookmarks)
-        setRefreshing(false);
     }
+    React.useEffect(() => {
+        restaurantList.current.scrollToOffset({ animated: true, offset: 0 });
+    }, [allrestaurants]);
     React.useEffect(() => {
         getData()
     }, [])
@@ -47,17 +51,13 @@ export default function Maptab({ navigation, route }) {
     function openMapStack() {
         navigation.push('MapStack')
     }
-    const openUserProfile = (id) => {
-        navigation.push('UserProfileStack', {
-            userid: id
-        })
-    }
     const searchByDish = (dish) => {
         console.log(dish)
         navigation.push('MapStack', {
             dish: dish
         })
     }
+
     const renderRestaurantItem = ({ item, index }) => {
         return (
             <TouchableOpacity activeOpacity={.8}
@@ -113,85 +113,85 @@ export default function Maptab({ navigation, route }) {
             </TouchableOpacity>
         )
     }
-    const renderUserItem = ({ item, index }) => {
-        return (
-            <TouchableOpacity activeOpacity={.8}
-                onPress={() => openUserProfile(item.id)}>
-                <VStack width={140} h={200} borderRadius={15} overflow='hidden' mx={3.5} mr={1} my={5} px={2}
-                    borderColor='#d9d9d9' borderWidth={1} alignItems='center' pt={25}
-                    style={{
-                        shadowColor: "#000",
-                        shadowOffset: {
-                            width: 8,
-                            height: 8,
-                        },
-                        shadowOpacity: 0.25,
-                        shadowRadius: 3.84,
-                        elevation: 8,
-                        backgroundColor: '#fff'
-                    }}
-                >
-
-                    <Avatar ml='15px' mr='8px' size={45} source={{ uri: item.propic, }} />
-
-                    <Text fontSize='md' fontWeight='bold' >{item.name}</Text>
-                    <Text fontSize={12} color='#888' mb={1}>{"("}{item.friends.length + item.requests.length}{")"}</Text>
-                    <Text fontSize={12} color='#888' textAlign={'center'}>{item.status}</Text>
-
-
-                </VStack>
-            </TouchableOpacity>
-        )
+    const browseBookmark = async () => {
+        var u = await getUser(undefined, true) // will delay
+        navigation.push('LocationPreviewStack', { locationIDs: u.bookmarks, title: `我的收藏` })
     }
     return (
         <NativeBaseProvider>
-            <ScrollView
-                flex={1}
-                showsVerticalScrollIndicator={false}
-                automaticallyAdjustsScrollIndicatorInsets
-            >
-                <HStack mx={6} mt={4} justifyContent='space-between' alignItems='center' >
-                    <Text fontSize={24} fontWeight='bold'  >探索</Text>
-                    <IconButton style={{ width: 50 }} onPress={openMapStack}
-                        icon={<Ionicons name="search" size={24} color="black" />} />
-                </HStack>
+          
+                <ScrollView
+                    flex={1}
+                    showsVerticalScrollIndicator={false}
+                    automaticallyAdjustsScrollIndicatorInsets
+                >
+                    <HStack mx={6} mt={4} justifyContent='space-between' alignItems='center' >
+                        <Text fontSize={24} fontWeight='bold'  >探索</Text>
+                        <IconButton style={{ width: 50 }} onPress={openMapStack}
+                            icon={<Ionicons name="search" size={24} color="black" />} />
+                    </HStack>
 
-                <HStack ml={6} mt={4} justifyContent='space-between' alignItems='center' >
-                    <Text fontSize={20} fontWeight={'bold'} color='#ff9639'  >一周熱門</Text>
-                </HStack>
 
-                <FlatList
-                    showsHorizontalScrollIndicator={false}
-                    horizontal
-                    data={allrestaurants}
-                    renderItem={renderRestaurantItem}
-                />
+                    <HStack ml={6} mt={4} alignItems='center' >
+                        {tagList.map((item, key) => (
+                            <TouchableOpacity onPress={() => getData(key)}>
+                                <Text fontSize={20}
+                                    mr={8}
+                                    fontWeight={listRestaurantKey == key ? 'bold' : 'normal'}
+                                    color={listRestaurantKey == key ? '#ff9639' : '#aaa'}  >{item}</Text>
+                            </TouchableOpacity>
+                        ))}
 
-                <HStack ml={6} mt={4} justifyContent='space-between' alignItems='center' >
-                    <Text fontSize={16} fontWeight={'bold'}  >按類型</Text>
-                </HStack>
-                <HStack flexWrap={'wrap'} mx={6}>
-                    {dishes[1].children.map(item => (
-                        <TouchableOpacity onPress={() => searchByDish(item.name)}>
-                            <Text borderRadius={10} borderWidth={1} borderColor="#c9c9c9" mx={2} px={2} my={2}>
-                                {item.name}
-                            </Text>
-                        </TouchableOpacity>
-                    ))}
-                </HStack>
-                <HStack ml={6} mt={4} justifyContent='space-between' alignItems='center' >
-                    <Text fontSize={20} fontWeight={'bold'} color='#ff9639'  >熱門Foodies</Text>
-                </HStack>
+                    </HStack>
 
-                <FlatList
-                    showsHorizontalScrollIndicator={false}
-                    horizontal
-                    data={allusers}
-                    renderItem={renderUserItem}
-                />
+                    <FlatList
+                        showsHorizontalScrollIndicator={false}
+                        horizontal
+                        data={allrestaurants}
+                        renderItem={renderRestaurantItem}
+                        ref={restaurantList}
+                    />
 
-                <Box h={50} />
-            </ScrollView>
+
+                    <HStack ml={6} mt={4} justifyContent='space-between' alignItems='center' >
+                        <Text fontSize={16} fontWeight={'bold'}  >按類型</Text>
+                    </HStack>
+                    <HStack flexWrap={'wrap'} mx={6}>
+                        {dishes[1].children.map(item => (
+                            <TouchableOpacity onPress={() => searchByDish(item.name)}>
+                                <Text borderRadius={10} borderWidth={1} borderColor="#c9c9c9" mx={2} px={2} my={2}>
+                                    {item.name}
+                                </Text>
+                            </TouchableOpacity>
+                        ))}
+                    </HStack>
+                    <HStack ml={6} mt={4} justifyContent='space-between' alignItems='center' >
+                        <Text fontSize={16} fontWeight={'bold'}  >按風格</Text>
+                    </HStack>
+                    <HStack flexWrap={'wrap'} mx={6}>
+                        {dishes[0].children.map(item => (
+                            <TouchableOpacity onPress={() => searchByDish(item.name)}>
+                                <Text borderRadius={10} borderWidth={1} borderColor="#c9c9c9" mx={2} px={2} my={2}>
+                                    {item.name}
+                                </Text>
+                            </TouchableOpacity>
+                        ))}
+                    </HStack>
+
+                    <TouchableOpacity activeOpacity={.8} key={3}
+                        onPress={browseBookmark}>
+                        <HStack flex={1} mx={6} overflow='hidden' borderRadius={15} my={7}
+                            borderColor='#d9d9d9' borderWidth={1} alignItems='center' py={2.5}
+                            style={styles.boxshadow}
+                        >
+                            <Feather name='bookmark' size={24} style={{ margin: 5, marginHorizontal: 15, marginLeft: 25 }} />
+                            <Text fontSize='md' fontWeight='bold' >查看我的收藏</Text>
+                        </HStack>
+                    </TouchableOpacity>
+
+                    <Box pt={4} h={60} />
+                </ScrollView>
+          
         </NativeBaseProvider>
     );
 }
@@ -221,5 +221,17 @@ const styles = StyleSheet.create({
         borderBottomColor: '#ddd',
         borderBottomWidth: 1,
         margin: 4
+    },
+
+    boxshadow: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 8,
+            height: 8,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 8,
+        backgroundColor: '#fff'
     }
 });

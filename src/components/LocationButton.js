@@ -59,7 +59,7 @@ export default class LocationButton extends React.Component {
                 <HStack alignItems='center' my={.5}>
                    
                     <VStack>
-                        <Text  fontWeight='bold' color='#FF9636' numberOfLines={1}>{this.props.location}</Text>
+                        <Text  fontWeight='bold' color='#FF9636' numberOfLines={1}>{this.props.location.trim()}</Text>
                         {this.state &&  <Text >{this.state.description}</Text>}
                     </VStack>
                 </HStack>

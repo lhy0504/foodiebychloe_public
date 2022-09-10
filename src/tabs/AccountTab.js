@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Dimensions, StyleSheet, Image, TextInput, Button, TouchableHighlight, ImageBackground, Alert } from 'react-native';
+import { View, Dimensions, StyleSheet, Share, TextInput, Button, TouchableHighlight, ImageBackground, Alert } from 'react-native';
 import {
     Text, Spinner, IconButton, Avatar,
     VStack, NativeBaseProvider, Box, HStack, ScrollView, FlatList
@@ -57,6 +57,25 @@ export default function Maptab({ navigation, route }) {
             })
         }
     }
+    const onShare = async () => {
+        try {
+            const result = await Share.share({
+                message: '在foodieByChloe加我為朋友！\nID: '+getMyUid() ,
+                    
+            });
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    // shared with activity type of result.activityType
+                } else {
+                    // shared
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // dismissed
+            }
+        } catch (error) {
+            
+        }
+    };
     return (
         <NativeBaseProvider>
             <ScrollView
@@ -117,7 +136,7 @@ export default function Maptab({ navigation, route }) {
                 </HStack>
 
 
-                <TouchableOpacity activeOpacity={.8}
+                <TouchableOpacity activeOpacity={.8} key={6}
                 disabled>
                     <HStack flex={1} mx={6} borderTopRightRadius={15} borderTopLeftRadius={15} overflow='hidden' mt={5}
                         borderColor='#d9d9d9' borderWidth={1} alignItems='center' py={2}
@@ -133,9 +152,18 @@ export default function Maptab({ navigation, route }) {
 
                     </HStack>
                 </TouchableOpacity>
-
-
                 <TouchableOpacity activeOpacity={.8} key={7}
+                    onPress={onShare}>
+                    <HStack flex={1} mx={6} overflow='hidden'
+                        borderColor='#d9d9d9' borderWidth={1} borderTopWidth={0} alignItems='center' py={2.5}
+                        style={styles.boxshadow}
+                    >
+                        <Feather name='share-2' size={24} style={{ margin: 5, marginHorizontal: 15, marginLeft: 25 }} />
+                        <Text fontSize='md' fontWeight='bold' >在外部分享ID</Text>
+                    </HStack>
+                </TouchableOpacity>
+
+                <TouchableOpacity activeOpacity={.8} key={8}
                     onPress={editProfile}>
                     <HStack flex={1} mx={6} overflow='hidden' borderBottomRightRadius={15} borderBottomLeftRadius={15} mb={5}
                         borderColor='#d9d9d9' borderWidth={1} borderTopWidth={0} alignItems='center' py={2.5}
@@ -145,8 +173,10 @@ export default function Maptab({ navigation, route }) {
                         <Text fontSize='md' fontWeight='bold' >編輯個人檔案</Text>
                     </HStack>
                 </TouchableOpacity>
+                <Text style={{ alignSelf: 'center', fontFamily: 'sans-serif-light', color: 'black', marginBottom: 18 }}
+                >ғᴏᴏᴅɪᴇ ʙʏ ᴄʜʟᴏᴇ🍺</Text>
 
-                <Box h={50} key={8} />
+                <Box h={50} key={98} />
             </ScrollView>
         </NativeBaseProvider>
     );

@@ -51,7 +51,7 @@ export default class LocationButton extends React.Component {
                             this.setState({ newnoti: false })
                         }
                         }
-                        mr='10px' icon={
+                        mx='10px' icon={
                             <Ionicons
                                 name={this.state.newnoti ? "notifications" : "notifications-outline"}
                                 size={24}

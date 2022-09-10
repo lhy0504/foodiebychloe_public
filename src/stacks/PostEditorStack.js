@@ -9,7 +9,7 @@ import {
     Button, NativeBaseProvider
 } from 'native-base';
 import StarRating from 'react-native-star-rating';
-import { Feather, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, Feather, MaterialIcons } from '@expo/vector-icons';
 import PagerView from 'react-native-pager-view';
 import Dots from 'react-native-dots-pagination';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -191,283 +191,283 @@ export default function ImageEditorStack({ navigation, route }) {
     }
     return (
         <NativeBaseProvider>
-
-            {/*  Header Bar  */}
-            <View style={{
-                height: 45,
-                zIndex: 6
-                , elevation: 6
-            }}>
-                <HStack alignItems='center' justifyContent='space-between'
-                    borderBottomWidth='1px' borderBottomColor='coolGray.300'
-                    backgroundColor='white' px={3}
-                >
-                    <IconButton
-                        onPress={addPage}
-                        icon={<Feather name="plus-square" size={24} color="black" />} />
-                    <Text fontSize='lg' textAlign='center'>撰寫貼文</Text>
-                    <IconButton
-                        onPress={submitPost}
-                        icon={<Feather name="send" size={24} color="black" />} />
-                </HStack>
-            </View>
-
+            <View style={{ flex: 1 }}>
+                {/*  Header Bar  */}
+                <View style={{
+                    height: 45,
+                    zIndex: 6
+                    , elevation: 6
+                }}>
+                    <HStack alignItems='center' justifyContent='space-between'
+                        borderBottomWidth='1px' borderBottomColor='coolGray.300'
+                        backgroundColor='white' px={3}
+                    >
+                        <IconButton onPress={() => navigation.goBack()}
+                            icon={<Ionicons name="ios-chevron-back" size={24} color="black" />} />
+                        <Text fontSize='lg' textAlign='center'>撰寫貼文</Text>
+                        <IconButton
+                            onPress={submitPost}
+                            icon={<Feather name="send" size={24} color="black" />} />
+                    </HStack>
+                </View>
 
 
-            <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps={'handled'}>
-                {/* Pagination */}
 
-                <Box height={30} pt={3} backgroundColor='#ff9636'>
-                    <Dots paddingVertical={13}
-                        passiveColor='#dddddd' length={route.params.images.length + 2} active={page} />
-                </Box>
+                <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps={'handled'}>
+                    {/* Pagination */}
 
-                <Box height={height - 75} backgroundColor='#ff9636'>
-                    <PagerView style={{ flex: 1, margin: 20, padding: 50 }} pageMargin={5}
-                        initialPage={route.params.reeditindex === undefined ? 0 : route.params.reeditindex + 1}
-                        onPageSelected={e => setPage(e.nativeEvent.position)}
-                        ref={pager}>
+                    <Box height={30} pt={3} backgroundColor='#ff9636'>
+                        <Dots paddingVertical={13}
+                            passiveColor='#dddddd' length={route.params.images.length + 2} active={page} />
+                    </Box>
 
-                        {/* Cover PAge */}
-                        <View key={999}
-                            style={{
-                                backgroundColor: 'white',
-                                padding: 20,
-                                // justifyContent: 'center',
-                                height: 400,
-                                borderRadius: 20
-                            }}
-                        >
+                    <Box height={height - 75} backgroundColor='#ff9636'>
+                        <PagerView style={{ flex: 1, margin: 20, padding: 50 }} pageMargin={5}
+                            initialPage={route.params.reeditindex === undefined ? 0 : route.params.reeditindex + 1}
+                            onPageSelected={e => setPage(e.nativeEvent.position)}
+                            ref={pager}>
 
-                            <HStack alignItems='center' >
-                                <Feather name="map-pin" size={16} color='#FF9636' />
-
-                                <View style={{ width: width - 80 }}>
-                                    <View style={styles.autocompleteContainer}>
-                                        <Autocomplete
-                                            onBlur={() => setHideLocationSuggestion(true)}
-                                            inputContainerStyle={{ borderWidth: 0 }}
-                                            hideResults={hidelocationSuggestion}
-                                            placeholder="地點"
-                                            data={locationSuggestion}
-                                            value={post.location}
-                                            onChangeText={(text) => {
-                                                setPost({
-                                                    ...post,
-                                                    location: text,
-                                                    place_id: '',
-                                                    address: ''
-                                                })
-                                                fetch('https://maps.googleapis.com/maps/api/place/autocomplete/json?key=AIzaSyBParPaZC61CNm5ouh-4vt9aloKsmTVCCQ&components=country%3Ahk&types=restaurant|cafe|bar|bakery|meal_takeaway&language=zh-HK&input=' + text)
-                                                    .then((response) => response.json())
-                                                    .then((responseJson) => {
-                                                        setLocationSuggestion(responseJson.predictions)
-                                                        setHideLocationSuggestion(false)
-                                                    })
-                                            }}
-                                            flatListProps={{
-                                                keyboardShouldPersistTaps: 'handled',
-                                                keyExtractor: (_, idx) => idx,
-                                                style: {
-                                                    borderWidth: 1,
-                                                    borderTopWidth: 0,
-                                                    borderColor: '#A2A2A2',
-                                                    backgroundColor: 'white'
-                                                },
-                                                renderItem: ({ item }) =>
-                                                    <TouchableOpacity onPress={() => {
-                                                        setPost({
-                                                            ...post,
-                                                            location: item.structured_formatting.main_text,
-                                                            place_id: item.place_id,
-                                                            address: item.structured_formatting.secondary_text
-                                                        })
-                                                        setHideLocationSuggestion(true)
-                                                    }}
-                                                        style={{
-                                                            paddingLeft: 5,
-                                                            paddingTop: 3,
-                                                            paddingBottom: 3,
-                                                            borderTopWidth: 1,
-                                                            borderColor: '#A2A2A2',
-                                                            backgroundColor: 'white'
-                                                        }}>
-                                                        <Text fontWeight='bold'>{item.structured_formatting.main_text}</Text>
-                                                        <Text>{item.structured_formatting.secondary_text}</Text>
-                                                    </TouchableOpacity>
-                                            }}
-                                        />
-
-                                    </View>
-                                    <View>
-                                        <Text> </Text>{/* Dont delete this placeholder */}
-                                    </View>
-                                </View>
-                            </HStack>
-                            <TouchableOpacity style={{ justifyContent: 'center', marginTop: 17, marginBottom: 15 }}
-                                onPress={() => setDateopen(true)}>
-                                <Text color='coolGray.400'>
-                                    <Feather name="calendar" size={16} color="#ff9636" />
-                                    {" "}{typeof (post.date) == 'string' ? post.date : post.date.toLocaleDateString('en-US')}
-                                </Text>
-                            </TouchableOpacity>
-
-                            {dateopen && <DateTimePicker
-                                testID="dateTimePicker"
-                                value={new Date(post.date)}
-                                onChange={(event, selectedDate) => {
-                                    setDateopen(false)
-                                    const currentDate = selectedDate || date;
-                                    setPost({ ...post, date: currentDate.toLocaleDateString('en-US') });
+                            {/* Cover PAge */}
+                            <View key={999}
+                                style={{
+                                    backgroundColor: 'white',
+                                    padding: 20,
+                                    // justifyContent: 'center',
+                                    height: 400,
+                                    borderRadius: 20
                                 }}
-                            />}
-                            <TextInput
-                                placeholder="標題"
-                                style={{ fontWeight: 'bold' }}
-                                defaultValue={post.overalltitle}
-                                onChangeText={text => setPost({ ...post, overalltitle: text })}
-                            />
-                            <TextInput
-                                placeholder="介紹" multiline={true}
-                                defaultValue={post.overalldescription}
-                                onChangeText={text => setPost({ ...post, overalldescription: text })}
-                            />
-                            <HStack alignItems='center' mt={4}>
-                                <Feather name="users" size={16} color='#FF9636' />
+                            >
+
+                                <HStack alignItems='center' >
+                                    <Feather name="map-pin" size={16} color='#FF9636' />
+
+                                    <View style={{ width: width - 80 }}>
+                                        <View style={styles.autocompleteContainer}>
+                                            <Autocomplete
+                                                onBlur={() => setHideLocationSuggestion(true)}
+                                                inputContainerStyle={{ borderWidth: 0 }}
+                                                hideResults={hidelocationSuggestion}
+                                                placeholder="地點"
+                                                data={locationSuggestion}
+                                                value={post.location}
+                                                onChangeText={(text) => {
+                                                    setPost({
+                                                        ...post,
+                                                        location: text,
+                                                        place_id: '',
+                                                        address: ''
+                                                    })
+                                                    fetch('https://maps.googleapis.com/maps/api/place/autocomplete/json?key=AIzaSyBParPaZC61CNm5ouh-4vt9aloKsmTVCCQ&components=country%3Ahk&types=restaurant|cafe|bar|bakery|meal_takeaway&language=zh-HK&input=' + text)
+                                                        .then((response) => response.json())
+                                                        .then((responseJson) => {
+                                                            setLocationSuggestion(responseJson.predictions)
+                                                            setHideLocationSuggestion(false)
+                                                        })
+                                                }}
+                                                flatListProps={{
+                                                    keyboardShouldPersistTaps: 'handled',
+                                                    keyExtractor: (_, idx) => idx,
+                                                    style: {
+                                                        borderWidth: 1,
+                                                        borderTopWidth: 0,
+                                                        borderColor: '#A2A2A2',
+                                                        backgroundColor: 'white'
+                                                    },
+                                                    renderItem: ({ item }) =>
+                                                        <TouchableOpacity onPress={() => {
+                                                            setPost({
+                                                                ...post,
+                                                                location: item.structured_formatting.main_text,
+                                                                place_id: item.place_id,
+                                                                address: item.structured_formatting.secondary_text
+                                                            })
+                                                            setHideLocationSuggestion(true)
+                                                        }}
+                                                            style={{
+                                                                paddingLeft: 5,
+                                                                paddingTop: 3,
+                                                                paddingBottom: 3,
+                                                                borderTopWidth: 1,
+                                                                borderColor: '#A2A2A2',
+                                                                backgroundColor: 'white'
+                                                            }}>
+                                                            <Text fontWeight='bold'>{item.structured_formatting.main_text}</Text>
+                                                            <Text>{item.structured_formatting.secondary_text}</Text>
+                                                        </TouchableOpacity>
+                                                }}
+                                            />
+
+                                        </View>
+                                        <View>
+                                            <Text> </Text>{/* Dont delete this placeholder */}
+                                        </View>
+                                    </View>
+                                </HStack>
+                                <TouchableOpacity style={{ justifyContent: 'center', marginTop: 17, marginBottom: 15 }}
+                                    onPress={() => setDateopen(true)}>
+                                    <Text color='coolGray.400'>
+                                        <Feather name="calendar" size={16} color="#ff9636" />
+                                        {" "}{typeof (post.date) == 'string' ? post.date : post.date.toLocaleDateString('en-US')}
+                                    </Text>
+                                </TouchableOpacity>
+
+                                {dateopen && <DateTimePicker
+                                    testID="dateTimePicker"
+                                    value={new Date(post.date)}
+                                    onChange={(event, selectedDate) => {
+                                        setDateopen(false)
+                                        const currentDate = selectedDate || date;
+                                        setPost({ ...post, date: currentDate.toLocaleDateString('en-US') });
+                                    }}
+                                />}
                                 <TextInput
-                                    placeholder="和誰在一起..."
-                                    defaultValue={post.with}
-                                    multiline={true}
-                                    onChangeText={text => setPost({ ...post, with: text })}
-                                    style={{ marginLeft: 3 }}
+                                    placeholder="標題"
+                                    style={{ fontWeight: 'bold' }}
+                                    defaultValue={post.overalltitle}
+                                    onChangeText={text => setPost({ ...post, overalltitle: text })}
                                 />
-                            </HStack>
-                            <HStack alignItems='center' mt={4} >
-                                <Feather name="tag" size={16} color='#FF9636' />
                                 <TextInput
-                                    placeholder="#tags"
-                                    defaultValue={post.tag}
-                                    multiline={true}
-                                    onChangeText={text => setPost({ ...post, tag: text })}
-                                    style={{ color: "#458eff", fontWeight: 'bold', marginLeft: 3 }}
+                                    placeholder="介紹" multiline={true}
+                                    defaultValue={post.overalldescription}
+                                    onChangeText={text => setPost({ ...post, overalldescription: text })}
                                 />
-                            </HStack>
-
-                            <Text mt={4} fontSize='lg' fontWeight='bold'>餐廳整體的...</Text>
-                            <HStack mt={4} justifyContent='space-between' alignItems='center'>
-                                <Text fontWeight='bold' color='coolGray.500'>🛎️ 味道</Text>
-                                <StarRating
-                                    fullStarColor='#ff9636'
-                                    rating={post.overallyummy}
-                                    selectedStar={(rating) => setPost({ ...post, overallyummy: rating })} />
-                            </HStack>
-                            <HStack mt={4} justifyContent='space-between' alignItems='center'>
-                                <Text fontWeight='bold' color='coolGray.500'>🤑 價錢</Text>
-                                <StarRating
-                                    fullStarColor='#ff9636'
-                                    rating={post.overallprice}
-                                    selectedStar={(rating) => setPost({ ...post, overallprice: rating })}
-                                />
-                            </HStack>
-                            <HStack mt={4} mb={8} justifyContent='space-between' alignItems='center'>
-                                <Text fontWeight='bold' color='coolGray.500'>🕯️ 環境</Text>
-                                <StarRating
-                                    fullStarColor='#ff9636'
-                                    rating={post.overallenv}
-                                    selectedStar={(rating) => setPost({ ...post, overallenv: rating })}
-                                />
-                            </HStack>
-                        </View>
-
-
-                        {/*  Canvas */}
-                        {
-                            route.params.images.map((item, index) => (
-                                <View key={index}
-                                    style={{
-                                        backgroundColor: 'white',
-                                        padding: 20,
-                                        // justifyContent: 'center',
-                                        borderRadius: 20
-                                    }}>
-
-                                    {/* Edit buttons */}
-                                    <View style={styles.container}>
-                                        <TouchableOpacity style={styles.buttonStyle}
-                                            onPress={() => delPage()}>
-                                            <Feather name="x" size={20} color="white" />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={styles.container2}>
-                                        <TouchableOpacity style={styles.buttonStyle2}
-                                            onPress={() => reedit()}>
-                                            <Feather name="edit-2" size={17} color="black" />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={styles.container3}>
-                                        <TouchableOpacity style={styles.buttonStyle2}
-                                            onPress={retakepic}>
-                                            <Feather name="image" size={17} color="black" />
-                                        </TouchableOpacity>
-                                    </View>
-
-
-                                    {/* Image */}
-                                    <Image resizeMode='contain'
-                                        style={{ width: null, height: 200 }}
-                                        source={{ uri: item }} />
-                                    <HStack mt={5} justifyContent='space-between' alignItems='center'>
-                                        <Text fontWeight='bold' color='coolGray.500'>🛎️ 美味指數</Text>
-                                        <StarRating
-                                            style={{ width: 200 }}
-                                            fullStarColor='#ff9636'
-                                            rating={post.yummystar[index]}
-                                            selectedStar={(rating) => setYummyStar(index, rating)}
-                                        />
-                                    </HStack>
-
+                                <HStack alignItems='center' mt={4}>
+                                    <Feather name="users" size={16} color='#FF9636' />
                                     <TextInput
-                                        placeholder="標題"
-                                        style={{ fontWeight: 'bold' }}
-                                        defaultValue={post.title[index]}
-                                        onChangeText={text => setTitle(index, text)}
+                                        placeholder="和誰在一起..."
+                                        defaultValue={post.with}
+                                        multiline={true}
+                                        onChangeText={text => setPost({ ...post, with: text })}
+                                        style={{ marginLeft: 3 }}
                                     />
-                                    {/*  <TextInput
+                                </HStack>
+                                <HStack alignItems='center' mt={4} >
+                                    <Feather name="tag" size={16} color='#FF9636' />
+                                    <TextInput
+                                        placeholder="#tags"
+                                        defaultValue={post.tag}
+                                        multiline={true}
+                                        onChangeText={text => setPost({ ...post, tag: text })}
+                                        style={{ color: "#458eff", fontWeight: 'bold', marginLeft: 3 }}
+                                    />
+                                </HStack>
+
+                                <Text mt={4} fontSize='lg' fontWeight='bold'>餐廳整體的...</Text>
+                                <HStack mt={4} justifyContent='space-between' alignItems='center'>
+                                    <Text fontWeight='bold' color='coolGray.500'>🛎️ 味道</Text>
+                                    <StarRating
+                                        fullStarColor='#ff9636'
+                                        rating={post.overallyummy}
+                                        selectedStar={(rating) => setPost({ ...post, overallyummy: rating })} />
+                                </HStack>
+                                <HStack mt={4} justifyContent='space-between' alignItems='center'>
+                                    <Text fontWeight='bold' color='coolGray.500'>🤑 價錢</Text>
+                                    <StarRating
+                                        fullStarColor='#ff9636'
+                                        rating={post.overallprice}
+                                        selectedStar={(rating) => setPost({ ...post, overallprice: rating })}
+                                    />
+                                </HStack>
+                                <HStack mt={4} mb={8} justifyContent='space-between' alignItems='center'>
+                                    <Text fontWeight='bold' color='coolGray.500'>🕯️ 環境</Text>
+                                    <StarRating
+                                        fullStarColor='#ff9636'
+                                        rating={post.overallenv}
+                                        selectedStar={(rating) => setPost({ ...post, overallenv: rating })}
+                                    />
+                                </HStack>
+                            </View>
+
+
+                            {/*  Canvas */}
+                            {
+                                route.params.images.map((item, index) => (
+                                    <View key={index}
+                                        style={{
+                                            backgroundColor: 'white',
+                                            padding: 20,
+                                            // justifyContent: 'center',
+                                            borderRadius: 20
+                                        }}>
+
+                                        {/* Edit buttons */}
+                                        <View style={styles.container}>
+                                            <TouchableOpacity style={styles.buttonStyle}
+                                                onPress={() => delPage()}>
+                                                <Feather name="x" size={20} color="white" />
+                                            </TouchableOpacity>
+                                        </View>
+                                        <View style={styles.container2}>
+                                            <TouchableOpacity style={styles.buttonStyle2}
+                                                onPress={() => reedit()}>
+                                                <Feather name="edit-2" size={17} color="black" />
+                                            </TouchableOpacity>
+                                        </View>
+                                        <View style={styles.container3}>
+                                            <TouchableOpacity style={styles.buttonStyle2}
+                                                onPress={retakepic}>
+                                                <Feather name="image" size={17} color="black" />
+                                            </TouchableOpacity>
+                                        </View>
+
+
+                                        {/* Image */}
+                                        <Image resizeMode='contain'
+                                            style={{ width: null, height: 200 }}
+                                            source={{ uri: item }} />
+                                        <HStack mt={5} justifyContent='space-between' alignItems='center'>
+                                            <Text fontWeight='bold' color='coolGray.500'>🛎️ 美味指數</Text>
+                                            <StarRating
+                                                style={{ width: 200 }}
+                                                fullStarColor='#ff9636'
+                                                rating={post.yummystar[index]}
+                                                selectedStar={(rating) => setYummyStar(index, rating)}
+                                            />
+                                        </HStack>
+
+                                        <TextInput
+                                            placeholder="標題"
+                                            style={{ fontWeight: 'bold' }}
+                                            defaultValue={post.title[index]}
+                                            onChangeText={text => setTitle(index, text)}
+                                        />
+                                        {/*  <TextInput
                                         placeholder="$$"
                                         keyboardType="numeric"
                                         defaultValue={post.price[index]}
                                         onChangeText={text => setPrice(index, text)}
                                     /> */}
-                                    <TextInput
-                                        placeholder="說明..."
-                                        defaultValue={post.description[index]}
-                                        multiline={true}
-                                        onChangeText={text => setDescription(index, text)}
-                                    />
+                                        <TextInput
+                                            placeholder="說明..."
+                                            defaultValue={post.description[index]}
+                                            multiline={true}
+                                            onChangeText={text => setDescription(index, text)}
+                                        />
 
-                                </View>
-                            ))
-                        }
-                        <View key={88}
-                            style={{
-                                backgroundColor: 'white',
-                                padding: 20,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                borderRadius: 20
-                            }}>
-                            <IconButton
-                                onPress={addPage}
-                                icon={<Feather name="plus-square" size={24} color="black" />} />
-                        </View>
+                                    </View>
+                                ))
+                            }
+                            <View key={88}
+                                style={{
+                                    backgroundColor: 'white',
+                                    padding: 20,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    borderRadius: 20
+                                }}>
+                                <IconButton
+                                    onPress={addPage}
+                                    icon={<Feather name="plus-square" size={24} color="black" />} />
+                            </View>
 
-                    </PagerView>
-                </Box>
-
-
+                        </PagerView>
+                    </Box>
 
 
-            </ScrollView>
+
+
+                </ScrollView>
+            </View>
         </NativeBaseProvider>
     );
 }
