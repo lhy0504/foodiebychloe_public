@@ -1,7 +1,6 @@
 import React from 'react';
-import {
-    TouchableHighlight
-} from 'react-native';
+import { TouchableHighlight } from 'react-native-gesture-handler';
+
 import {
     HStack, Text, VStack,
 } from "native-base";
@@ -33,6 +32,9 @@ export default class LocationButton extends React.Component {
         }
         if (l.hasOwnProperty('price')) {
             desc += " / $" + l.price
+        }
+        if(l.hasOwnProperty('average')){
+            desc +=" (" + (l.average).toFixed(1) +")"
         }
         if (desc != '') {
             this.setState({ description: desc })

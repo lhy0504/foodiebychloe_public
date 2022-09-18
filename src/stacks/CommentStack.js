@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
-    Dimensions, TouchableOpacity,
+    Dimensions, 
     StyleSheet, View, TextInput
 } from 'react-native';
 import {
@@ -12,6 +12,7 @@ import {
     commentPost, getUser, getMyUid, unlikePost, likePost
     , getPostById
 } from '../utils/FirebaseUtil'
+import { TouchableOpacity,  } from 'react-native-gesture-handler';
 
 var { width, height } = Dimensions.get('window')
 

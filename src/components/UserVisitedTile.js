@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-    View, TouchableWithoutFeedback, Image, TouchableHighlight, TouchableOpacity
-} from 'react-native';
+
 import {
     HStack, Text, Box,
     VStack, Avatar, IconButton
@@ -12,6 +10,7 @@ import {
     , getPostById,
     getUserVisited
 } from '../utils/FirebaseUtil'
+import { TouchableOpacity,  } from 'react-native-gesture-handler';
 
 /* 
 prosp: place_id, location (name), navigation

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
-    View, Dimensions, StyleSheet, Image, TextInput, Button, TouchableHighlight, ScrollView
-    , TouchableOpacity
+    View, Dimensions, StyleSheet, Image, TextInput, Button,  ScrollView
+    , 
 } from 'react-native';
+import { TouchableHighlight,TouchableOpacity } from 'react-native-gesture-handler';
 import {
     Text, Spinner,
     VStack, NativeBaseProvider, Box, HStack, IconButton
@@ -34,11 +35,12 @@ export default function Maptab({ navigation, route }) {
     const [searchStar, setSearchStar] = useState(0)
 
     //hide if have route params
-    const [showAdvanced, setShowAdvanced] = useState( !route.params)
+    const [showAdvanced, setShowAdvanced] = useState(!route.params)
     const [showTextResult, setShowTextResult] = useState(true)
 
 
     async function searchRestaurant() {
+        console.log(searchPrice)
         var r = await getRestaurantsMap(searchName, searchAddress, searchDishes, searchPrice, parseFloat(searchStar))
 
         //preload image
@@ -81,7 +83,11 @@ export default function Maptab({ navigation, route }) {
             setSearchDishes([...searchDishes, dish])
         }
     }
+    function toggleMap() {
+        setShowAdvanced(false)
+        setShowTextResult(!showTextResult)
 
+    }
     return (
         <NativeBaseProvider>
 
@@ -168,8 +174,8 @@ export default function Maptab({ navigation, route }) {
                         </HStack>
                         <HStack mt={4} justifyContent='space-between' alignItems='center' key={'asf'}>
                             <Text fontSize={16} fontWeight={'bold'}>按風格</Text>
-                    </HStack>
-                    <HStack flexWrap={'wrap'} key={'as1'}>
+                        </HStack>
+                        <HStack flexWrap={'wrap'} key={'as1'}>
                             {dishes[0].children.map(item => (
                                 searchDishes.indexOf(item.name) !== -1 ?
                                     <TouchableOpacity onPress={() => toggleDish(item.name)}>
@@ -228,7 +234,7 @@ export default function Maptab({ navigation, route }) {
                     </TouchableHighlight>
                     {markers.length > 0 &&
                         <Box flex={1} ml={2}>
-                            <Button onPress={() => setShowTextResult(!showTextResult)}
+                            <Button onPress={toggleMap}
                                 title={showTextResult ? `以地圖檢視` : `以詳細檢視`} />
                         </Box>
                     }

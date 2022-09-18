@@ -3,10 +3,11 @@ import React, { useState, useEffect, } from 'react';
 import {
     StyleSheet,
     View, TextInput,
-    Alert, TouchableOpacity,
-    Image,
+    Alert, 
+    Image,FlatList,
     BackHandler, useWindowDimensions
 } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import {
     ScrollView, HStack, IconButton, Text, Box,
     VStack, NativeBaseProvider, Avatar, Spinner
@@ -167,6 +168,69 @@ export default function StoryStack({ navigation, route }) {
 
         );
     }
+    const SuggestedFoodiesView=() =>{
+        const [allusers, setAllusers] = useState([])
+        async function getData() {
+            var all = []
+            for(var i of content.with){
+                var dat = await getUser(i)
+                all.push(dat)
+            }
+            setAllusers(all)
+        }
+        React.useEffect(() => {
+            getData()
+        }, [])
+        const openUserProfile = (id) => {
+            navigation.push('UserProfileStack', {
+                userid: id
+            })
+        }
+        const renderUserItem = ({ item, index }) => {
+            return (
+                <TouchableOpacity activeOpacity={.8}
+                    onPress={() => openUserProfile(item.uid)}>
+                    <VStack width={140} h={200} borderRadius={15} overflow='hidden' mx={3.5} mr={1} my={5} px={2}
+                        borderColor='#d9d9d9' borderWidth={1} alignItems='center' pt={25}
+                        style={{
+                            shadowColor: "#000",
+                            shadowOffset: {
+                                width: 8,
+                                height: 8,
+                            },
+                            shadowOpacity: 0.25,
+                            shadowRadius: 3.84,
+                            elevation: 8,
+                            backgroundColor: '#fff'
+                        }}
+                    >
+    
+                        <Avatar ml='15px' mr='8px' size={45} source={{ uri: item.propic, }} />
+    
+                        <Text fontSize='md' fontWeight='bold' textAlign={'center'}>{item.name}</Text>
+                        <Text fontSize={12} color='#888' mb={1}>{"("}{item.friends.length + item.requests.length}{")"}</Text>
+                        <Text fontSize={12} color='#888' textAlign={'center'}>{item.status}</Text>
+    
+    
+                    </VStack>
+                </TouchableOpacity>
+            )
+        }
+        return (
+            <Box mx={5}  >
+                <HStack  mt={4} justifyContent='space-between' alignItems='center' >
+                    <Text fontWeight={'bold'}   >在此帖文標記的Foodies</Text>
+                </HStack>
+    
+                <FlatList
+                    showsHorizontalScrollIndicator={false}
+                    horizontal
+                    data={allusers}
+                    renderItem={renderUserItem}
+                />
+            </Box>
+        )
+    }
     return content != null ? (
         <NativeBaseProvider>
             {/*  Header Bar  */}
@@ -237,7 +301,7 @@ export default function StoryStack({ navigation, route }) {
                         {content.overalltitle != '' && <Text fontSize='lg' fontWeight={'bold'} >{content.overalltitle.trim()}</Text>}
                         {content.overalldescription != '' && <Text fontSize={'md'} >{content.overalldescription.trim()}</Text>}
 
-                        {content.with[0] != '' &&
+                        {/* {content.with.length>0 && content.with[0] != '' &&
                             <HStack alignItems='center'>
                                 <Feather name="users" size={16} color='#FF9636' />
                                 <Text > </Text>
@@ -252,7 +316,7 @@ export default function StoryStack({ navigation, route }) {
                                         }
                                     })}
                             </HStack>
-                        }
+                        } */}
 
                     </VStack>
                 </HStack>
@@ -341,9 +405,12 @@ export default function StoryStack({ navigation, route }) {
 
                         </VStack>}
                     </HStack>
+                    
 
 
                 </VStack>
+
+                {content.with.length>1 && <SuggestedFoodiesView />}
 
                 {/********** Footer part ********/}
                 <VStack px={5} pt={1}>
@@ -356,7 +423,7 @@ export default function StoryStack({ navigation, route }) {
 
                     {commentUsers.map((item, index) =>
                         <HStack key={index}>
-                            <TouchableOpacity onPress={() => openProfile(item.id)}>
+                            <TouchableOpacity onPress={() => openProfile(item.userid)}>
                                 <Text fontWeight='bold' >{item.name} </Text>
                             </TouchableOpacity>
                             <Text>{content.comment[index].comment}</Text>

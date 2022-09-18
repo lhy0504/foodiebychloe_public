@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import {
-    Dimensions, View, Image, TextInput, StyleSheet, TouchableOpacity
-    , ScrollView, Alert
+    Dimensions, View, Image, TextInput, StyleSheet
+    , ScrollView, Alert, ImageBackground
 } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import {
     HStack, IconButton, Box,
     Text,
-    Button, NativeBaseProvider
+    Button, NativeBaseProvider, Avatar
 } from 'native-base';
 import StarRating from 'react-native-star-rating';
 import { Ionicons, Feather, MaterialIcons } from '@expo/vector-icons';
@@ -15,7 +16,7 @@ import Dots from 'react-native-dots-pagination';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Autocomplete from 'react-native-autocomplete-input'
 import { getAuth } from 'firebase/auth';
-import { getMyUid, uploadPost } from '../utils/FirebaseUtil'
+import { getMyUid, getUser, uploadPost } from '../utils/FirebaseUtil'
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import { yummyRank } from './../consts/dishes'
 import YummyRankView from './../components/YummyRankView'
@@ -25,8 +26,23 @@ const height = Dimensions.get('window').height
 
 export default function ImageEditorStack({ navigation, route }) {
 
+    const [fdlist, setFdlist] = useState([])
+    const [myuser, setMyuser] = useState(null)
     const [page, setPage] = useState(0)
     const [post, setPost] = useState(initState())
+
+    React.useEffect(async () => {
+        // for getting fd list, bad to performance
+        var fdlist = []
+
+        var u = await getUser().catch(e => { friends: [] })
+        setMyuser(u)
+        for (var i of u.friends) {
+            var fd = await getUser(i)
+            fdlist.push({ id: i, name: fd.name, propic: fd.propic })
+        }
+        setFdlist(fdlist)
+    }, [])
 
     function initState() {
         if (route.params.reeditindex !== undefined) {
@@ -34,9 +50,9 @@ export default function ImageEditorStack({ navigation, route }) {
             obj.image[route.params.reeditindex] = route.params.images[route.params.reeditindex]
 
             //
-            if (Array.isArray(obj.with)) {
-                obj.with = obj.with.join(', ')
-            }
+            /*  if (Array.isArray(obj.with)) {
+                 obj.with = obj.with.join(', ')
+             } */
             if (Array.isArray(obj.hashtag)) {
                 obj.hashtag = obj.hashtag.join(' ')
             }
@@ -55,7 +71,7 @@ export default function ImageEditorStack({ navigation, route }) {
                 date: new Date().toLocaleDateString('en-US'),
                 location: '',
                 place_id: '',
-                with: '',
+                with: [],
                 tag: '',
                 likes: [],
                 hashtag: '',
@@ -152,41 +168,8 @@ export default function ImageEditorStack({ navigation, route }) {
     }
     async function submitPost() {
 
-        //isupdate?
-        if (post.publicOrFriends) {
-            navigation.replace('LoadingStack2')
-            await uploadPost(post, post.publicOrFriends)
-            navigation.replace("MainScreen", { screen: "GalleryTab" })
-            return
-        }
-        Alert.alert(
-            "發佈貼文",
-            "請設定貼文的私隱度 :",
-            [
-                {
-                    text: "取消",
-                    onPress: () => { },
-                    style: "destructive",
-                },
-                {
-                    text: "公開", onPress: async () => {
-                        navigation.replace('LoadingStack2')
-                        console.log(1)
-                        await uploadPost(post, 'public')
-                        console.log(2)
-                        navigation.replace("MainScreen", { screen: "GalleryTab" })
-                    }
-                },
-                {
-                    text: "僅朋友", onPress: async () => {
-                        navigation.replace('LoadingStack2')
-                        await uploadPost(post, 'friends')
-                        navigation.replace("MainScreen", { screen: "GalleryTab" })
-                    }
-                }
-            ],
+        navigation.navigate('PostEditorStackII', { post: post })
 
-        );
 
     }
     return (
@@ -228,120 +211,54 @@ export default function ImageEditorStack({ navigation, route }) {
                             ref={pager}>
 
                             {/* Cover PAge */}
-                            <View key={999}
+                            <ImageBackground
+                                key={999}
+
                                 style={{
-                                    backgroundColor: 'white',
+                                    overflow: 'hidden', backgroundColor: 'white',
                                     padding: 20,
-                                    // justifyContent: 'center',
-                                    height: 400,
                                     borderRadius: 20
                                 }}
                             >
 
-                                <HStack alignItems='center' >
-                                    <Feather name="map-pin" size={16} color='#FF9636' />
-
-                                    <View style={{ width: width - 80 }}>
-                                        <View style={styles.autocompleteContainer}>
-                                            <Autocomplete
-                                                onBlur={() => setHideLocationSuggestion(true)}
-                                                inputContainerStyle={{ borderWidth: 0 }}
-                                                hideResults={hidelocationSuggestion}
-                                                placeholder="地點"
-                                                data={locationSuggestion}
-                                                value={post.location}
-                                                onChangeText={(text) => {
-                                                    setPost({
-                                                        ...post,
-                                                        location: text,
-                                                        place_id: '',
-                                                        address: ''
-                                                    })
-                                                    fetch('https://maps.googleapis.com/maps/api/place/autocomplete/json?key=AIzaSyBParPaZC61CNm5ouh-4vt9aloKsmTVCCQ&components=country%3Ahk&types=restaurant|cafe|bar|bakery|meal_takeaway&language=zh-HK&input=' + text)
-                                                        .then((response) => response.json())
-                                                        .then((responseJson) => {
-                                                            setLocationSuggestion(responseJson.predictions)
-                                                            setHideLocationSuggestion(false)
-                                                        })
-                                                }}
-                                                flatListProps={{
-                                                    keyboardShouldPersistTaps: 'handled',
-                                                    keyExtractor: (_, idx) => idx,
-                                                    style: {
-                                                        borderWidth: 1,
-                                                        borderTopWidth: 0,
-                                                        borderColor: '#A2A2A2',
-                                                        backgroundColor: 'white'
-                                                    },
-                                                    renderItem: ({ item }) =>
-                                                        <TouchableOpacity onPress={() => {
-                                                            setPost({
-                                                                ...post,
-                                                                location: item.structured_formatting.main_text,
-                                                                place_id: item.place_id,
-                                                                address: item.structured_formatting.secondary_text
-                                                            })
-                                                            setHideLocationSuggestion(true)
-                                                        }}
-                                                            style={{
-                                                                paddingLeft: 5,
-                                                                paddingTop: 3,
-                                                                paddingBottom: 3,
-                                                                borderTopWidth: 1,
-                                                                borderColor: '#A2A2A2',
-                                                                backgroundColor: 'white'
-                                                            }}>
-                                                            <Text fontWeight='bold'>{item.structured_formatting.main_text}</Text>
-                                                            <Text>{item.structured_formatting.secondary_text}</Text>
-                                                        </TouchableOpacity>
-                                                }}
-                                            />
-
-                                        </View>
-                                        <View>
-                                            <Text> </Text>{/* Dont delete this placeholder */}
-                                        </View>
-                                    </View>
+                                {myuser && <HStack alignItems={'center'} mb={5}>
+                                    <Avatar source={{ uri: myuser.propic }} />
+                                    <Text ml={2}>{myuser.name}</Text>
                                 </HStack>
-                                <TouchableOpacity style={{ justifyContent: 'center', marginTop: 17, marginBottom: 15 }}
-                                    onPress={() => setDateopen(true)}>
-                                    <Text color='coolGray.400'>
-                                        <Feather name="calendar" size={16} color="#ff9636" />
-                                        {" "}{typeof (post.date) == 'string' ? post.date : post.date.toLocaleDateString('en-US')}
-                                    </Text>
-                                </TouchableOpacity>
-
-                                {dateopen && <DateTimePicker
-                                    testID="dateTimePicker"
-                                    value={new Date(post.date)}
-                                    onChange={(event, selectedDate) => {
-                                        setDateopen(false)
-                                        const currentDate = selectedDate || date;
-                                        setPost({ ...post, date: currentDate.toLocaleDateString('en-US') });
-                                    }}
-                                />}
+                                }
                                 <TextInput
                                     placeholder="標題"
-                                    style={{ fontWeight: 'bold' }}
+                                    style={{ fontWeight: 'bold', fontSize: 18, marginVertical: 8 }}
+
                                     defaultValue={post.overalltitle}
                                     onChangeText={text => setPost({ ...post, overalltitle: text })}
                                 />
                                 <TextInput
-                                    placeholder="介紹" multiline={true}
+                                    placeholder="開場白..." multiline={true}
                                     defaultValue={post.overalldescription}
+                                    style={{ minHeight: 150, }}
                                     onChangeText={text => setPost({ ...post, overalldescription: text })}
                                 />
-                                <HStack alignItems='center' mt={4}>
+                                <HStack alignItems='center' borderColor={'coolGray.300'} borderBottomWidth={1} borderTopWidth={1}>
                                     <Feather name="users" size={16} color='#FF9636' />
-                                    <TextInput
-                                        placeholder="和誰在一起..."
-                                        defaultValue={post.with}
-                                        multiline={true}
-                                        onChangeText={text => setPost({ ...post, with: text })}
-                                        style={{ marginLeft: 3 }}
-                                    />
+                                    <Text fontWeight={'bold'} color='coolGray.400'>{`  同行朋友 (${post.with.length})`}</Text>
+                                    <Box style={{ marginBottom: -10 }}>
+                                        <SectionedMultiSelect
+
+                                            items={fdlist}
+                                            IconRenderer={MaterialIcons}
+                                            uniqueKey="id"
+                                            selectText="和誰在一起..."
+                                            confirmText='確認'
+                                            onSelectedItemsChange={arr => setPost({ ...post, with: arr })}
+                                            selectedItems={post.with}
+                                            key={'as2ljkh'}
+                                            searchPlaceholderText="和誰在一起..."
+                                            showChips={false}
+                                        />
+                                    </Box>
                                 </HStack>
-                                <HStack alignItems='center' mt={4} >
+                                <HStack alignItems='center' py={5} borderColor={'coolGray.300'} borderBottomWidth={1}>
                                     <Feather name="tag" size={16} color='#FF9636' />
                                     <TextInput
                                         placeholder="#tags"
@@ -352,31 +269,8 @@ export default function ImageEditorStack({ navigation, route }) {
                                     />
                                 </HStack>
 
-                                <Text mt={4} fontSize='lg' fontWeight='bold'>餐廳整體的...</Text>
-                                <HStack mt={4} justifyContent='space-between' alignItems='center'>
-                                    <Text fontWeight='bold' color='coolGray.500'>🛎️ 味道</Text>
-                                    <StarRating
-                                        fullStarColor='#ff9636'
-                                        rating={post.overallyummy}
-                                        selectedStar={(rating) => setPost({ ...post, overallyummy: rating })} />
-                                </HStack>
-                                <HStack mt={4} justifyContent='space-between' alignItems='center'>
-                                    <Text fontWeight='bold' color='coolGray.500'>🤑 價錢</Text>
-                                    <StarRating
-                                        fullStarColor='#ff9636'
-                                        rating={post.overallprice}
-                                        selectedStar={(rating) => setPost({ ...post, overallprice: rating })}
-                                    />
-                                </HStack>
-                                <HStack mt={4} mb={8} justifyContent='space-between' alignItems='center'>
-                                    <Text fontWeight='bold' color='coolGray.500'>🕯️ 環境</Text>
-                                    <StarRating
-                                        fullStarColor='#ff9636'
-                                        rating={post.overallenv}
-                                        selectedStar={(rating) => setPost({ ...post, overallenv: rating })}
-                                    />
-                                </HStack>
-                            </View>
+
+                            </ImageBackground>
 
 
                             {/*  Canvas */}
@@ -426,8 +320,8 @@ export default function ImageEditorStack({ navigation, route }) {
                                         </HStack>
 
                                         <TextInput
-                                            placeholder="標題"
-                                            style={{ fontWeight: 'bold' }}
+                                            placeholder="菜式"
+                                            style={{ fontWeight: 'bold',fontSize:18 ,marginVertical:8}}
                                             defaultValue={post.title[index]}
                                             onChangeText={text => setTitle(index, text)}
                                         />

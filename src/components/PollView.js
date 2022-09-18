@@ -22,13 +22,14 @@ export default function P(props) {
         var c = await getDishPollByRestaurant(props.id)
         var out = []
         var totalCount = 0
-
         for (var i in c) {
             totalCount += c[i]
             out.push({ id: i, choice: i, votes: c[i] })
         }
-        out.push({ id: 'New', choice: '+ 新菜式...', votes: '' })
+       
         out.sort((a,b)=>a.votes<b.votes)
+        out.push({ id: 'New', choice: '+ 新菜式...', votes: '' })
+
         setChoices(out)
         setTotalVotes(totalCount)
 

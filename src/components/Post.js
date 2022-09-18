@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
-    View, Image, TouchableHighlight, TouchableOpacity, Dimensions
+    View, Image,   Dimensions
 } from 'react-native';
+import { TouchableHighlight ,TouchableOpacity} from 'react-native-gesture-handler';
 import {
     HStack, Text, Box,
     VStack, Avatar
@@ -34,6 +35,7 @@ export default function Post(props) {
             /* check block end */
 
             var u = await getUser(p.userid, false)
+            console.log('get',u)
             setItem({
                 ...p,
                 propic: u.propic,
@@ -76,16 +78,16 @@ export default function Post(props) {
     }
     const ImageDesc = (props) => {
         return (
-            <VStack backgroundColor='gray.700' pl={2} py={1}>
-                <Text numberOfLines={1} px={0} fontSize='sm' color='white'>{props.title}</Text>
+            <VStack backgroundColor='gray.600' pl={2} py={1}>
+                <Text numberOfLines={1} px={0} fontSize='sm' color='white' textAlign={'center'}>{props.title}</Text>
                 {props.yummystar > 0 &&
-                    <HStack alignItems='center' pl={0.2}>
+                    <HStack alignItems='center' justifyContent={'center'} pl={0.2}>
                         <StarRating disabled={true} halfStar={'star-half'}
                             starSize={10}
                             starStyle={{ marginRight: 2 }}
                             fullStarColor='#ff9636'
                             rating={props.yummystar}
-
+                            
                         />
                     </HStack>
                 }

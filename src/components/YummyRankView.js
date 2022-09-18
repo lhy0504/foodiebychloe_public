@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-    TouchableHighlight
-} from 'react-native';
+
 import {
     FlatList, HStack, IconButton, Text, Box,
     VStack, NativeBaseProvider, Button, Avatar, Image

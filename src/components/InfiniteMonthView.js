@@ -1,14 +1,14 @@
 import React from 'react';
-import { View, Dimensions, ImageBackground, TouchableOpacity } from 'react-native';
+import { View, Dimensions, ImageBackground,  } from 'react-native';
 import {
     FlatList, HStack, Text, Spinner,
     VStack,
 } from "native-base";
-import { getUserPostsMonthly, getMyUid, getUser } from '../utils/FirebaseUtil'
+import { getUserPostsMonthly, getBothUserPostsMonthly, getMyUid, getUser } from '../utils/FirebaseUtil'
 
 import { Feather, Ionicons, } from '@expo/vector-icons';
 
-
+import { TouchableOpacity, TouchableHighlight } from 'react-native-gesture-handler';
 
 var { width, height } = Dimensions.get('window')
 const startMonthIndex = 12
@@ -46,6 +46,7 @@ export class InfiniteMonthView extends React.Component {
 
         return (
             <MonthView
+                both={this.props.both}
                 date={d}
                 monthidx={info.index}
                 navigation={this.props.navigation}
@@ -109,7 +110,14 @@ class MonthView extends React.Component {
     }
 
     async getData(date) {
-        var dat = await getUserPostsMonthly(this.props.date.getFullYear(), this.props.date.getMonth() + 1, this.props.uid)
+        var dat
+        if (this.props.both) {
+            dat = await getBothUserPostsMonthly(this.props.date.getFullYear(), this.props.date.getMonth() + 1, this.props.uid)
+console.log("BOTH",date,dat)
+        } else {
+            dat = await getUserPostsMonthly(this.props.date.getFullYear(), this.props.date.getMonth() + 1, this.props.uid)
+
+        }
         this.setState({
             ...this.state,
             data: dat,
@@ -138,7 +146,7 @@ class MonthView extends React.Component {
             style={{ flex: 1, padding: 2 }}
             onPress={() => this.viewPost(day)}>
             <View style={{ flex: 1 }}>
-                <View style={{ flex: 1, backgroundColor: '#d9d7cf',opacity:.9 }}>
+                <View style={{ flex: 1, backgroundColor: '#d9d7cf', opacity: .9 }}>
                     <Text style={{
                         backgroundColor: this.isToday(day) ? '#FF9636' : '#6F6F71',
                         textAlign: 'center',

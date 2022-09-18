@@ -121,7 +121,7 @@ export default function X({ navigation, route }) {
                         style={{ textAlignVertical: 'top' }}
                     />
                 </Box>
-                <Button title="更改照片" onPress={changePic} />
+                <Button mb={2} title="更改照片" onPress={changePic} />
                 <Button backgroundColor='red' title="刪除帳戶" onPress={deleteAcc} />
             </VStack >}
 

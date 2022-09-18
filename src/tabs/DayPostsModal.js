@@ -1,12 +1,12 @@
 import React from "react";
 import {
-    useWindowDimensions, TouchableOpacity, 
+    useWindowDimensions,  
     StyleSheet, View
 } from 'react-native';
 import {
     HStack, Text,  NativeBaseProvider, Box
 } from "native-base";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { TouchableWithoutFeedback,TouchableOpacity } from "react-native-gesture-handler";
 import { Feather } from '@expo/vector-icons';
 import { getAuth } from 'firebase/auth';
 import  PostPreview from '../components/PostPreview'
@@ -36,7 +36,7 @@ export default function DayPostModal({ navigation, route }) {
                 date: date,
                 location: '',
                 place_id:'',
-                with: '',
+                with: [],
                 tag: '',
                 likes: [],
                 hashtag: '',
@@ -45,7 +45,7 @@ export default function DayPostModal({ navigation, route }) {
                
                 
                 overallprice: 0,
-                overallyummy: 1,
+                overallyummy: 0,
                 overallenv: 0,
                 overalltitle: '',
                 overalldescription: '',

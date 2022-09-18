@@ -1,7 +1,5 @@
 import React, {  useState, useEffect } from 'react';
-import {
-     TouchableOpacity,TouchableHighlight
-} from 'react-native';
+
 import {
     FlatList, HStack, IconButton, Text, Box,
     VStack, NativeBaseProvider, Button, Avatar
@@ -10,6 +8,7 @@ import {
      getUser
   
 } from '../utils/FirebaseUtil'
+import {  TouchableHighlight } from 'react-native-gesture-handler';
 
 
 /* 

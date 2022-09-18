@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, RefreshControl, Alert, TouchableOpacity, Dimensions, ImageBackground,TouchableHighlight } from 'react-native';
+import { View, RefreshControl, Alert,  Dimensions, ImageBackground, } from 'react-native';
 import {
     FlatList, HStack, IconButton, Text, Image, Box,
     VStack, NativeBaseProvider, Avatar
@@ -8,6 +8,7 @@ import { Feather, Entypo, Ionicons } from '@expo/vector-icons';
 import { getUserPosts, getUser, followUser, getMyUid, blockUser, unblockUser } from '../utils/FirebaseUtil'
 import Post from '../components/Post'
 import { InfiniteMonthView } from '../components/InfiniteMonthView'
+import { TouchableOpacity,TouchableHighlight } from 'react-native-gesture-handler';
 
 /* props: userid */
 var { width, height } = Dimensions.get('window')
@@ -18,7 +19,7 @@ function Feed(props) {
 
     async function getData() {
         setRefreshing(true);
-        var dat = await getUserPosts(props.userid,true)
+        var dat = await getUserPosts(props.userid, true)
         setData(dat)
 
         setRefreshing(false);
@@ -46,7 +47,7 @@ function Feed(props) {
                     <Post postid={item.id} index={index} navigation={props.navigation} />
                 )}
                 ListHeaderComponent={
-                    <Header userid={props.userid} navigation={props.navigation}/>
+                    <Header userid={props.userid} navigation={props.navigation} />
 
                 }
             />
@@ -58,11 +59,11 @@ function Feed(props) {
     );
 }
 function Header(props) {
-    const [user, setUser] = useState({ friends: [], requests: [], following: []})
+    const [user, setUser] = useState({ friends: [], requests: [], following: [] })
     const [myself, setMyself] = useState({ friends: [], requests: [], following: [] })
 
     async function getData() {
-        var u = await getUser(props.userid,true)
+        var u = await getUser(props.userid, true)
         setUser(u)
         var u = await getUser(getMyUid())
         setMyself(u)
@@ -72,13 +73,13 @@ function Header(props) {
         getData()
     }, [])
 
-    const browseBookmark = () => { 
-        props.navigation.push('LocationPreviewStack',{locationIDs:user.bookmarks, title:`${user.name}的收藏`})
+    const browseBookmark = () => {
+        props.navigation.push('LocationPreviewStack', { locationIDs: user.bookmarks, title: `${user.name}的收藏` })
     }
-    const browseFriends= () => { 
-       props. navigation.push('UserPreviewStack',{user:user})
+    const browseFriends = () => {
+        props.navigation.push('UserPreviewStack', { user: user })
 
-    } 
+    }
     return <VStack >
         <ImageBackground
             source={require("./../../assets/gallery_bg.png")}
@@ -96,7 +97,7 @@ function Header(props) {
                             </VStack>
                             <VStack
                                 alignItems='center' justifyContent='flex-end'>
-                                <Text color='white'>關注</Text>
+                                <Text color='white'>他追蹤中</Text>
                                 <Text color='white' fontWeight='bold' fontSize='xl'>{user.following.length}</Text>
                             </VStack>
                         </HStack>
@@ -104,7 +105,7 @@ function Header(props) {
                     </TouchableOpacity>
                 </HStack>
                 <HStack justifyContent={'space-between'} mx={6} my={2} alignItems='center'>
-                        <Text fontWeight={'bold'} fontSize={16} color='white'>{user.name}</Text>  
+                    <Text fontWeight={'bold'} fontSize={16} color='white'>{user.name}</Text>
                     {
                         props.userid != getMyUid() && (user.friends.includes(getMyUid())
                             ?
@@ -112,7 +113,7 @@ function Header(props) {
                             <View style={{
                                 borderColor: "#d1d5db", borderRadius: 5,
                                 borderWidth: 1, padding: 5,
-                               
+
                             }}>
                                 <Text textAlign='center' fontSize='sm' color='white'
                                     width='100'>朋友</Text>
@@ -125,7 +126,7 @@ function Header(props) {
                                 <View style={{
                                     borderColor: "#d1d5db", borderRadius: 5,
                                     borderWidth: 1, padding: 5,
-                                  
+
                                 }}><TouchableOpacity>
                                         <Text textAlign='center' fontSize='sm' color='white'
                                             width='100'>追蹤中</Text></TouchableOpacity>
@@ -137,7 +138,7 @@ function Header(props) {
                                     <View style={{
                                         borderColor: "#d1d5db", borderRadius: 5,
                                         borderWidth: 1, padding: 5,
-                                        
+
                                     }}>
                                         <TouchableOpacity onPress={async () => { await followUser(props.userid); getData(); }}>
                                             <Text textAlign='center' fontSize='sm' color='white'
@@ -148,7 +149,7 @@ function Header(props) {
                                     <View style={{
                                         borderColor: "#d1d5db", borderRadius: 5,
                                         borderWidth: 1, padding: 5,
-                                       
+
                                     }}>
                                         <TouchableOpacity onPress={async () => { await followUser(props.userid); getData(); }}>
                                             <Text textAlign='center' fontSize='sm' color='white'
@@ -162,7 +163,7 @@ function Header(props) {
             </VStack>
         </ImageBackground>
 
-        {user.hasOwnProperty('bookmarks') && <TouchableHighlight activeOpacity={1}underlayColor="#e6e6e6" onPress={browseBookmark}>
+        {user.hasOwnProperty('bookmarks') && <TouchableHighlight activeOpacity={1} underlayColor="#e6e6e6" onPress={browseBookmark}>
             <VStack alignItems={'center'} p={8}>
                 <Feather name={'bookmark'} size={35} color='#555' />
                 <Text color='#555' fontSize={'xs'}>  {`他的收藏 (${user.bookmarks.length || 0})`} </Text>
@@ -181,7 +182,7 @@ export default class GalleryTab extends React.Component {
 
     async getData() {
         /* Check block */
-        var me = await getUser(undefined,true)
+        var me = await getUser(undefined, true)
         if (me.block.includes(this.props.route.params.userid)) {
             Alert.alert(
                 '已封鎖用戶', '解除封鎖?',
@@ -203,8 +204,8 @@ export default class GalleryTab extends React.Component {
         }
         /* check block end */
 
-console.log(this.props.route.params)
-        var u = await getUser(this.props.route.params.userid,true)
+        console.log(this.props.route.params)
+        var u = await getUser(this.props.route.params.userid, true)
         this.setState({ ...this.state, user: u })
     }
 
@@ -248,7 +249,7 @@ console.log(this.props.route.params)
                         height: 50
                     }}>
                         <HStack alignItems='center' justifyContent='space-between'
-                                borderBottomWidth={2} borderBottomColor='#ff9636'
+                            borderBottomWidth={2} borderBottomColor='#ff9636'
                             backgroundColor='white' height='50px' px={2}
                         >
                             <HStack alignItems={'center'}>
@@ -262,10 +263,10 @@ console.log(this.props.route.params)
                                 }
                             </HStack>
                             <HStack>
-                                <IconButton onPress={this.changeViewStyle.bind(this)} mr={2} 
-                                icon={this.state.viewStyle == 'small'?
-                                <Ionicons name="list" size={24} color="black" />
-                                :<Ionicons name="calendar" size={24} color="black" />} />
+                                <IconButton onPress={this.changeViewStyle.bind(this)} mr={2}
+                                    icon={this.state.viewStyle == 'small' ?
+                                        <Ionicons name="list" size={24} color="black" />
+                                        : <Ionicons name="calendar" size={24} color="black" />} />
                                 {this.props.route.params.userid != getMyUid() &&
                                     <IconButton onPress={this.block}
                                         icon={<Entypo name="block" size={24} color="black" />} />

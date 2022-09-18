@@ -19,7 +19,7 @@ export default function Maptab({ navigation, route }) {
 
     const [allrestaurants, setAllrestaurants] = useState([])
 
-    const tagList = ['一周熱門', '旺角', '銅鑼灣']
+    const tagList = ['一周熱門', '旺角', '中環']
     const [listRestaurantKey, setListRestaurantKey] = useState(0)
     const restaurantList = React.createRef()
 
@@ -60,7 +60,7 @@ export default function Maptab({ navigation, route }) {
 
     const renderRestaurantItem = ({ item, index }) => {
         return (
-            <TouchableOpacity activeOpacity={.8}
+            <TouchableOpacity activeOpacity={.8} key={index}
                 onPress={() => openProfile(item.name, item.place_id)}>
                 <Box width={200} h={250} borderRadius={15} overflow='hidden' mx={3.5} mr={1} my={5}
                     borderColor='#d9d9d9' borderWidth={1}

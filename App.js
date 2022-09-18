@@ -11,8 +11,12 @@ import LikedStack from './src/stacks/LikedStack';
 import StoryStack from './src/stacks/StoryStack';
 import StoryStackIGstyle from './src/stacks/StoryStackIGstyle';
 import PostEditorStack from './src/stacks/PostEditorStack';
+import PostEditorStackII from './src/stacks/PostEditorStackII';
+import FriendshipStack from './src/stacks/FriendshipStack';
 import UserProfileStack from './src/stacks/UserProfileStack'
 import ImageBrowserStack from './src/stacks/ImageBrowserStack'
+import UserSearchPreviewStack from './src/stacks/UserSearchPreviewStack'
+
 import './src/utils/FirebaseInit'
 import LoadingStack from './src/stacks/LoadingStack'
 import LocationProfileStack from './src/stacks/LocationProfileStack'
@@ -185,6 +189,18 @@ export default function App() {
                 <Stack.Screen
                   name="UserPreviewStack"
                   component={UserPreviewStack}
+                />
+                <Stack.Screen
+                  name="FriendshipStack"
+                  component={FriendshipStack}
+                />
+                 <Stack.Screen
+                  name="PostEditorStackII"
+                  component={PostEditorStackII}
+                />
+                  <Stack.Screen
+                  name="UserSearchPreviewStack"
+                  component={UserSearchPreviewStack}
                 />
               </Stack.Navigator>
             </NavigationContainer>

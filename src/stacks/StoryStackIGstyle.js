@@ -5,11 +5,12 @@ import {
     StyleSheet,
     View,
     Dimensions,
-    TouchableOpacity,
+    
     Image,
     BackHandler,
     StatusBar,
 } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import {
     HStack, IconButton, Text, Box,
     VStack, NativeBaseProvider

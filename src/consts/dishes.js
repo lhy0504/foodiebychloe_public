@@ -31,7 +31,7 @@ export const dishes = [
         name: '類型',
         id: 1,
         children: [
-            {
+             {
                 name: '自助餐', id: '自助餐',
             },
             {
@@ -39,30 +39,37 @@ export const dishes = [
             },
             {
                 name: '火鍋', id: '火鍋',
-            },
+            }, 
             {
                 name: '甜品', id: '甜品',
             },
-            {
+          /*   {
                 name: 'Fine Dining', id: 'Fine Dining',
             },
             {
                 name: '燒烤', id: '燒烤',
             },
-            {
-                name: '海鮮', id: '海鮮',
-            },
+           
             {
                 name: 'All Day Breakfast', id: 'All Day Breakfast',
+            },*/
+            {
+                name: '海鮮', id: '海鮮',
             },
             {
                 name: '飲品', id: '飲品',
             },
             {
                 name: '健康', id: '健康',
-            },
+            }, 
             {
                 name: '小食', id: '小食',
+            },
+            {
+                name: '漢堡', id: '漢堡',
+            },
+            {
+                name: '拉麵', id: '拉麵',
             },
 
         ]

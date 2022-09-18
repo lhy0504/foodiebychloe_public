@@ -19,11 +19,11 @@ var { width, height } = Dimensions.get('window')
 function FriendList(props) {
     var myuser = props.user
 
-    const [data, setData] = React.useState(myuser.friends)
+    const [data, setData] = React.useState(myuser.friends.concat(myuser.requests))
     const [showing, setShowing] = React.useState('friends')
 
     const showFriend = () => {
-        setData(myuser.friends)
+        setData(myuser.friends.concat(myuser.requests))
         setShowing('friends')
     }
     const showRequests = () => {
@@ -44,11 +44,11 @@ function FriendList(props) {
             <ScrollView horizontal >
                 <TouchableOpacity onPress={showFriend}>
                     <Text m={5} fontSize={'xl'} color={showing == 'friends' ? '#ff9639' : '#c3c3c3'}
-                        fontWeight={'bold'}>{"朋友"}</Text>
+                        fontWeight={'bold'}>{"粉絲"}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={showFollowing}>
                     <Text m={5} fontSize={'xl'} color={showing == 'following' ? '#ff9639' : '#c3c3c3'}
-                        fontWeight={'bold'}>{"追蹤中"}</Text>
+                        fontWeight={'bold'}>{"他追蹤中"}</Text>
                 </TouchableOpacity>
                 {myuser.requests.length != 0 && myuser.id==getMyUid()&&
                     <TouchableOpacity onPress={showRequests}>

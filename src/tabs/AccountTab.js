@@ -6,7 +6,7 @@ import {
 } from "native-base";
 import { Feather, AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
 
-import { getAllRestaurants, getMyUid, getRestaurantsMap, getUser } from '../utils/FirebaseUtil'
+import { getAllRestaurants, getMyUid, getRestaurantsMap, getUser,getUsersByName } from '../utils/FirebaseUtil'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
@@ -18,6 +18,7 @@ export default function Maptab({ navigation, route }) {
 
     const [user, setUsers] = useState(null)
     const [IDSearch, setIDSearch] = useState('')
+    const [nameSearch, setNameSearch] = useState('')
 
     async function getData() {
         var dat = await getUser()
@@ -57,10 +58,20 @@ export default function Maptab({ navigation, route }) {
             })
         }
     }
+    const onNameSearch = async () => {
+        var searchUsers = await getUsersByName(nameSearch)
+
+     
+             navigation.push('UserSearchPreviewStack', {
+                users:searchUsers
+            }) 
+            
+        
+    }
     const onShare = async () => {
         try {
             const result = await Share.share({
-                message: '在foodieByChloe加我為朋友！\nID: '+getMyUid() ,
+                message: '在foodieByChloe加我為朋友！\n名字: '+user.name ,
                     
             });
             if (result.action === Share.sharedAction) {
@@ -136,22 +147,21 @@ export default function Maptab({ navigation, route }) {
                 </HStack>
 
 
-                <TouchableOpacity activeOpacity={.8} key={6}
-                disabled>
-                    <HStack flex={1} mx={6} borderTopRightRadius={15} borderTopLeftRadius={15} overflow='hidden' mt={5}
+              
+               
+                <HStack flex={1} mx={6} borderTopRightRadius={15} borderTopLeftRadius={15} overflow='hidden' mt={5}
                         borderColor='#d9d9d9' borderWidth={1} alignItems='center' py={2}
                         style={styles.boxshadow}
                     >
                         <Feather name='user-plus' size={24} style={{ margin: 5, marginHorizontal: 15, marginLeft: 25 }} />
-                        <TextInput placeholder='以ID追蹤朋友'
-                            onChangeText={setIDSearch}
-                            value={IDSearch}
+                        <TextInput placeholder='以名稱追蹤朋友'
+                            onChangeText={setNameSearch}
+                            value={nameSearch}
                             style={{ flex: 1 }} />
-                        <IconButton style={{ width: 50 }} onPress={onIDSearch}
+                        <IconButton style={{ width: 50 }} onPress={onNameSearch}
                             icon={<Ionicons name="search" size={24} color="black" />} />
-
                     </HStack>
-                </TouchableOpacity>
+          
                 <TouchableOpacity activeOpacity={.8} key={7}
                     onPress={onShare}>
                     <HStack flex={1} mx={6} overflow='hidden'
@@ -159,7 +169,7 @@ export default function Maptab({ navigation, route }) {
                         style={styles.boxshadow}
                     >
                         <Feather name='share-2' size={24} style={{ margin: 5, marginHorizontal: 15, marginLeft: 25 }} />
-                        <Text fontSize='md' fontWeight='bold' >在外部分享ID</Text>
+                        <Text fontSize='md' fontWeight='bold' >在外部分享</Text>
                     </HStack>
                 </TouchableOpacity>
 
@@ -173,7 +183,7 @@ export default function Maptab({ navigation, route }) {
                         <Text fontSize='md' fontWeight='bold' >編輯個人檔案</Text>
                     </HStack>
                 </TouchableOpacity>
-                <Text style={{ alignSelf: 'center', fontFamily: 'sans-serif-light', color: 'black', marginBottom: 18 }}
+                <Text mt={9} style={{ alignSelf: 'center', fontFamily: 'sans-serif-light', color: 'black', marginBottom: 18 }}
                 >ғᴏᴏᴅɪᴇ ʙʏ ᴄʜʟᴏᴇ🍺</Text>
 
                 <Box h={50} key={98} />

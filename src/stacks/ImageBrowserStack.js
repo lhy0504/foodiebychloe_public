@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text,  ActivityIndicator } from 'react-native';
 import { ImageBrowser } from 'expo-image-picker-multiple';
+import { TouchableOpacity,  } from 'react-native-gesture-handler';
 
 export default class ImageBrowserScreen extends Component {
   _getHeaderLoader = () => (

@@ -1,5 +1,5 @@
 import React, { setState, useEffect } from 'react';
-import { Dimensions, StyleSheet, BackHandler, View, TouchableOpacity } from 'react-native';
+import { Dimensions, StyleSheet, Platform, View, StatusBar } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Permissions from "expo-permissions";
 
@@ -8,8 +8,8 @@ import {
     VStack, NativeBaseProvider, Button
 } from "native-base";
 import { Feather, Ionicons } from '@expo/vector-icons';
-import { StatusBar } from 'expo-status-bar';
 import * as ImageManipulator from 'expo-image-manipulator';
+import { TouchableOpacity,  } from 'react-native-gesture-handler';
 
 
 const { width, height } = Dimensions.get("window");
@@ -37,7 +37,7 @@ export default function AddMediaTab({ navigation, route }) {
         setState({ ...state, loaded: false });
         console.log('bl')
     });
-    useEffect(async() => {
+    useEffect(async () => {
         const { status } = await Permissions.askAsync(Permissions.CAMERA);
         console.log(status)
         const cameraPermission = await Camera.requestPermissionsAsync();
@@ -78,14 +78,14 @@ export default function AddMediaTab({ navigation, route }) {
 
     async function takePicture() {
         if (camera) {
-            var data = await camera.current.takePictureAsync({exif:true});
-            
+            var data = await camera.current.takePictureAsync({ exif: true });
+
             /* workaround for ios wrong photo orientation */
-           /*  if(data.width != data.exif.ImageWidth  ){
-                console.log('oritation',data.exif.Orientation)
-                data = await ImageManipulator.manipulateAsync(data.uri, 
-                    [{ rotate: 0 }],   { compress: 1 });
-            } */
+            /*  if(data.width != data.exif.ImageWidth  ){
+                 console.log('oritation',data.exif.Orientation)
+                 data = await ImageManipulator.manipulateAsync(data.uri, 
+                     [{ rotate: 0 }],   { compress: 1 });
+             } */
 
             if (state.isMultipleImg) {
 
@@ -97,28 +97,24 @@ export default function AddMediaTab({ navigation, route }) {
 
                 if (route.params !== undefined) {
                     if (route.params.hasOwnProperty('reeditindex')) {
-                        
+
                         navigation.push('ImageEditorStack', {
-                          uri:data.uri,
-                            width:data.exif.width || data.width,
-                            height:data.exif.height || data.height,
+                            uri: data.uri,
+                            width: data.exif?.width || data.width,
+                            height: data.exif?.height || data.height,
                             post: route.params.post,
                             reeditindex: route.params.reeditindex,
 
                         })
                     }
                 } else {
-                    console.log({
-                        uri:data.uri,
-                          width:data.exif.width || data.width,
-                          height:data.exif.height || data.height,
-                    })
+                  
                     navigation.push('ImageEditorStack', {
-                        uri:data.uri,
-                          width:data.exif.width || data.width,
-                          height:data.exif.height || data.height,
+                        uri: data.uri,
+                        width: data.exif?.width || data.width,
+                        height: data.exif?.height || data.height,
                     })
-                    
+
                 }
             }
         }
@@ -217,8 +213,15 @@ export default function AddMediaTab({ navigation, route }) {
 
     }
     return <NativeBaseProvider>
-        <Box flex={1} backgroundColor='black'>
-            <StatusBar style="dark" />
+        <View >
+            <StatusBar
+            animated={true}
+            backgroundColor="#000"
+            barStyle="light-content" />
+        </View>
+
+        <View style={{ backgroundColor: 'black', flex: 1,}}>
+           
             {
                 state.loaded &&
                 <Box flex={1}
@@ -226,7 +229,7 @@ export default function AddMediaTab({ navigation, route }) {
                 >
                     <Camera
                         ratio="16:9"
-                        style={{flex:1}}
+                        style={{ flex: 1 }}
                         type={Camera.Constants.Type.back}
 
                         justifyContent='space-between' ref={camera} >
@@ -261,8 +264,7 @@ export default function AddMediaTab({ navigation, route }) {
                     </HStack>
                 </Box>
             }
-        </Box>
-        <Box position='absolute' right={5} top={5}>
+            <Box position='absolute' right={5} top={5}>
                 <TouchableOpacity
                     onPress={() => {
                         navigation.goBack()
@@ -272,6 +274,8 @@ export default function AddMediaTab({ navigation, route }) {
 
                 </TouchableOpacity>
             </Box>
+        </View>
+
     </NativeBaseProvider >
 
 

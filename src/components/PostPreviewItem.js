@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    View, Image, TouchableHighlight
+    View, Image
 } from 'react-native';
 import {
     HStack, Text,
@@ -13,6 +13,7 @@ import {
 import LocationButton from '../components/LocationButton'
 import StarRating from 'react-native-star-rating';
 import YummyRankView from './YummyRankView';
+import {  TouchableHighlight } from 'react-native-gesture-handler';
 
 export default function Post(props) {
 

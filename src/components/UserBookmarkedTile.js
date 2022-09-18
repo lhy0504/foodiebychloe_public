@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-    View, TouchableWithoutFeedback, Image, TouchableHighlight, TouchableOpacity
-} from 'react-native';
+
 import {
     HStack, Text, Box,
     VStack, Avatar
