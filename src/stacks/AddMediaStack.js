@@ -9,7 +9,7 @@ import {
 } from "native-base";
 import { Feather, Ionicons } from '@expo/vector-icons';
 import * as ImageManipulator from 'expo-image-manipulator';
-import { TouchableOpacity,  } from 'react-native-gesture-handler';
+import { TouchableOpacity, } from 'react-native-gesture-handler';
 
 
 const { width, height } = Dimensions.get("window");
@@ -79,14 +79,17 @@ export default function AddMediaTab({ navigation, route }) {
     async function takePicture() {
         if (camera) {
             var data = await camera.current.takePictureAsync({ exif: true });
-
-            /* workaround for ios wrong photo orientation */
-            /*  if(data.width != data.exif.ImageWidth  ){
-                 console.log('oritation',data.exif.Orientation)
-                 data = await ImageManipulator.manipulateAsync(data.uri, 
-                     [{ rotate: 0 }],   { compress: 1 });
-             } */
-
+            console.log(data.exif)
+            if (data.exif.Orientation!=0) {
+                data = await ImageManipulator.manipulateAsync(data.uri,
+                    [
+                    {
+                        resize: {
+                            width: width,
+                            height: height
+                        }
+                    }], { compress: 1 });
+            }
             if (state.isMultipleImg) {
 
                 var arr = state.multipleImages
@@ -100,19 +103,19 @@ export default function AddMediaTab({ navigation, route }) {
 
                         navigation.push('ImageEditorStack', {
                             uri: data.uri,
-                            width: data.exif?.width || data.width,
-                            height: data.exif?.height || data.height,
+                            width: width,//data.exif?.width || data.width,
+                            height: height,//data.exif?.height || data.height,
                             post: route.params.post,
                             reeditindex: route.params.reeditindex,
 
                         })
                     }
                 } else {
-                  
+
                     navigation.push('ImageEditorStack', {
                         uri: data.uri,
-                        width: data.exif?.width || data.width,
-                        height: data.exif?.height || data.height,
+                        width: width,//data.exif?.width || data.width,
+                        height: height//data.exif?.height || data.height,
                     })
 
                 }
@@ -215,13 +218,13 @@ export default function AddMediaTab({ navigation, route }) {
     return <NativeBaseProvider>
         <View >
             <StatusBar
-            animated={true}
-            backgroundColor="#000"
-            barStyle="light-content" />
+                animated={true}
+                backgroundColor="#fff"
+                barStyle="dark-content" />
         </View>
 
-        <View style={{ backgroundColor: 'black', flex: 1,}}>
-           
+        <View style={{ backgroundColor: 'black', flex: 1, }}>
+
             {
                 state.loaded &&
                 <Box flex={1}
@@ -229,7 +232,7 @@ export default function AddMediaTab({ navigation, route }) {
                 >
                     <Camera
                         ratio="16:9"
-                        style={{ flex: 1 }}
+                        style={{ width: width, height: height }}
                         type={Camera.Constants.Type.back}
 
                         justifyContent='space-between' ref={camera} >

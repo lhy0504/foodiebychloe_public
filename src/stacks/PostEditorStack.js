@@ -7,19 +7,15 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import {
     HStack, IconButton, Box,
     Text,
-    Button, NativeBaseProvider, Avatar
+    Button, NativeBaseProvider, Avatar, Checkbox
 } from 'native-base';
 import StarRating from 'react-native-star-rating';
 import { Ionicons, Feather, MaterialIcons } from '@expo/vector-icons';
 import PagerView from 'react-native-pager-view';
 import Dots from 'react-native-dots-pagination';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import Autocomplete from 'react-native-autocomplete-input'
-import { getAuth } from 'firebase/auth';
 import { getMyUid, getUser, uploadPost } from '../utils/FirebaseUtil'
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
-import { yummyRank } from './../consts/dishes'
-import YummyRankView from './../components/YummyRankView'
+import { getAllThemes, getTheme } from '../consts/themes';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height
@@ -81,7 +77,9 @@ export default function ImageEditorStack({ navigation, route }) {
                 overallenv: 0,
                 overalltitle: '',
                 overalldescription: '',
-                address: ''
+                address: '',
+                theme: 'None',
+                layout: false
             }
         }
     }
@@ -228,7 +226,7 @@ export default function ImageEditorStack({ navigation, route }) {
                                 }
                                 <TextInput
                                     placeholder="標題"
-                                    style={{ fontWeight: 'bold', fontSize: 18, marginVertical: 8 }}
+                                    style={{ fontWeight: 'bold', fontSize: 18, marginVertical: 0 }}
 
                                     defaultValue={post.overalltitle}
                                     onChangeText={text => setPost({ ...post, overalltitle: text })}
@@ -236,10 +234,53 @@ export default function ImageEditorStack({ navigation, route }) {
                                 <TextInput
                                     placeholder="開場白..." multiline={true}
                                     defaultValue={post.overalldescription}
-                                    style={{ minHeight: 150, }}
+                                    style={{ minHeight: 100, }}
                                     onChangeText={text => setPost({ ...post, overalldescription: text })}
                                 />
-                                <HStack alignItems='center' borderColor={'coolGray.300'} borderBottomWidth={1} borderTopWidth={1}>
+                                <HStack alignItems='center' borderColor={'coolGray.300'}  >
+                                    <Feather name="sun" size={16} color='#FF9636' />
+                                    <Text fontWeight={'bold'} color='coolGray.400'>{`  主題 (${post.theme})`}</Text>
+                                    <Box style={{ marginBottom: -10 }}>
+                                        <SectionedMultiSelect single
+                                            items={getAllThemes()}
+                                            IconRenderer={MaterialIcons}
+                                            uniqueKey="id"
+                                            selectText="主題"
+                                            confirmText='確認'
+                                            onSelectedItemsChange={arr => setPost({ ...post, theme: arr })}
+                                            selectedItems={post.theme}
+                                            key={'as2ljkasdh'}
+                                            searchPlaceholderText="主題"
+                                            showChips={false}
+                                        />
+
+                                    </Box>
+
+                                    <Text pl={5} fontWeight={'bold'} color='coolGray.400'>{'有趣佈局 '}</Text>
+                                    <Checkbox
+                                        defaultIsChecked={post.layout}
+                                        value={post.layout}
+                                        onChange={() => setPost({ ...post, layout: !post.layout })}
+                                    />
+
+                                </HStack>
+                                <HStack justifyContent='center' borderColor={'coolGray.300'} borderBottomWidth={1} pb={1} >
+                                    <ImageBackground
+                                        style={{ width: 50, }}
+                                        source={getTheme(post).image}
+                                        imageStyle={{ resizeMode: 'cover' }}
+                                    >
+
+                                        <Box backgroundColor={'gray.300'} w={5} h={5} borderRadius={1} m={1} />
+                                        <HStack mx={1} borderColor='gray.300' borderTopWidth={1} borderBottomWidth={1} h={1} />
+                                        <Box backgroundColor={'gray.300'} w={5} h={5} borderRadius={1} m={1} 
+                                        alignSelf={post.layout?'flex-end':'auto'} />
+                                        <HStack mx={1} borderColor='gray.300' borderTopWidth={1} borderBottomWidth={1} h={1} />
+                                        <Box h={1} />
+
+                                    </ImageBackground>
+                                </HStack>
+                                <HStack alignItems='center' borderColor={'coolGray.300'} borderBottomWidth={1} >
                                     <Feather name="users" size={16} color='#FF9636' />
                                     <Text fontWeight={'bold'} color='coolGray.400'>{`  同行朋友 (${post.with.length})`}</Text>
                                     <Box style={{ marginBottom: -10 }}>
@@ -321,7 +362,7 @@ export default function ImageEditorStack({ navigation, route }) {
 
                                         <TextInput
                                             placeholder="菜式"
-                                            style={{ fontWeight: 'bold',fontSize:18 ,marginVertical:8}}
+                                            style={{ fontWeight: 'bold', fontSize: 18, marginVertical: 8 }}
                                             defaultValue={post.title[index]}
                                             onChangeText={text => setTitle(index, text)}
                                         />

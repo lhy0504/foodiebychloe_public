@@ -16,6 +16,8 @@ export default class LocationButton extends React.Component {
         Location
         place_id = ''
 
+    Optional: color (for tag color)
+
     */
     constructor(props) {
         super(props)
@@ -57,12 +59,12 @@ export default class LocationButton extends React.Component {
         if (this.props.location == '') return <></>
 
         return (
-            <TouchableHighlight activeOpacity={1} underlayColor="#e6e6e6" onPress={this.onPress} >
+            <TouchableHighlight activeOpacity={1} underlayColor="#e6e6e650" onPress={this.onPress} >
                 <HStack alignItems='center' my={.5}>
                    
                     <VStack>
                         <Text  fontWeight='bold' color='#FF9636' numberOfLines={1}>{this.props.location.trim()}</Text>
-                        {this.state &&  <Text >{this.state.description}</Text>}
+                        {this.state &&  <Text color={this.props.hasOwnProperty('color')?this.props.color:'black'}>{this.state.description}</Text>}
                     </VStack>
                 </HStack>
             </TouchableHighlight>

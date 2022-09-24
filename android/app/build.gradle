@@ -135,8 +135,8 @@ android {
         applicationId 'com.foodiebychloe'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 21
-        versionName "1.0.8"
+        versionCode 24
+        versionName "1.0.16"
         missingDimensionStrategy 'react-native-camera', 'general'
         multiDexEnabled true
     }

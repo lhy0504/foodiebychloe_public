@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Dimensions, StyleSheet, Image, TextInput, Button, TouchableHighlight, ImageBackground } from 'react-native';
+import { View, Dimensions, StyleSheet, Image, TextInput, Button, TouchableOpacity, ImageBackground } from 'react-native';
 import {
     Text, Spinner, IconButton, Avatar,
     VStack, NativeBaseProvider, Box, HStack, ScrollView, FlatList
@@ -7,8 +7,6 @@ import {
 import { Feather, AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
 
 import { getAllRestaurants, getUser, getRestaurantsMap, getAllUsers } from '../utils/FirebaseUtil'
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import YummyRankView from './../components/YummyRankView'
 
 import { dishes } from './../consts/dishes'
 
@@ -60,7 +58,7 @@ export default function Maptab({ navigation, route }) {
 
     const renderRestaurantItem = ({ item, index }) => {
         return (
-            <TouchableOpacity activeOpacity={.8} key={index}
+            <TouchableOpacity activeOpacity={.8}
                 onPress={() => openProfile(item.name, item.place_id)}>
                 <Box width={200} h={250} borderRadius={15} overflow='hidden' mx={3.5} mr={1} my={5}
                     borderColor='#d9d9d9' borderWidth={1}

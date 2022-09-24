@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Dimensions, ImageBackground,  } from 'react-native';
+import { View, Dimensions, ImageBackground,  TouchableOpacity} from 'react-native';
 import {
     FlatList, HStack, Text, Spinner,
     VStack,
@@ -8,7 +8,7 @@ import { getUserPostsMonthly, getBothUserPostsMonthly, getMyUid, getUser } from 
 
 import { Feather, Ionicons, } from '@expo/vector-icons';
 
-import { TouchableOpacity, TouchableHighlight } from 'react-native-gesture-handler';
+import {  TouchableHighlight } from 'react-native-gesture-handler';
 
 var { width, height } = Dimensions.get('window')
 const startMonthIndex = 12

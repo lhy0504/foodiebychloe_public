@@ -3,11 +3,10 @@ import React, { useState, useEffect, } from 'react';
 import {
     StyleSheet,
     View, TextInput,
-    Alert, 
-    Image,FlatList,
-    BackHandler, useWindowDimensions
+    Alert,
+    Image, FlatList, TouchableOpacity,
+    BackHandler, useWindowDimensions, ImageBackground
 } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import {
     ScrollView, HStack, IconButton, Text, Box,
     VStack, NativeBaseProvider, Avatar, Spinner
@@ -23,6 +22,7 @@ import {
 import LocationButton from '../components/LocationButton'
 import StarRating from 'react-native-star-rating';
 import YummyRankView from '../components/YummyRankView';
+import { getTheme } from '../consts/themes';
 /* 
 Props:
 -  post  (whole post)
@@ -141,10 +141,10 @@ export default function StoryStack({ navigation, route }) {
             ],
 
         );
-    const openProfile = (authorid ) => {
+    const openProfile = (authorid) => {
         console.log(content)
         navigation.push('UserProfileStack', {
-            userid: authorid || content.userid 
+            userid: authorid || content.userid
         })
     }
     var { width, height } = useWindowDimensions()
@@ -168,11 +168,11 @@ export default function StoryStack({ navigation, route }) {
 
         );
     }
-    const SuggestedFoodiesView=() =>{
+    const SuggestedFoodiesView = () => {
         const [allusers, setAllusers] = useState([])
         async function getData() {
             var all = []
-            for(var i of content.with){
+            for (var i of content.with) {
                 var dat = await getUser(i)
                 all.push(dat)
             }
@@ -204,24 +204,24 @@ export default function StoryStack({ navigation, route }) {
                             backgroundColor: '#fff'
                         }}
                     >
-    
+
                         <Avatar ml='15px' mr='8px' size={45} source={{ uri: item.propic, }} />
-    
+
                         <Text fontSize='md' fontWeight='bold' textAlign={'center'}>{item.name}</Text>
                         <Text fontSize={12} color='#888' mb={1}>{"("}{item.friends.length + item.requests.length}{")"}</Text>
                         <Text fontSize={12} color='#888' textAlign={'center'}>{item.status}</Text>
-    
-    
+
+
                     </VStack>
                 </TouchableOpacity>
             )
         }
         return (
             <Box mx={5}  >
-                <HStack  mt={4} justifyContent='space-between' alignItems='center' >
-                    <Text fontWeight={'bold'}   >在此帖文標記的Foodies</Text>
+                <HStack mt={4} justifyContent='space-between' alignItems='center' >
+                    <Text fontWeight={'bold'} color={theme.color}  >在此帖文標記的Foodies</Text>
                 </HStack>
-    
+
                 <FlatList
                     showsHorizontalScrollIndicator={false}
                     horizontal
@@ -231,13 +231,17 @@ export default function StoryStack({ navigation, route }) {
             </Box>
         )
     }
+
+    var theme = getTheme(content)
+    var isZlayout = content.hasOwnProperty('layout') && content.layout
+
     return content != null ? (
         <NativeBaseProvider>
             {/*  Header Bar  */}
             <View style={{
                 height: 50,
-              
-              
+
+
             }}>
                 <HStack alignItems='center'
                     borderBottomWidth={2} borderBottomColor='#ff9636'
@@ -248,7 +252,7 @@ export default function StoryStack({ navigation, route }) {
                         <IconButton onPress={() => navigation.goBack()}
                             icon={<Ionicons name="ios-chevron-back" size={24} color="black" />} />
 
-                        <TouchableOpacity onPress={()=>openProfile()}>
+                        <TouchableOpacity onPress={() => openProfile()}>
                             <HStack height='50px' alignItems='center'>
                                 <Image source={{ uri: author.propic }} style={{ height: 40, width: 40, borderRadius: 20 }} />
                                 <Text fontWeight='bold' color='black' fontSize='sm'>  {author.name}</Text>
@@ -260,192 +264,194 @@ export default function StoryStack({ navigation, route }) {
 
                 </HStack>
             </View>
-           {/*  <Box backgroundColor={'#ff9636'} width={width} height={.5}/> */}
-            <ScrollView flex={1}  >
 
 
+            <ImageBackground
+                style={{ height: '100%', width: width, flex: 1 }}
+                source={theme.image}
 
-                {getMyUid() == content.userid &&
-                    <HStack>
-                        {/* Editor buttons */}
-                        <TouchableOpacity style={{ flex: 1 }}
-                            onPress={() => editPost()}
-                        >
-                            <Box style={{
-                                borderColor: "#ff9636", borderRadius: 5,
-                                borderWidth: 1, padding: 5, flex: 1, margin: 9
+                imageStyle={{ resizeMode: 'cover' }}
+            >
+                <ScrollView flex={1} >
+                    {getMyUid() == content.userid &&
+                        <HStack>
+                            {/* Editor buttons */}
+                            <TouchableOpacity style={{ flex: 1 }}
+                                onPress={() => editPost()}
+                            >
+                                <Box style={{
+                                    borderColor: "#ff9636", borderRadius: 5,
+                                    borderWidth: 1, padding: 5, flex: 1, margin: 9
 
-                            }}>
-                                <Text textAlign='center' fontSize='sm'
-                                    color="#ff9636">編輯</Text>
-                            </Box>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{ flex: 1 }} onPress={askConfirmDelPost}>
-                            <Box style={{
-                                borderColor: "#ff9636", borderRadius: 5,
-                                borderWidth: 1, padding: 5, flex: 1, margin: 9
-
-                            }}>
-                                <Text textAlign='center' fontSize='sm'
-                                    style={{ flex: 1 }} color="#ff9636">刪除</Text>
-                            </Box>
-                        </TouchableOpacity>
-
-                    </HStack>
-                }
-                {/* Heading part */}
-                <HStack padding={2} ml={3} >
-
-                    <VStack flex={1}>
-
-                        {content.overalltitle != '' && <Text fontSize='lg' fontWeight={'bold'} >{content.overalltitle.trim()}</Text>}
-                        {content.overalldescription != '' && <Text fontSize={'md'} >{content.overalldescription.trim()}</Text>}
-
-                        {/* {content.with.length>0 && content.with[0] != '' &&
-                            <HStack alignItems='center'>
-                                <Feather name="users" size={16} color='#FF9636' />
-                                <Text > </Text>
-                                {
-                                    content.with.map((item, index) => {
-                                        if (index == content.with.length - 1) {
-                                            return (<Text key={index} fontSize='xs' color='coolGray.500'>{item}</Text>)
-                                        } else {
-                                            return (<Text key={index} fontSize='xs' color='coolGray.500'>{item}{", "}</Text>
-
-                                            )
-                                        }
-                                    })}
-                            </HStack>
-                        } */}
-
-                    </VStack>
-                </HStack>
-
-                {/* Every image part */}
-
-                {content.image.map((item, index) =>
-
-
-                    <View key={index}>
-                        <TouchableWithoutFeedback onPress={() => openStory(index)} >
-                            <View style={{ width: width - 32, marginLeft: 16, marginRight: 16, backgroundColor: '#f0f0ed' }}>
-                                <Image source={{ uri: item }} style={{
-                                    height: width, width: '100%', flex: 1,
-                                }} />
-                                {content.title.length > index && <Box width={'100%'}
-                                    position='absolute'
-                                    bottom={0}
-                                    px={4} py={1} pb={2}
-                                    backgroundColor='rgba(44,44,44,.6)'>
-                                    <HStack pt={1} justifyContent='space-between' pb={1} alignItems='center'>
-                                        <Text fontWeight='semibold' fontSize='lg' color='white'>{content.title[index]}</Text>
-                                        {content.price[index] > 0 &&
-                                            <Text color='white'>{'$' + content.price[index]}</Text>
-                                        }
-                                    </HStack>
-
-                                    {content.yummystar[index] > 0 &&
-                                        <HStack alignItems='center' >
-                                            <StarRating disabled={true} halfStar={'star-half'}
-                                                starSize={15}
-                                                starStyle={{ marginRight: 5 }}
-                                                fullStarColor='#ff9636'
-                                                rating={content.yummystar[index]}
-
-                                            />
-                                        </HStack>
-                                    }
+                                }}>
+                                    <Text textAlign='center' fontSize='sm'
+                                        color="#ff9636">編輯</Text>
                                 </Box>
-                                }
-                            </View>
-                        </TouchableWithoutFeedback>
-                        <Box mb={8}>
-                            {content.description[index] &&
-                                <Text px={4} mt={1} mb={2} fontSize={'md'}>{content.description[index]}</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{ flex: 1 }} onPress={askConfirmDelPost}>
+                                <Box style={{
+                                    borderColor: "#ff9636", borderRadius: 5,
+                                    borderWidth: 1, padding: 5, flex: 1, margin: 9
+
+                                }}>
+                                    <Text textAlign='center' fontSize='sm'
+                                        style={{ flex: 1 }} color="#ff9636">刪除</Text>
+                                </Box>
+                            </TouchableOpacity>
+
+                        </HStack>
+                    }
+                    {/* Heading part */}
+                    <HStack padding={2} mx={3} >
+
+                        <VStack flex={1}>
+
+                            {content.overalltitle != '' && <Text fontSize='lg' color={theme.color}
+                                fontWeight={'bold'} >{content.overalltitle.trim()}</Text>}
+                            {content.overalldescription != '' && <Text fontSize={'md'} color={theme.color}
+                            >{content.overalldescription.trim()}</Text>}
+
+                        </VStack>
+                    </HStack>
+
+                    {/* Every image part */}
+
+                    {content.image.map((item, index) =>
+
+
+                        <View key={index}
+                            style={{
+                                marginLeft: isZlayout && index % 2 == 1 ? 90 : 16,
+                                marginRight: isZlayout && index % 2 == 0 ? 90 : 16,
+
+                                marginVertical: 18
+                            }}>
+                            <TouchableWithoutFeedback onPress={() => openStory(index)} >
+                                <View style={{
+                                    width: '100%',
+                                    backgroundColor: '#f0f0ed'
+                                }}>
+                                    <Image source={{ uri: item }} style={{
+                                        width: '100%', height: width - 16 - isZlayout * 74, flex: 1,
+                                    }} />
+                                    {content.title.length > index && <Box width={'100%'}
+                                        position='absolute'
+                                        bottom={0}
+                                        px={4} py={1} pb={2}
+                                        backgroundColor='rgba(44,44,44,.6)'>
+                                        <HStack pt={1} justifyContent='space-between' pb={1} alignItems='center'>
+                                            <Text fontWeight='semibold' fontSize='lg' color='white'>{content.title[index]}</Text>
+                                            {content.price[index] > 0 &&
+                                                <Text color='white'>{'$' + content.price[index]}</Text>
+                                            }
+                                        </HStack>
+
+                                        {content.yummystar[index] > 0 &&
+                                            <HStack alignItems='center' >
+                                                <StarRating disabled={true} halfStar={'star-half'}
+                                                    starSize={15}
+                                                    starStyle={{ marginRight: 5 }}
+                                                    fullStarColor='#ff9636'
+                                                    rating={content.yummystar[index]}
+
+                                                />
+                                            </HStack>
+                                        }
+                                    </Box>
+                                    }
+                                </View>
+                            </TouchableWithoutFeedback>
+
+                            {content.description[index] != '' &&
+                                <Text px={1} mt={1} mb={2} fontSize={'md'}
+                                    color={theme.color}>{content.description[index]}</Text>
                             }
-                        </Box>
-                    </View>
 
-                )}
+                        </View>
 
-                <VStack mx={5} py={4} my={2} borderTopWidth={1} borderBottomWidth={1} borderColor='coolGray.300'>
-                    {/* Rating */}
-                    {(content.overallyummy > 0 ||
-                        content.overallprice > 0 ||
-                        content.overallenv > 0) &&
-                        <HStack justifyContent='space-between' alignItems='center' mb={3} >
-                            <LocationButton disabled
-                                location={content.location}
-                                place_id={content.place_id}
-                                navigation={navigation} />
+                    )}
 
-                            {/*   {content.overallyummy != 0 && <StarRating
+                    <VStack mx={5} py={4} my={2} borderTopWidth={1} borderBottomWidth={1} borderColor='coolGray.300'>
+                        {/* Rating */}
+                        {(content.overallyummy > 0 ||
+                            content.overallprice > 0 ||
+                            content.overallenv > 0) &&
+                            <HStack justifyContent='space-between' alignItems='center' mb={3} >
+                                <LocationButton disabled
+                                    location={content.location}
+                                    place_id={content.place_id}
+                                    navigation={navigation}
+                                    color={theme.color} />
+
+                                {/*   {content.overallyummy != 0 && <StarRating
                                 fullStarColor='#ff9636'
                                 rating={content.overallyummy}
                                 starSize={20}
                             />} */}
 
-                        </HStack>}
-                    <HStack>
-                        {content.overallyummy > 0 && <VStack alignItems='center' flex={1}>
-                            <Text fontWeight={'semibold'} color='#ff9636' fontSize={36}>{content.overallyummy}</Text>
-                            <Text fontWeight='bold' color='coolGray.500' >味道</Text>
+                            </HStack>}
+                        <HStack>
+                            {content.overallyummy > 0 && <VStack alignItems='center' flex={1}>
+                                <Text fontWeight={'semibold'} color='#ff9636' fontSize={36}>{content.overallyummy}</Text>
+                                <Text fontWeight='bold' color='coolGray.500' >味道</Text>
 
-                        </VStack>}
+                            </VStack>}
 
-                        {content.overallyummy > 0 && <VStack alignItems='center' flex={1}>
-                            <Text fontWeight={'semibold'} color='#ff9636' fontSize={36}>{content.overallenv}</Text>
-                            <Text fontWeight='bold' color='coolGray.500' >環境</Text>
+                            {content.overallyummy > 0 && <VStack alignItems='center' flex={1}>
+                                <Text fontWeight={'semibold'} color='#ff9636' fontSize={36}>{content.overallenv}</Text>
+                                <Text fontWeight='bold' color='coolGray.500' >環境</Text>
 
-                        </VStack>}
+                            </VStack>}
 
-                        {content.overallyummy > 0 && <VStack alignItems='center' flex={1}>
-                            <Text fontWeight={'semibold'} color='#ff9636' fontSize={36}>{content.overallprice}</Text>
-                            <Text fontWeight='bold' color='coolGray.500' >抵食</Text>
+                            {content.overallyummy > 0 && <VStack alignItems='center' flex={1}>
+                                <Text fontWeight={'semibold'} color='#ff9636' fontSize={36}>{content.overallprice}</Text>
+                                <Text fontWeight='bold' color='coolGray.500' >抵食</Text>
 
-                        </VStack>}
-                    </HStack>
-                    
-
-
-                </VStack>
-
-                {content.with.length>1 && <SuggestedFoodiesView />}
-
-                {/********** Footer part ********/}
-                <VStack px={5} pt={1}>
-                    {content.likes.length != 0 &&
-                        <TouchableOpacity onPress={() => openLiked} >
-                            <Text mb={1}
-                                fontWeight='bold'>{content.likes.length} 個讚好</Text>
-                        </TouchableOpacity>
-                    }
-
-                    {commentUsers.map((item, index) =>
-                        <HStack key={index}>
-                            <TouchableOpacity onPress={() => openProfile(item.userid)}>
-                                <Text fontWeight='bold' >{item.name} </Text>
-                            </TouchableOpacity>
-                            <Text>{content.comment[index].comment}</Text>
+                            </VStack>}
                         </HStack>
 
-                    )
-                    }
-                    <Box mb={1} />
-                    {content.hashtag.map((item, index) =>
-                        <Text fontWeight='bold' key={index} fontSize='xs' color='blue.400'>
-                            {item}
-                        </Text>
-                    )}
-                    <Box mb={1} />
-                    <Text color='coolGray.500' fontSize='xs'>
-                        <Feather name="calendar" size={12} color="#555555" />
-                        {"  "}{content.date}  {content.time}
-                    </Text>
-                    <Box mb={4} />
-                </VStack>
 
-            </ScrollView>
+
+                    </VStack>
+
+                    {content.with.length > 1 && <SuggestedFoodiesView />}
+
+                    {/********** Footer part ********/}
+                    <VStack px={5} pt={1}>
+                        {content.likes.length != 0 &&
+                            <TouchableOpacity onPress={() => openLiked} >
+                                <Text mb={1} color={theme.color}
+                                    fontWeight='bold'>{content.likes.length} 個讚好</Text>
+                            </TouchableOpacity>
+                        }
+
+                        {commentUsers.map((item, index) =>
+                            <HStack key={index}>
+                                <TouchableOpacity onPress={() => openProfile(item.userid)}>
+                                    <Text fontWeight='bold' color={theme.color}>{item.name} </Text>
+                                </TouchableOpacity>
+                                <Text color={theme.color}>{content.comment[index].comment}</Text>
+                            </HStack>
+
+                        )
+                        }
+                        <Box mb={1} />
+                        {content.hashtag.map((item, index) =>
+                            <Text fontWeight='bold' key={index} fontSize='xs' color='blue.400'>
+                                {item}
+                            </Text>
+                        )}
+                        <Box mt={1} mb={4} >
+                            <Text color='coolGray.500' fontSize='xs'>
+                                <Feather name="calendar" size={12} color="#555555" />
+                                {"  "}{content.date}  {content.time}
+                            </Text>
+                        </Box>
+
+                    </VStack>
+                </ScrollView>
+            </ImageBackground>
+
 
 
             {/*  Footer Bar  */}

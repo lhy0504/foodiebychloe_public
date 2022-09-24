@@ -79,7 +79,7 @@ export default function Post(props) {
     const ImageDesc = (props) => {
         return (
             <VStack backgroundColor='gray.600' pl={2} py={1}>
-                <Text numberOfLines={1} px={0} fontSize='sm' color='white' textAlign={'center'}>{props.title}</Text>
+                <Text numberOfLines={1} px={0} fontSize='sm'  color='white' textAlign={'center'}>{props.title}</Text>
                 {props.yummystar > 0 &&
                     <HStack alignItems='center' justifyContent={'center'} pl={0.2}>
                         <StarRating disabled={true} halfStar={'star-half'}

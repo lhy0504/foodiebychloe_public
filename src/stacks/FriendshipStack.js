@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, RefreshControl, Alert, Dimensions, ImageBackground,  } from 'react-native';
+import { View, RefreshControl, Alert, Dimensions, ImageBackground,TouchableOpacity  } from 'react-native';
 import {
     FlatList, HStack, IconButton, Text, Image, Box,
     VStack, NativeBaseProvider, Avatar
@@ -8,7 +8,6 @@ import { Feather, Entypo, Ionicons } from '@expo/vector-icons';
 import { getBothUserPosts, getUser, followUser, getMyUid, blockUser, unblockUser } from '../utils/FirebaseUtil'
 import Post from '../components/Post'
 import { InfiniteMonthView } from '../components/InfiniteMonthView'
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 /* props: userid */
 var { width, height } = Dimensions.get('window')
@@ -85,7 +84,7 @@ function Header(props) {
             {myself && user &&
                 <VStack>
                     <HStack pt={3} px={6} justifyContent='space-between' alignItems={'center'}>
-                        <TouchableOpacity onPress={() => openFriend(props.userid)}>
+                        <TouchableOpacity onPress={() => openFriend(props.userid)} style={{flex:1}}>
                             <VStack flex={1} borderRadius={15} overflow='hidden' mx={3.5} my={5} px={2}
                                 alignItems='center' >
                                 <Avatar size={60} source={{ uri: user.propic, }} />
@@ -94,7 +93,7 @@ function Header(props) {
                                 <Text fontSize={12} color='#ccc' textAlign={'center'}>{user.status}</Text>
                             </VStack>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => openFriend(getMyUid())}>
+                        <TouchableOpacity onPress={() => openFriend(getMyUid())}  style={{flex:1}}>
 
                             <VStack flex={1} borderRadius={15} overflow='hidden' mx={3.5} my={5} px={2}
                                 alignItems='center' >

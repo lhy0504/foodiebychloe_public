@@ -11,8 +11,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 T*/
 
-const Testing = false
-const testUID = 'Deleted Account'
+const Testing = true
+const testUID = 'fatdoglovefood'
 
 export function TestingPurpose() {
   if (!Testing) return
@@ -280,12 +280,13 @@ export async function getBothUserPosts(uidA, uidB = getMyUid()) {
 
   var snapshot = await firebase.firestore()
     .collection('posts')
-    .where('with', 'array-contains', uidA, uidB)
+    .where('with', 'array-contains', uidA)
     .orderBy('date', 'desc')
     .get()
 
   snapshot.forEach((doc) => {
     const singlePost = doc.data();
+    if(!singlePost.with.includes(uidB))return
     singlePost.id = doc.id;
     postList.push(convertTimestampToDate(singlePost));
   });
@@ -1016,7 +1017,8 @@ export async function updateUser(user) {
 
 /* foodieScoring */
 export async function addFoodieScore(uidA, uidB, value) {
-
+  // checki f user name has symbol
+  if(uidA.includes('@') || uidB.includes('@')) return
 
   var userA = (await firebase.firestore().collection('score').doc(uidA).get())
   if (!userA.exists) {

@@ -35,7 +35,7 @@ export default function RestaurantTileFromID(props) {
 
     const openProfile = () => {
         props.navigation.push('UserProfileStack', {
-            userid:props.userid
+            userid:data.uid
         })
     }
 

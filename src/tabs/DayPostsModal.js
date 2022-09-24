@@ -49,7 +49,9 @@ export default function DayPostModal({ navigation, route }) {
                 overallenv: 0,
                 overalltitle: '',
                 overalldescription: '',
-                address:''
+                address:'',
+                theme:'None',
+                layout:false
             }
         })
     }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Dimensions, StyleSheet, Image, TextInput, Button, RefreshControl, ImageBackground } from 'react-native';
+import { View, Dimensions, StyleSheet, Image,  Button, RefreshControl, ImageBackground } from 'react-native';
 import {
     Text, Spinner, IconButton, Avatar,
     VStack, NativeBaseProvider, Box, HStack, ScrollView, FlatList
@@ -7,11 +7,10 @@ import {
 import { Feather, AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
 
 import { getUser, getMyUid, getFoodieScore, } from '../utils/FirebaseUtil'
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as Noti from '../utils/SaveNotifications'
 import NotificationButton from '../components/NotificationButton'
 
-
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 var { width, height } = Dimensions.get('window')
 

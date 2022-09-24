@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Dimensions, StyleSheet, Share, TextInput, Button, TouchableHighlight, ImageBackground, Alert } from 'react-native';
+import { View, Dimensions, StyleSheet, Share, TextInput, Button, TouchableOpacity, ImageBackground, Alert } from 'react-native';
 import {
     Text, Spinner, IconButton, Avatar,
     VStack, NativeBaseProvider, Box, HStack, ScrollView, FlatList
@@ -7,7 +7,6 @@ import {
 import { Feather, AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
 
 import { getAllRestaurants, getMyUid, getRestaurantsMap, getUser,getUsersByName } from '../utils/FirebaseUtil'
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 
@@ -148,7 +147,8 @@ export default function Maptab({ navigation, route }) {
 
 
               
-               
+                <TouchableOpacity activeOpacity={.8} key={6}
+                disabled>
                 <HStack flex={1} mx={6} borderTopRightRadius={15} borderTopLeftRadius={15} overflow='hidden' mt={5}
                         borderColor='#d9d9d9' borderWidth={1} alignItems='center' py={2}
                         style={styles.boxshadow}
@@ -161,7 +161,7 @@ export default function Maptab({ navigation, route }) {
                         <IconButton style={{ width: 50 }} onPress={onNameSearch}
                             icon={<Ionicons name="search" size={24} color="black" />} />
                     </HStack>
-          
+                    </TouchableOpacity>
                 <TouchableOpacity activeOpacity={.8} key={7}
                     onPress={onShare}>
                     <HStack flex={1} mx={6} overflow='hidden'

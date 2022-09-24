@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, Dimensions, ScrollView, View, Image, } from 'react-native';
+import { StyleSheet, Dimensions, ScrollView, View, Image, TouchableWithoutFeedback, TouchableHighlight, TouchableOpacity } from 'react-native';
 import { ImageEditor } from "expo-image-editor";
 import {
     HStack, IconButton, Box,
@@ -12,7 +12,6 @@ import { ImageManipulator } from 'expo-image-crop'
 import { Ionicons, Feather } from '@expo/vector-icons';
 import * as MediaLibrary from 'expo-media-library';
 import Slider from '@react-native-community/slider';
-import { TouchableWithoutFeedback, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 
 import Firebase from '../utils/FirebaseInit'
 import { useAuthentication } from '../utils/UseAuth';
@@ -98,26 +97,24 @@ const presets = [
     {
         name: '原圖',
         filter: {
-
-        }
+        },
+        image:require('../../assets/FilterPreview/Normal.jpeg')
     },
     {
         name: '鮮艷',
         filter: {
-
             saturation: +1,
-
-        }
+        },
+        image:require('../../assets/FilterPreview/Saturation1.0.jpeg')
     }, {
         name: '懷舊',
         filter: {
-
             sepia: +1,
-
-        }
+        },
+        image:require('../../assets/FilterPreview/Sepia.jpeg')
     }
 ]
-function styleContain(w, h, maxW = width, maxH = (height - 260 - 45)) {
+function styleContain(w, h, maxW = width, maxH = (height - 220 - 85)) {
     if (w > maxW) {
         h = h * maxW / w
         w = maxW
@@ -218,12 +215,32 @@ export default function ImageEditorStack({ navigation, route }) {
     return (
         <NativeBaseProvider>
             <View style={{ flex: 1 }}>
+                {/*  Header Bar  */}
+
+                <HStack alignItems='center' justifyContent='space-between'
+                    borderBottomWidth={2} borderBottomColor='#ff9636'
+                    backgroundColor='white' px={3}
+
+                >
+                    <HStack flex={1}>
+                        <IconButton onPress={() => navigation.goBack()} key={1}
+                            icon={<Ionicons name="ios-chevron-back" size={24} color="black" />} />
+                        <IconButton key={2}
+                            onPress={toggleCropper}
+                            icon={<Feather name="crop" size={24} color="black" />} />
+                    </HStack>
+                    <Text flex={1} fontSize='lg' textAlign='center'>Edit</Text>
+                    <Box flex={1} alignItems='flex-end'><IconButton
+                        onPress={saveImage}
+                        icon={<Feather name="send" size={24} color="black" />} />
+                    </Box>
+                </HStack>
+
                 {/*  Canvas */}
-                <Box flex={1} alignItems='center' justifyContent='center' position={'absolute'}
-                    >
-                    <Surface style={{
-                        width: route.params.width,
-                        height: route.params.height
+                <Box flex={1} alignItems='center' justifyContent='center'>
+                <Surface style={{
+                        width: styleContain(route.params.width, route.params.height).width,
+                        height: styleContain(route.params.width, route.params.height).height
                     }} ref={image}>
                         <ImageFilters {...state}
                             width={editorState.width}
@@ -232,46 +249,20 @@ export default function ImageEditorStack({ navigation, route }) {
                             {{ uri: editorState.uri }}
                         </ImageFilters>
 
-                    </Surface>
+                    </Surface>  
+                  {/*   <Image style={{
+                        width: styleContain(route.params.width, route.params.height).width,
+                        height: styleContain(route.params.width, route.params.height).height
+                    }} source=   {{ uri: editorState.uri }}/> */}
                 </Box>
-                {/*  Header Bar  */}
-
-                <View style={{
-                    width: width,
-                    height: 45,
-                    position: 'absolute',
-                    top: 0
-                }}>
-                    <HStack alignItems='center' justifyContent='space-between'
-                        borderBottomWidth={2} borderBottomColor='#ff9636'
-                        backgroundColor='rgba(233,233,233,.8)' px={3} h={45}
-                    >
-                        <HStack flex={1}>
-                            <IconButton onPress={() => navigation.goBack()} key={1}
-                                icon={<Ionicons name="ios-chevron-back" size={24} color="black" />} />
-                            <IconButton key={2}
-                                onPress={toggleCropper}
-                                icon={<Feather name="crop" size={24} color="black" />} />
-                        </HStack>
-                        <Text flex={1} fontSize='lg' textAlign='center'>調整圖片</Text>
-                        <Box flex={1} alignItems='flex-end'><IconButton
-                            onPress={saveImage}
-                            icon={<Feather name="send" size={24} color="black" />} />
-                        </Box>
-                    </HStack>
-                </View>
-
-
 
 
                 {/*  Pane  */}
                 <View style={{
                     width: width,
                     height: 260,
-                    position: 'absolute',
-                    bottom: 0
                 }}>
-                    <View style={{ height: 210 }} backgroundColor='rgba(233,233,233,.8)' >
+                    <View style={{ height: 210 }} backgroundColor='#e9e9e9' >
                         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                             {
                                 presets.map((item, index) => (
@@ -282,25 +273,20 @@ export default function ImageEditorStack({ navigation, route }) {
                                             <Box alignItems='center' >
                                                 <Text color={currFilterIndex == index ? '#ff9636' : 'black'}
                                                     py={2}>{item.name}</Text>
-                                                <Surface style={{
-                                                    width: filterWidth,
-                                                    height: filterHeight,
-                                                }} >
-                                                    <ImageFilters {...item.filter}
-                                                        width={editorState.width}
-                                                        height={editorState.height}
-                                                    >
-                                                        {{ uri: editorState.uri }}
-                                                    </ImageFilters>
-
-                                                </Surface>
+                                                <Image style={{
+                                                    width: 120,
+                                                    height: 100,
+                                                }} 
+                                                source={item.image}
+                                                />
+                                                    
                                             </Box></Box>
                                     </TouchableWithoutFeedback>
                                 ))
                             }
 
                         </ScrollView>
-                        <View style={{ height: 50 }} backgroundColor='rgba(233,233,233,.8)'>
+                        <View style={{ height: 50 }} backgroundColor='#e9e9e9' >
 
                             <Slider
                                 ref={filterPercentageSliderRef}
@@ -314,7 +300,7 @@ export default function ImageEditorStack({ navigation, route }) {
                         </View>
                     </View>
 
-                    <HStack height={50} backgroundColor='rgba(233,233,233,.8)'>
+                    <HStack height={50} >
 
                         <Box flex={1} justifyContent='center'
                             borderBottomColor='#ff9636'
@@ -421,11 +407,9 @@ export default function ImageEditorStack({ navigation, route }) {
 
                 {/*  <ImageManipulator
                 photo={{ uri: editorState.uri }}
-
                 isVisible={editorState.isCropperVisible}
                 onToggleModal={toggleCropper}
                 onPictureChoosed={({ uri: uriM }) => {
-
                     Image.getSize(uriM, (w, h) => {
                         if (route.params !== undefined) {
                             if (route.params.hasOwnProperty('reeditindex')) {
@@ -434,17 +418,13 @@ export default function ImageEditorStack({ navigation, route }) {
                                     reeditindex: route.params.reeditindex,
                                     uri: uriM, width: w, height: h
                                 })
-
-
                             } else {
                                 navigation.replace('ImageEditorStack', { uri: uriM, width: w, height: h })
                             }
                         } else {
                             navigation.replace('ImageEditorStack', { uri: uriM, width: w, height: h })
                         }
-
                     })
-
                 }}
             /> */}
             </View>
