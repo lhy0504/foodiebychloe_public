@@ -48,13 +48,14 @@ function SuggestedFoodiesView(props) {
                     style={{
                         shadowColor: "#000",
                         shadowOffset: {
-                            width: 8,
-                            height: 8,
+                            width: 0,
+                            height: 2,
                         },
-                        shadowOpacity: 0.25,
+                        shadowOpacity: 0.2,
                         shadowRadius: 3.84,
                         elevation: 8,
-                        backgroundColor: '#fff'
+                        backgroundColor: '#fff',
+                        overflow: 'visible',
                     }}
                 >
 

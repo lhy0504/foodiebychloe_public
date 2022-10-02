@@ -3,7 +3,7 @@
     "name": "foodieByChloe",
     "slug": "foodieByChloe",
     "scheme": "foodiebychloe",
-    "version": "1.0.16",
+    "version": "1.1.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -26,13 +26,16 @@
         "NSCameraUsageDescription": "foodieByChloe拍攝美食照片來加到您的帖文中",
         "NSPhotoLibraryUsageDescription": "從圖片庫上載美食照片來加到您的帖文中",
         "NSPhotoLibraryAddUsageDescription": "foodieByChloe下載美食照片到您的圖庫中",
-        "NSLocationWhenInUseUsageDescription": "foodieByChloe以位置搜尋附近餐廳"
+        "NSLocationWhenInUseUsageDescription": "foodieByChloe以位置搜尋附近餐廳",
+        "UIBackgroundModes": [
+          "remote-notification"
+        ]
       },
-      "buildNumber": "21"
+      "buildNumber": "33"
     },
     "android": {
       "package": "com.foodiebychloe",
-      "versionCode": 24,
+      "versionCode": 33,
       "permissions": [
         "CAMERA_ROLL",
         "CAMERA",

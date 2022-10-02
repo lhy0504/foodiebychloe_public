@@ -195,13 +195,14 @@ export default function StoryStack({ navigation, route }) {
                         style={{
                             shadowColor: "#000",
                             shadowOffset: {
-                                width: 8,
-                                height: 8,
+                                width: 0,
+                                height: 2,
                             },
-                            shadowOpacity: 0.25,
+                            shadowOpacity: 0.2,
                             shadowRadius: 3.84,
                             elevation: 8,
-                            backgroundColor: '#fff'
+                            backgroundColor: '#fff',
+                            overflow: 'visible',
                         }}
                     >
 
@@ -305,9 +306,14 @@ export default function StoryStack({ navigation, route }) {
                     <HStack padding={2} mx={3} >
 
                         <VStack flex={1}>
-
+                            <LocationButton disabled hideTags
+                                location={content.location}
+                                place_id={content.place_id}
+                                navigation={navigation}
+                                color={theme.color} />
                             {content.overalltitle != '' && <Text fontSize='lg' color={theme.color}
                                 fontWeight={'bold'} >{content.overalltitle.trim()}</Text>}
+
                             {content.overalldescription != '' && <Text fontSize={'md'} color={theme.color}
                             >{content.overalldescription.trim()}</Text>}
 
@@ -340,7 +346,9 @@ export default function StoryStack({ navigation, route }) {
                                         px={4} py={1} pb={2}
                                         backgroundColor='rgba(44,44,44,.6)'>
                                         <HStack pt={1} justifyContent='space-between' pb={1} alignItems='center'>
-                                            <Text fontWeight='semibold' fontSize='lg' color='white'>{content.title[index]}</Text>
+                                            {content.title[index] != '' &&
+                                                <Text fontWeight='semibold' fontSize='lg' color='white'>{content.title[index]}</Text>
+                                            }
                                             {content.price[index] > 0 &&
                                                 <Text color='white'>{'$' + content.price[index]}</Text>
                                             }
@@ -390,24 +398,31 @@ export default function StoryStack({ navigation, route }) {
                             />} */}
 
                             </HStack>}
-                        <HStack>
+                        <HStack alignItems={'flex-end'}>
+                            {content.overallscore>0 && <VStack alignItems='center' flex={1.5} borderColor='coolGray.300'>
+                                <Text fontWeight={'semibold'} color='#ff9636' fontSize={36}>{content.overallscore}</Text>
+                                <Text fontWeight='bold' color='coolGray.500' >整體</Text>
+
+                            </VStack>}
                             {content.overallyummy > 0 && <VStack alignItems='center' flex={1}>
-                                <Text fontWeight={'semibold'} color='#ff9636' fontSize={36}>{content.overallyummy}</Text>
+                                <Text color='#ff9636' fontSize={28}>{content.overallyummy}</Text>
                                 <Text fontWeight='bold' color='coolGray.500' >味道</Text>
 
                             </VStack>}
 
                             {content.overallyummy > 0 && <VStack alignItems='center' flex={1}>
-                                <Text fontWeight={'semibold'} color='#ff9636' fontSize={36}>{content.overallenv}</Text>
+                                <Text color='#ff9636' fontSize={28}>{content.overallenv}</Text>
                                 <Text fontWeight='bold' color='coolGray.500' >環境</Text>
 
                             </VStack>}
 
                             {content.overallyummy > 0 && <VStack alignItems='center' flex={1}>
-                                <Text fontWeight={'semibold'} color='#ff9636' fontSize={36}>{content.overallprice}</Text>
+                                <Text color='#ff9636' fontSize={28}>{content.overallprice}</Text>
                                 <Text fontWeight='bold' color='coolGray.500' >抵食</Text>
 
                             </VStack>}
+
+
                         </HStack>
 
 

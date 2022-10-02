@@ -38,30 +38,32 @@ function FriendList(props) {
     return (
 
         <VStack flex={1} justifyContent='flex-start'>
-           
+
 
             <ScrollView  >
-            <ScrollView horizontal >
-                <TouchableOpacity onPress={showFriend}>
-                    <Text m={5} fontSize={'xl'} color={showing == 'friends' ? '#ff9639' : '#c3c3c3'}
-                        fontWeight={'bold'}>{"粉絲"}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={showFollowing}>
-                    <Text m={5} fontSize={'xl'} color={showing == 'following' ? '#ff9639' : '#c3c3c3'}
-                        fontWeight={'bold'}>{"他追蹤中"}</Text>
-                </TouchableOpacity>
-                {myuser.requests.length != 0 && myuser.id==getMyUid()&&
-                    <TouchableOpacity onPress={showRequests}>
-                        <Text m={5} fontSize={'xl'} color={showing == 'requests' ? '#ff9639' : '#c3c3c3'}
-                            fontWeight={'bold'}>{"追蹤請求"}</Text>
+                <ScrollView horizontal >
+                    <TouchableOpacity onPress={showFriend}>
+                        <Text m={5} fontSize={'xl'} color={showing == 'friends' ? '#ff9639' : '#c3c3c3'}
+                            fontWeight={'bold'}>{"粉絲"}</Text>
                     </TouchableOpacity>
-                }
-            </ScrollView>
-                {data.map((item,index) => (
-                    <Box backgroundColor={'#fff'}  key={showing+index} >
-                        <UserPreview userid={item} navigation={props.navigation}/></Box>
+                    <TouchableOpacity onPress={showFollowing}>
+                        <Text m={5} fontSize={'xl'} color={showing == 'following' ? '#ff9639' : '#c3c3c3'}
+                            fontWeight={'bold'}>{"他追蹤中"}</Text>
+                    </TouchableOpacity>
+                    {myuser.requests.length != 0 && myuser.id == getMyUid() &&
+                        <TouchableOpacity onPress={showRequests}>
+                            <Text m={5} fontSize={'xl'} color={showing == 'requests' ? '#ff9639' : '#c3c3c3'}
+                                fontWeight={'bold'}>{"追蹤請求"}</Text>
+                        </TouchableOpacity>
+                    }
+                </ScrollView>
+                {data.map((item, index) => (
+                    <Box backgroundColor={'#fff'} key={showing + index} >
+                        <UserPreview userid={item} navigation={props.navigation} /></Box>
                 )
                 )}
+                 {data.length==0&&
+                            <Text textAlign={'center'} m={10}>沒有結果</Text>}
             </ScrollView>
         </VStack >
 

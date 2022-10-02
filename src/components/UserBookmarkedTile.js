@@ -25,7 +25,8 @@ export default function Post(props) {
         async function getData() {
 
             var userlist = await getUserBookmarked(props.place_id)
-            var myFd = (await getUser(undefined,false)).following
+            var myUser = await getUser()
+            var myFd = myUser.following.concat(myUser.friends)
 
             // find all fd Bookmarked
             var fdBookmarked = userlist.filter(value =>

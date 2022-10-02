@@ -50,6 +50,10 @@ function Feed(props) {
                         score={props.score} rank={props.rank} numpost={data.length} />
 
                 }
+                ListEmptyComponent={
+
+                    <Text textAlign={'center'} m={10}>沒有共同帖文</Text>
+                }
             />
         </VStack>
 
@@ -85,7 +89,7 @@ function Header(props) {
                 <VStack>
                     <HStack pt={3} px={6} justifyContent='space-between' alignItems={'center'}>
                         <TouchableOpacity onPress={() => openFriend(props.userid)} style={{flex:1}}>
-                            <VStack flex={1} borderRadius={15} overflow='hidden' mx={3.5} my={5} px={2}
+                            <VStack flex={1}  my={5} px={5.5} borderColor='coolGray.300' borderRightWidth={1}
                                 alignItems='center' >
                                 <Avatar size={60} source={{ uri: user.propic, }} />
                                 <Text fontSize='md' color='white' fontWeight='bold' textAlign={'center'}>{user.name}</Text>
@@ -95,7 +99,7 @@ function Header(props) {
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => openFriend(getMyUid())}  style={{flex:1}}>
 
-                            <VStack flex={1} borderRadius={15} overflow='hidden' mx={3.5} my={5} px={2}
+                            <VStack flex={1}  my={5} px={5.5}
                                 alignItems='center' >
                                 <Avatar msize={60} source={{ uri: myself.propic, }} />
                                 <Text fontSize='md' fontWeight='bold' color='white' textAlign={'center'}>{myself.name}</Text>

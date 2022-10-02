@@ -36,7 +36,7 @@ export default function Maptab({ navigation, route }) {
 
     //hide if have route params
     const [showAdvanced, setShowAdvanced] = useState(!route.params)
-    const [showTextResult, setShowTextResult] = useState(true)
+    const [showTextResult, setShowTextResult] = useState( route.params && route.params.hasOwnProperty('dish'))
 
 
     async function searchRestaurant() {
@@ -103,7 +103,7 @@ export default function Maptab({ navigation, route }) {
                 >
                     {markers.map((marker, index) => (
                         <Marker
-                            key={index}
+                            key={marker.place_id}
                             coordinate={{
                                 latitude: marker.lat,
                                 longitude: marker.long,

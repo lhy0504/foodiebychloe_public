@@ -50,8 +50,8 @@ export default function DayPostModal({ navigation, route }) {
                 overalltitle: '',
                 overalldescription: '',
                 address:'',
-                theme:'None',
-                layout:false
+                theme:'Rice',
+                layout:true
             }
         })
     }

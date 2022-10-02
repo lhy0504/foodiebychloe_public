@@ -43,7 +43,7 @@ export default function Post(props) {
             onPress={() => props.navigation.push('StoryStack', { post: post, currImg: 0 })} >
             <VStack mx={5} py={3} borderBottomWidth={1} borderBottomColor='coolGray.300'>
 
-                <HStack justifyContent='space-between' alignItems='center' mb={1}>
+                <HStack justifyContent='space-between' alignItems='center' >
                     {post.overalltitle != '' ?
                         <Text fontSize={'lg'} fontWeight={'bold'}
                             flexWrap='wrap' flex={1}
@@ -54,18 +54,22 @@ export default function Post(props) {
 
                     {post.overallyummy != 0 && <StarRating
                         fullStarColor='#ff9636'
-                        rating={post.overallyummy}
+                        rating={post.overallscore || post.overallyummy}
                         starSize={18}
                     />
                     }
 
                 </HStack>
-
-                {post.overalldescription != '' && <Text numberOfLines={3} >{post.overalldescription}</Text>}
+                <LocationButton disabled hideTags
+                                location={post.location}
+                                place_id={post.place_id}
+                                navigation={props.navigation}
+                                color={'black'} />
+                {post.overalldescription != '' && <Text numberOfLines={3} fontSize='md' >{post.overalldescription}</Text>}
                 <View style={{ flexWrap: 'wrap', flexDirection: 'row' }} >
                     {post.image.map(
                         img => (<View style={{ flexBasis: '33%', padding: 2 }}>
-                            <Image source={{ uri: img }} style={{ height: 100, width: '100%', }} />
+                            <Image source={{ uri: img }} style={{ height: 100, width: '100%', }} resizeMode='cover' />
                         </View>
                         )
                     )}

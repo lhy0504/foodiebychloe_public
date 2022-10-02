@@ -2,6 +2,7 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, Button, Platform } from 'react-native';
+import * as Permissions from "expo-permissions";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -43,15 +44,23 @@ await fetch('https://exp.host/--/api/v2/push/send', {
 export async function registerForPushNotificationsAsync() {
   let token;
   if (Device.isDevice) {
+    /* attempt 1 */
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
     if (existingStatus !== 'granted') {
       const { status } = await Notifications.requestPermissionsAsync();
       finalStatus = status;
     }
+    /* attempt 2 */
+    const { status: existingStatus2 } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    let finalStatus2 = existingStatus2;
+    if (existingStatus2 !== 'granted') {
+      const { status2 } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus2 = status2;
+    }
     if (finalStatus !== 'granted') {
       //alert('Failed to get push token for push notification!');
-      return;
+      //return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
     console.log(token);

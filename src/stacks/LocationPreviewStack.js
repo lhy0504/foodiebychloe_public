@@ -42,8 +42,8 @@ export default class GalleryTab extends React.Component {
                     </HStack>
                 </View>
                 <VStack backgroundColor='white' flex={1}>
+                    <Text m={4} fontWeight='bold' fontSize='2xl' >{this.props.route.params.title}</Text>
                     <ScrollView>
-                        <Text m={4} fontWeight='bold' fontSize='2xl' >{this.props.route.params.title}</Text>
 
 
                         {this.props.route.params.hasOwnProperty('locations') ?
@@ -55,6 +55,9 @@ export default class GalleryTab extends React.Component {
                                 <LocationPreview place_id={item} navigation={this.props.navigation} />
                             )
                             )}
+                            {!this.props.route.params.locations?.length
+                            &&!this.props.route.params.locationIDs?.length&&
+                            <Text textAlign={'center'} m={10}>沒有結果</Text>}
                     </ScrollView>
                 </VStack>
             </NativeBaseProvider >

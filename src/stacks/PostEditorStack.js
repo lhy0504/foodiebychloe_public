@@ -78,8 +78,8 @@ export default function ImageEditorStack({ navigation, route }) {
                 overalltitle: '',
                 overalldescription: '',
                 address: '',
-                theme: 'None',
-                layout: false
+                theme: 'Rice',
+                layout: true
             }
         }
     }
@@ -353,6 +353,7 @@ export default function ImageEditorStack({ navigation, route }) {
                                         <HStack mt={5} justifyContent='space-between' alignItems='center'>
                                             <Text fontWeight='bold' color='coolGray.500'>🛎️ 美味指數</Text>
                                             <StarRating
+                                            halfStarEnabled
                                                 style={{ width: 200 }}
                                                 fullStarColor='#ff9636'
                                                 rating={post.yummystar[index]}

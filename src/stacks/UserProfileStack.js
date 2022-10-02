@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, RefreshControl, Alert,  Dimensions, ImageBackground, } from 'react-native';
+import { View, RefreshControl, Alert, Dimensions, ImageBackground, } from 'react-native';
 import {
     FlatList, HStack, IconButton, Text, Image, Box,
     VStack, NativeBaseProvider, Avatar
 } from "native-base";
 import { Feather, Entypo, Ionicons } from '@expo/vector-icons';
-import { getUserPosts, getUser, followUser, getMyUid, blockUser, unblockUser } from '../utils/FirebaseUtil'
+import { getUserPosts, getUser, followUser, getMyUid, blockUser, unblockUser, getFoodieScore } from '../utils/FirebaseUtil'
 import Post from '../components/Post'
 import { InfiniteMonthView } from '../components/InfiniteMonthView'
-import { TouchableOpacity,TouchableHighlight } from 'react-native-gesture-handler';
+import { TouchableOpacity, TouchableHighlight } from 'react-native-gesture-handler';
 
 /* props: userid */
 var { width, height } = Dimensions.get('window')
@@ -61,12 +61,16 @@ function Feed(props) {
 function Header(props) {
     const [user, setUser] = useState({ friends: [], requests: [], following: [] })
     const [myself, setMyself] = useState({ friends: [], requests: [], following: [] })
+    const [score,setScore]=useState(0)
 
     async function getData() {
         var u = await getUser(props.userid, true)
         setUser(u)
         var u = await getUser(getMyUid())
         setMyself(u)
+
+        var fdScore = await getFoodieScore()
+        if(fdScore.hasOwnProperty(props.userid))setScore(fdScore[props.userid])
     }
 
     useEffect(() => {
@@ -78,6 +82,10 @@ function Header(props) {
     }
     const browseFriends = () => {
         props.navigation.push('UserPreviewStack', { user: user })
+
+    }
+    const browseSocial = () => {
+        props.navigation.navigate('SocialTab')
 
     }
     return <VStack >
@@ -163,14 +171,24 @@ function Header(props) {
             </VStack>
         </ImageBackground>
 
-        {user.hasOwnProperty('bookmarks') && <TouchableHighlight activeOpacity={1} underlayColor="#e6e6e6" onPress={browseBookmark}>
-            <VStack alignItems={'center'} p={8}>
-                <Feather name={'bookmark'} size={35} color='#555' />
-                <Text color='#555' fontSize={'xs'}>  {`他的收藏 (${user.bookmarks.length || 0})`} </Text>
-            </VStack>
+        <HStack justifyContent={'center'} alignItems={'flex-end'}>
+            {user.hasOwnProperty('bookmarks') && <TouchableHighlight style={{flex:1}}
+            activeOpacity={1} underlayColor="#e6e6e6" onPress={browseBookmark}>
+                <VStack alignItems={'center'} py={4} px={4}>
+                    <Feather name={'bookmark'} size={35} color='#555' />
+                    <Text color='#555' fontSize={'xs'}>  {`他的收藏 (${user.bookmarks.length || 0})`} </Text>
+                </VStack>
 
-        </TouchableHighlight>}
+            </TouchableHighlight>}
+            {props.userid!=getMyUid()&&<TouchableHighlight style={{flex:1}}
+            activeOpacity={1} underlayColor="#e6e6e6" onPress={browseSocial}>
+                <VStack alignItems={'center'} py={4} px={4}>
+                    <Text fontSize={24}>{score}</Text>
+                    <Text color='#555' fontSize={'xs'}>  {`foodieScore`} </Text>
+                </VStack>
 
+            </TouchableHighlight>}
+        </HStack>
     </VStack>
 }
 export default class GalleryTab extends React.Component {

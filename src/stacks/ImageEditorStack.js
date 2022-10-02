@@ -101,17 +101,37 @@ const presets = [
         image:require('../../assets/FilterPreview/Normal.jpeg')
     },
     {
-        name: '鮮艷',
+        name: '鮮豔1',
         filter: {
-            saturation: +1,
+            saturation: +.5,
         },
         image:require('../../assets/FilterPreview/Saturation1.0.jpeg')
+    },  {
+        name: '鮮豔2',
+        filter: {
+            exposure:+.5,
+            saturation: +.5,
+        },
+        image:require('../../assets/FilterPreview/Saturation2.jpeg')
     }, {
+        name: '鮮豔3',
+        filter: {
+            temperature:-1500,
+            saturation: +.5,
+        },
+        image:require('../../assets/FilterPreview/Saturation3.jpeg')
+    },{
         name: '懷舊',
         filter: {
             sepia: +1,
         },
         image:require('../../assets/FilterPreview/Sepia.jpeg')
+    },{
+        name: '藍調',
+        filter: {
+            sepia: -1,
+        },
+        image:require('../../assets/FilterPreview/Blue.jpeg')
     }
 ]
 function styleContain(w, h, maxW = width, maxH = (height - 220 - 85)) {
@@ -207,6 +227,7 @@ export default function ImageEditorStack({ navigation, route }) {
         }
         setState({ ...originalPreset, ...newState })
         setFilterPercentage(value)
+        console.log(newState)
     }
 
     const filterWidth = styleContain(route.params.width, route.params.height, 110, 110).width
@@ -218,7 +239,7 @@ export default function ImageEditorStack({ navigation, route }) {
                 {/*  Header Bar  */}
 
                 <HStack alignItems='center' justifyContent='space-between'
-                    borderBottomWidth={2} borderBottomColor='#ff9636'
+                   borderBottomColor='#ff9636'
                     backgroundColor='white' px={3}
 
                 >
@@ -269,13 +290,13 @@ export default function ImageEditorStack({ navigation, route }) {
                                     <TouchableWithoutFeedback key={index}
                                         backgroundColor={currFilterIndex == index ? '#eeeeee' : '#e9e9e9'}
                                         onPress={() => useFilter(index, -999)}>
-                                        <Box height={140} width={120} mr={4} justifyContent='center'>
+                                        <Box height={140}  mr={1} justifyContent='center'>
                                             <Box alignItems='center' >
                                                 <Text color={currFilterIndex == index ? '#ff9636' : 'black'}
                                                     py={2}>{item.name}</Text>
                                                 <Image style={{
-                                                    width: 120,
-                                                    height: 100,
+                                                    width: 120*.8,
+                                                    height: 100*.8,
                                                 }} 
                                                 source={item.image}
                                                 />

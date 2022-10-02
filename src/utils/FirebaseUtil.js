@@ -11,8 +11,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 T*/
 
-const Testing = true
-const testUID = 'fatdoglovefood'
+const Testing = false
+const testUID = 'gladysfoodie.fdchloe@gmail.com'
 
 export function TestingPurpose() {
   if (!Testing) return
@@ -57,18 +57,46 @@ export function TestingPurpose() {
       likes: [],
       hashtag: '',
       comment: [],
+      theme: "Rice",
+      layout: true,
 
-      image: ['https://scontent-hkt1-2.cdninstagram.com/v/t51.2885-15/291758906_454423986020700_7179524618739691436_n.jpg?stp=dst-jpg_e35&_nc_ht=scontent-hkt1-2.cdninstagram.com&_nc_cat=100&_nc_ohc=dnX_bds8_TgAX8tL9mo&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=Mjg3NDczODA1NjUxMTcyMTYxMg%3D%3D.2-ccb7-5&oh=00_AT-qazzGobgI0tUINF_tWyADXsnQMwhGSNZIdHb3mHxoRQ&oe=6328D1D1&_nc_sid=30a2ef', 'https://scontent-hkt1-2.cdninstagram.com/v/t51.2885-15/291452716_125216466674352_4933099925450068094_n.jpg?stp=dst-jpg_e35&_nc_ht=scontent-hkt1-2.cdninstagram.com&_nc_cat=100&_nc_ohc=LUbC6FyTPKwAX-ExXjm&tn=uGuKNaPSDvb2QSiE&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=Mjg3NDczODA1NjUxMTc3Nzg4NQ%3D%3D.2-ccb7-5&oh=00_AT-eDUQ4WRTn1x4CBDDHio9zKNP5x1L5TjDID1E0V8ry_g&oe=63292C08&_nc_sid=30a2ef'],
-      yummystar: [1, 2],
-      title: ['養生腐皮烏冬 $72', '雞蛋花接骨木花啡湯力 $49'],
-      description: ['湯底失望本來期待烏冬表現好d，但都係失望\n烏冬唔彈牙，夾開福袋嗰時都夾得爛，一般真空包裝貨色。', '好淡接骨木花味，真係要好仔細先feel到少少，湯力苦味同咖啡加埋算少少特別，但冇咩驚喜。'],
+
+
+
+      image: ['https://scontent-hkt1-2.cdninstagram.com/v/t51.2885-15/307409554_778236933518730_6389744094334805890_n.jpg?stp=dst-jpg_e35&_nc_ht=scontent-hkt1-2.cdninstagram.com&_nc_cat=106&_nc_ohc=flGMMeqOfjoAX8VZcKK&tn=6lKGob4RTc_b6DfL&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=MjkzMTAzNTAzMTg0NzkwODkzMw%3D%3D.2-ccb7-5&oh=00_AT_7tKEEGpPrmhxR9dXT50v2Lr60yydwHuF3j7o3k5Tpew&oe=63348F23&_nc_sid=30a2ef', 'https://scontent-hkt1-1.cdninstagram.com/v/t51.2885-15/307548535_156911603617341_7927267163115279694_n.jpg?stp=dst-jpg_e35&_nc_ht=scontent-hkt1-1.cdninstagram.com&_nc_cat=109&_nc_ohc=-ED7PmLdtmEAX_lp504&tn=6lKGob4RTc_b6DfL&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=MjkzMTAzNTAzMTQ3ODgzOTYwOA%3D%3D.2-ccb7-5&oh=00_AT_KlB0JvCA1_FP-j61_iGOXh0flfivBS4JFMkAjrAN1rg&oe=6334E21B&_nc_sid=30a2ef', 'https://scontent-hkt1-2.cdninstagram.com/v/t51.2885-15/307735819_754543272317083_2948222041737263751_n.jpg?stp=dst-jpg_e35&_nc_ht=scontent-hkt1-2.cdninstagram.com&_nc_cat=107&_nc_ohc=cwpXEmuLeF4AX86pFOM&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=MjkzMTAzNTAzMTQ3ODk4NzU1Mg%3D%3D.2-ccb7-5&oh=00_AT85079OQIVCImFbz_PCQ7qE9-Ay2QgVIDJGV3lxbkTXOw&oe=6335A9CA&_nc_sid=30a2ef', 'https://scontent-hkt1-2.cdninstagram.com/v/t51.2885-15/307805389_598690965133160_6858458876901700006_n.jpg?stp=dst-jpg_e35&_nc_ht=scontent-hkt1-2.cdninstagram.com&_nc_cat=108&_nc_ohc=0zs6grWuZEkAX8Evb9F&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=MjkzMTAzNTAzMTg4MTQ5NzUxMg%3D%3D.2-ccb7-5&oh=00_AT9mORKYaN_j1omQQ4e1y0bh9M6juFvJ0KxPCXrNS4GO1Q&oe=6335DE6A&_nc_sid=30a2ef'],
+      yummystar: [4, 5, 5, 4],
+      title: ['香煎北海道帶子🐚 $108', '白酒牛油汁煮蜆🧈 $118', '芝士蟹肉長通粉🦀 $168', 'Mojito🥂 $138'],
+      description: ['帶子下面有個綠色嘅醬汁，係枝豆蓉，幾特別，帶子煎到金黃色，充滿油香🤤帶子口感鮮嫩又鎖到好多汁😆唔會好鞋口😝上面配埋金山豆豉醬，香香甜甜', '有兩大舊焗蒜蓉包，超級香脆🥳蜆肉肥美，最緊要冇沙，入口後有甜甜嘅白酒香加埋牛油之後有一個非常好嘅化學作用，總之呢個唔執就好好😝追住嚟食‼️而且上面嘅洋蔥炒到好香😋個汁我仲拎匙羹飲🤭', '蟹👈🏻呢隻中文字係令我抗拒不了的，所以喺餐牌上面見到就一定要叫🙌🏻點知咁鬼正🤩嘩‼️魚子醬呀仲有😍好有魚油香🥳仲有滿滿嘅蟹肉，每一啖都食到😋佢整嘅芝士醬汁好Creamy😳仲要好掛汁👍🏻比佢💯', '酒精含量相對較低，大約只有10%，有青檸汁、蘇打水和薄荷🌿 因為採用左大量嘅薄荷、同青檸🍋，清新又酸甜嘅口感，沖淡了酒精嘅濃烈，喝起來清爽又開胃🌱'],
       overallprice: 3,
-      overallyummy: 1,
+      overallyummy: 4,
       overallenv: 4,
-      location: "	South Herbal Lab 南本草	",
-      overalltitle: "	以環境黎講係靚同舒服，但食物真係算弱項，希望響特色方面加強番。	",
-      overalldescription: "	感覺上除左飲品有d特色之外，食物表現有d強差人意，如果再試應該淨係會試下飲品。	",
-      place_id: "	ChIJz3jYDsUHBDQR198Qz9-wgoo	",
+      location: "	The Pearl (尖沙咀)	",
+      overalltitle: "	《藝 術 風 格 西 餐 廳》	",
+      overalldescription: "	呢間餐廳太有feel了，環境充滿古典氣息，周圍都可以見到唔同嘅雕塑😍就好似我玩動森時佈置嘅餐廳咁😂餐廳分左室內、室外位置，有興趣嘅朋友可以坐室外chill下😌不過今日撞正落雨就唯有坐返室內啦☹️大家黎呢度記得做快測呀🤭	",
+      place_id: "	ChIJbZj0o3gBBDQRgiwmoS6JNVM	",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
     //trimming spaces
@@ -79,19 +107,8 @@ export function TestingPurpose() {
       }
     }
     uploadPost(post, 'public')
-
-    //poll dish
-    var updateObj = {}
-    for (let p in post.title) {
-      updateObj[post.title[p]] = p == 0 ? 1 : 0
-    }
-    console.log(updateObj)
-    firebase.firestore()
-      .collection('dishPoll')
-      .doc(post.place_id)
-      .set(updateObj);
-
   }
+
 }
 
 function getAuth() {
@@ -110,12 +127,11 @@ export async function checkIfNewUser(navigation) {
   1 - save user data to 'user'
   2 - 
   */
-  console.log(getAuth().currentUser)
   console.log('xxx')
-  var userExist = (await firebase.firestore().collection('users').doc(
+  var user = (await firebase.firestore().collection('users').doc(
     getAuth().currentUser.uid
-  ).get()).exists
-  if (!userExist) {
+  ).get())
+  if (!user.exists) {
     registerForPushNotificationsAsync().then(async (token) =>
       await firebase.firestore()
         .collection("users").doc(getAuth().currentUser.uid).set({
@@ -143,6 +159,22 @@ export async function checkIfNewUser(navigation) {
     ).then(() => navigation.replace("MainScreen", { screen: "Home" }));
 
 
+  } else {
+    console.log(user.data())
+    if (user.data().pushtoken == 'error') {
+      registerForPushNotificationsAsync().then(async (token) =>
+        await firebase.firestore()
+          .collection("users").doc(getAuth().currentUser.uid).update({
+            pushtoken: token || 'error',
+          })
+      ).catch(e=>{
+        console.log(e)
+         firebase.firestore()
+        .collection("users").doc(getAuth().currentUser.uid).update({
+          pushtoken: e.toString(),
+        })
+      })
+    }
   }
 }
 export async function getUser(id = getMyUid(), refresh = false) {
@@ -150,17 +182,15 @@ export async function getUser(id = getMyUid(), refresh = false) {
   let today = new Date().toLocaleDateString()
 
   if (refresh) {
-    console.log('refresh')
     // refresh
 
     doc = await firebase.firestore().collection('users').doc(id).get()
-    console.log(doc)
-     if(doc.exists){
-      doc=doc.data()
-     }else{
-        var sampledeleteduser = await getUser("Deleted Account", false)
-        doc =sampledeleteduser
-      }
+    if (doc.exists) {
+      doc = doc.data()
+    } else {
+      var sampledeleteduser = await getUser("Deleted Account", false)
+      doc = sampledeleteduser
+    }
 
 
     //.data()
@@ -168,7 +198,6 @@ export async function getUser(id = getMyUid(), refresh = false) {
     AsyncStorage.setItem('@foodiebychloe:usercache:' + id + today, jsonValue)
 
   } else {
-    console.log('cache')
     doc = await AsyncStorage.getItem('@foodiebychloe:usercache:' + id + today);
     if (doc !== null) {
       return JSON.parse(doc);
@@ -181,7 +210,6 @@ export async function getUser(id = getMyUid(), refresh = false) {
 }
 export async function getUsersByName(queryText) {
   //descending, limit 30
-  console.log(queryText.toString().toUpperCase())
   var postList = [];
   var snapshot = await firebase.firestore()
     .collection('users')
@@ -286,7 +314,7 @@ export async function getBothUserPosts(uidA, uidB = getMyUid()) {
 
   snapshot.forEach((doc) => {
     const singlePost = doc.data();
-    if(!singlePost.with.includes(uidB))return
+    if (!singlePost.with.includes(uidB)) return
     singlePost.id = doc.id;
     postList.push(convertTimestampToDate(singlePost));
   });
@@ -297,7 +325,6 @@ export async function getBothUserPostsMonthly(year, month, uidA, uidB = getMyUid
   //monthly, ascending
   var firstDay = new Date(year, month - 1, 1);
   var lastDay = new Date(year, month, 1);
-  console.log(lastDay)
 
   var postList = [];
 
@@ -330,7 +357,7 @@ export async function getLocationPosts(location, place_id) {
       .where('location', '==', location)
       .orderBy('date', 'desc')
       .get()
-
+ 
   } else { */
 
   snapshot = await firebase.firestore()
@@ -419,6 +446,7 @@ export async function uploadPost(post, publicOrFriends) {
 
   post.publicOrFriends = publicOrFriends
 
+
   //add self to 'with'
   if (!post.with.includes(getMyUid())) post.with.push(getMyUid())
 
@@ -426,7 +454,6 @@ export async function uploadPost(post, publicOrFriends) {
   post.hashtag = post.hashtag.replace("#", "").split(" ")
 
   //reformat date
-  console.log('post.data', post.date)
   var parts = post.date.split('/');
   // Please pay attention to the month (parts[1]); JavaScript counts months from 0:
   // January - 0, February - 1, etc.
@@ -483,6 +510,26 @@ export async function uploadPost(post, publicOrFriends) {
       addFoodieScore(getMyUid(), i, 5)
     }
 
+    // pollDish: add all dish to 0 , then vote
+    //poll dish
+    var updateObj = {}
+    var maxRating = 0
+    var maxIndex = 0
+    for (let p in post.title) {
+      updateObj[post.title[p]] = 0
+      if (post.yummystar[p] > maxRating) {
+        maxRating = post.yummystar[p]
+        maxIndex = p
+      }
+    }
+    firebase.firestore()
+      .collection('dishPoll')
+      .doc(post.place_id)
+      .set(updateObj)
+      .then(() => pollDish(post.place_id, post.title[maxIndex]));
+
+
+
   }
 
 
@@ -510,6 +557,9 @@ async function voteToLocation(post) {
     average: 0
   }
 
+  //weigh score to nearest 1 for VOTE
+  var score = Math.floor(post.overallscore)
+
   var location = (await firebase.firestore().collection('location').doc(post.place_id).get())
   if (!location.exists) {
     firebase.firestore()
@@ -517,17 +567,17 @@ async function voteToLocation(post) {
         ...yummytemplate,
         name: post.location,
         address: post.address || '',
-        ['star' + post.overallyummy]: 1,
+        ['star' + score]: 1,
         total: 1,
-        average: post.overallyummy,
+        average: score,
         pic: post.image[0]
       })
   } else {
     firebase.firestore()
       .collection("location").doc(post.place_id).update({
-        ['star' + post.overallyummy]: firebase.firestore.FieldValue.increment(1),
+        ['star' + score]: firebase.firestore.FieldValue.increment(1),
         total: firebase.firestore.FieldValue.increment(1),
-        average: (location.data().average * location.data().total + post.overallyummy) / parseFloat(location.data().total + 1)
+        average: (location.data().average * location.data().total + score) / parseFloat(location.data().total + 1)
       })
   }
 }
@@ -932,9 +982,9 @@ export async function getRestaurantsMap(searchName = '', searchRegion = '', sear
   if (searchName != '') {
     query = query.where('name', '>=', searchName)
       .where('name', '<=', searchName + '\uf8ff')
-   /* }else if (searchAddress != '') {
-    query = query.where('address', '>=', searchAddress)
-      .where('address', '<=', searchAddress + '\uf8ff') */
+    /* }else if (searchAddress != '') {
+     query = query.where('address', '>=', searchAddress)
+       .where('address', '<=', searchAddress + '\uf8ff') */
   } else if (searchDishes.length > 0) {
     query = query.where('tag', 'array-contains-any', searchDishes)
   } else if (searchPrice.length > 0) {
@@ -1018,7 +1068,7 @@ export async function updateUser(user) {
 /* foodieScoring */
 export async function addFoodieScore(uidA, uidB, value) {
   // checki f user name has symbol
-  if(uidA.includes('@') || uidB.includes('@')) return
+  if (uidA.includes('@') || uidB.includes('@')) return
 
   var userA = (await firebase.firestore().collection('score').doc(uidA).get())
   if (!userA.exists) {

@@ -10,7 +10,7 @@ import {
     , getPostById,
     getUserVisited
 } from '../utils/FirebaseUtil'
-import { TouchableOpacity,  } from 'react-native-gesture-handler';
+import { TouchableOpacity, } from 'react-native-gesture-handler';
 
 /* 
 prosp: place_id, location (name), navigation
@@ -26,8 +26,9 @@ export default function Post(props) {
         async function getData() {
 
             var userlist = await getUserVisited(props.place_id)
-            var myFd = (await getUser(undefined, false)).following
-
+            var myUser = await getUser()
+            var myFd = myUser.following.concat(myUser.friends)
+            console.log(userlist, myFd)
             // find all fd visited
             var fdVisited = userlist.filter(value =>
                 myFd.includes(value)
@@ -54,7 +55,8 @@ export default function Post(props) {
     return (
         propics && propics.length > 0 &&
         <TouchableOpacity onPress={() => props.navigation.push('LocationProfileFriendPostStack',
-            {   location:props.location,
+            {
+                location: props.location,
                 place_id: props.place_id, friendlist: users
             })} >
 
@@ -69,7 +71,7 @@ export default function Post(props) {
                     <Text fontSize='sm'>{"到訪過"}</Text>
                 </HStack>
 
-              <Feather name="chevron-right" size={20} color="black" />
+                <Feather name="chevron-right" size={20} color="black" />
 
             </HStack>
 

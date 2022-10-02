@@ -35,7 +35,6 @@ export default function Post(props) {
             /* check block end */
 
             var u = await getUser(p.userid, false)
-            console.log('get',u)
             setItem({
                 ...p,
                 propic: u.propic,
@@ -110,7 +109,7 @@ export default function Post(props) {
                             <Text fontSize='xs' color='coolGray.500' >{item.name}{" 給了  "}</Text>
                             {item.overallyummy != 0 && <StarRating
                                 fullStarColor='#ff9636'
-                                rating={item.overallyummy}
+                                rating={item.overallscore || item.overallyummy}
                                 starSize={16} disabled />}
                         </HStack>
                     </HStack>{/* '#f3f4f6' */}
@@ -128,8 +127,8 @@ export default function Post(props) {
                         mb={2}
                         flexWrap='wrap'>{item.overalltitle.trim()}</Text>}
 
-                    {item.overalldescription != '' && <Text fontSize='sm'
-                        numberOfLines={3} mb={2}>{item.overalldescription.trim()}</Text>}
+                    {item.overalldescription != '' && <Text fontSize='md'
+                        numberOfLines={5} mb={2}>{item.overalldescription.trim()}</Text>}
 
                 </VStack>
                 <View style={{ flexDirection: 'row', marginTop: 2, marginBottom: 2 }} >

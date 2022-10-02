@@ -41,7 +41,8 @@ export default function RestaurantTileFromID(props) {
         })
     }
 
-    return (data ? <TouchableHighlight activeOpacity={0.6} underlayColor="#e6e6e6" onPress={() => openProfile(data.name, data.place_id)}>
+    return (data ? <TouchableHighlight key={data.place_id}
+    activeOpacity={0.6} underlayColor="#e6e6e6" onPress={() => openProfile(data.name, data.place_id)}>
         <HStack alignItems='center' backgroundColor='white'
             borderBottomColor='coolGray.100' borderBottomWidth={1} borderRadius={10}>
 
@@ -84,6 +85,6 @@ export default function RestaurantTileFromID(props) {
 
         </HStack>
     </TouchableHighlight>
-        : <></>
+        : <View></View>
     );
 }

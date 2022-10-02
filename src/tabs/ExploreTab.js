@@ -71,7 +71,8 @@ export default function Maptab({ navigation, route }) {
                         shadowOpacity: 0.25,
                         shadowRadius: 3.84,
                         elevation: 8,
-                        backgroundColor: '#fff'
+                        backgroundColor: '#fff',
+                        overflow: 'visible'
                     }}
                 >
                     <ImageBackground
@@ -80,7 +81,7 @@ export default function Maptab({ navigation, route }) {
                             uri: item.pic ||
                                 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/facebook/65/clinking-beer-mugs_1f37b.png'
                         }}
-                        imageStyle={{ borderRadius: 6 }}
+                        imageStyle={{ borderRadius: 15 }}
                     >
                         <Text position={'absolute'}
                             bottom={110} fontSize={36} marginLeft={4}
@@ -91,7 +92,7 @@ export default function Maptab({ navigation, route }) {
                             }}
                             color='white'>{index + 1}</Text>
                         <VStack position={'absolute'} bottom={0} left={0} width={200} h={115}
-                            backgroundColor='rgba(44,44,44, 0.8)' px={4} py={2}>
+                            backgroundColor='rgba(44,44,44, 0.8)' px={4} py={2} borderBottomRadius={15} overflow='hidden'>
                             <Text color={'#ff9639'} lineHeight={20} numberOfLines={2}
                                 fontWeight='bold' fontSize={16}>{item.name}</Text>
                             {item.hasOwnProperty('tag') && item.tag.length > 0 &&
@@ -117,79 +118,95 @@ export default function Maptab({ navigation, route }) {
     }
     return (
         <NativeBaseProvider>
-          
-                <ScrollView
-                    flex={1}
-                    showsVerticalScrollIndicator={false}
-                    automaticallyAdjustsScrollIndicatorInsets
-                >
-                    <HStack mx={6} mt={4} justifyContent='space-between' alignItems='center' >
-                        <Text fontSize={24} fontWeight='bold'  >探索</Text>
+
+            <ScrollView
+                flex={1}
+                showsVerticalScrollIndicator={false}
+                automaticallyAdjustsScrollIndicatorInsets
+            >
+                <HStack mx={6} mt={4} justifyContent='space-between' alignItems='center' >
+                    <Text fontSize={24} fontWeight='bold'  >探索</Text>
+                    <HStack>
+                        <IconButton style={{ width: 50 }}  onPress={browseBookmark}
+                            icon={<Feather name='bookmark' size={24} style={{  }} />} />
                         <IconButton style={{ width: 50 }} onPress={openMapStack}
                             icon={<Ionicons name="search" size={24} color="black" />} />
                     </HStack>
 
+                </HStack>
 
-                    <HStack ml={6} mt={4} alignItems='center' >
-                        {tagList.map((item, key) => (
-                            <TouchableOpacity onPress={() => getData(key)}>
-                                <Text fontSize={20}
-                                    mr={8}
-                                    fontWeight={listRestaurantKey == key ? 'bold' : 'normal'}
-                                    color={listRestaurantKey == key ? '#ff9639' : '#aaa'}  >{item}</Text>
-                            </TouchableOpacity>
-                        ))}
 
+                <HStack ml={6} mt={4} alignItems='center' >
+                    {tagList.map((item, key) => (
+                        <TouchableOpacity onPress={() => getData(key)}>
+                            <Text fontSize={20}
+                                mr={8}
+                                fontWeight={listRestaurantKey == key ? 'bold' : 'normal'}
+                                color={listRestaurantKey == key ? '#ff9639' : '#aaa'}  >{item}</Text>
+                        </TouchableOpacity>
+                    ))}
+
+                </HStack>
+
+                <FlatList
+                    showsHorizontalScrollIndicator={false}
+                    horizontal
+                    data={allrestaurants}
+                    renderItem={renderRestaurantItem}
+                    ref={restaurantList}
+                />
+
+
+                <HStack ml={6} mt={4} justifyContent='space-between' alignItems='center' >
+                    <Text fontSize={16} fontWeight={'bold'}  >按類型</Text>
+                </HStack>
+                <HStack flexWrap={'wrap'} mx={6}>
+                    {dishes[1].children.map(item => (
+                        <TouchableOpacity onPress={() => searchByDish(item.name)}>
+                            <Text borderRadius={10} borderWidth={1} borderColor="#c9c9c9" mx={2} px={2} my={2}>
+                                {item.name}
+                            </Text>
+                        </TouchableOpacity>
+                    ))}
+                </HStack>
+                <HStack ml={6} mt={4} justifyContent='space-between' alignItems='center' >
+                    <Text fontSize={16} fontWeight={'bold'}  >按風格</Text>
+                </HStack>
+                <HStack flexWrap={'wrap'} mx={6}>
+                    {dishes[0].children.map(item => (
+                        <TouchableOpacity onPress={() => searchByDish(item.name)}>
+                            <Text borderRadius={10} borderWidth={1} borderColor="#c9c9c9" mx={2} px={2} my={2}>
+                                {item.name}
+                            </Text>
+                        </TouchableOpacity>
+                    ))}
+                </HStack>
+
+                <TouchableOpacity activeOpacity={.8} key={3}
+                    onPress={browseBookmark}>
+                    <HStack flex={1} mx={6} borderRadius={15} overflow='hidden' my={7}
+                        borderColor='#d9d9d9' borderWidth={1} alignItems='center' py={2.5}
+                        style={{
+                            shadowColor: "#000",
+                            shadowOffset: {
+                                width: 0,
+                                height: 2,
+                            },
+                            shadowOpacity: 0.2,
+                            shadowRadius: 3.84,
+                            elevation: 8,
+                            backgroundColor: '#fff',
+                            overflow: 'visible',
+                        }}
+                    >
+                        <Feather name='bookmark' size={24} style={{ margin: 5, marginHorizontal: 15, marginLeft: 25 }} />
+                        <Text fontSize='md' fontWeight='bold' >查看我的收藏</Text>
                     </HStack>
+                </TouchableOpacity>
 
-                    <FlatList
-                        showsHorizontalScrollIndicator={false}
-                        horizontal
-                        data={allrestaurants}
-                        renderItem={renderRestaurantItem}
-                        ref={restaurantList}
-                    />
+                <Box pt={4} h={60} />
+            </ScrollView>
 
-
-                    <HStack ml={6} mt={4} justifyContent='space-between' alignItems='center' >
-                        <Text fontSize={16} fontWeight={'bold'}  >按類型</Text>
-                    </HStack>
-                    <HStack flexWrap={'wrap'} mx={6}>
-                        {dishes[1].children.map(item => (
-                            <TouchableOpacity onPress={() => searchByDish(item.name)}>
-                                <Text borderRadius={10} borderWidth={1} borderColor="#c9c9c9" mx={2} px={2} my={2}>
-                                    {item.name}
-                                </Text>
-                            </TouchableOpacity>
-                        ))}
-                    </HStack>
-                    <HStack ml={6} mt={4} justifyContent='space-between' alignItems='center' >
-                        <Text fontSize={16} fontWeight={'bold'}  >按風格</Text>
-                    </HStack>
-                    <HStack flexWrap={'wrap'} mx={6}>
-                        {dishes[0].children.map(item => (
-                            <TouchableOpacity onPress={() => searchByDish(item.name)}>
-                                <Text borderRadius={10} borderWidth={1} borderColor="#c9c9c9" mx={2} px={2} my={2}>
-                                    {item.name}
-                                </Text>
-                            </TouchableOpacity>
-                        ))}
-                    </HStack>
-
-                    <TouchableOpacity activeOpacity={.8} key={3}
-                        onPress={browseBookmark}>
-                        <HStack flex={1} mx={6} overflow='hidden' borderRadius={15} my={7}
-                            borderColor='#d9d9d9' borderWidth={1} alignItems='center' py={2.5}
-                            style={styles.boxshadow}
-                        >
-                            <Feather name='bookmark' size={24} style={{ margin: 5, marginHorizontal: 15, marginLeft: 25 }} />
-                            <Text fontSize='md' fontWeight='bold' >查看我的收藏</Text>
-                        </HStack>
-                    </TouchableOpacity>
-
-                    <Box pt={4} h={60} />
-                </ScrollView>
-          
         </NativeBaseProvider>
     );
 }
@@ -224,12 +241,13 @@ const styles = StyleSheet.create({
     boxshadow: {
         shadowColor: "#000",
         shadowOffset: {
-            width: 8,
-            height: 8,
+            width: 0,
+            height: 2,
         },
-        shadowOpacity: 0.25,
+        shadowOpacity: 0.2,
         shadowRadius: 3.84,
         elevation: 8,
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+        overflow: 'visible',
     }
 });

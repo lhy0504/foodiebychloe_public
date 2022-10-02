@@ -31,9 +31,9 @@ export function getAllThemes(){
 }
 export function getTheme(post){
 
-    if(!post || !post.hasOwnProperty('theme')) return themes.None
+    if(!post || !post.hasOwnProperty('theme')) return themes.Rice
 
-    if( !themes.hasOwnProperty(post.theme)) return themes.None
+    if( !themes.hasOwnProperty(post.theme)) return themes.Rice
          return themes[post.theme]
     
 }

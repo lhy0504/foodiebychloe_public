@@ -35,7 +35,7 @@ export default function MainScreen({ navigation, route }) {
 
 
     useEffect(() => {
-        registerForPushNotificationsAsync().then(token => console.log('TOKEN',token))
+        registerForPushNotificationsAsync().then(token => console.log('TOKEN', token))
 
         // fired whenever a notification is received while the app is foregrounded
         notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
@@ -105,6 +105,7 @@ export default function MainScreen({ navigation, route }) {
                 }}>
                 <Tab.Screen name="Home" component={HomeTab} stackNavigation={navigation}
                     options={{
+                        tabBarLabel: '動態',
                         tabBarActiveTintColor: 'black',
                         tabBarIcon: (props) => {
                             if (props.focused) {
@@ -116,6 +117,7 @@ export default function MainScreen({ navigation, route }) {
                     }} />
                 <Tab.Screen name="ExploreTab" component={ExploreTab}
                     options={{
+                        tabBarLabel: '探索',
                         tabBarActiveTintColor: 'black',
                         tabBarIcon: (props) => {
                             if (props.focused) {
@@ -125,7 +127,7 @@ export default function MainScreen({ navigation, route }) {
                             }
                         }
                     }} />
-               {/*  <Tab.Screen name="New"
+                {/*  <Tab.Screen name="New"
                     component={() => null}
                     listeners={() => ({
                         tabPress: (e) => {
@@ -143,8 +145,9 @@ export default function MainScreen({ navigation, route }) {
                             </View>;
                         }
                     }} /> */}
-                     <Tab.Screen name="SocialTab" component={SocialTab} navigation={navigation}
+                <Tab.Screen name="SocialTab" component={SocialTab} navigation={navigation}
                     options={{
+                        tabBarLabel: '社交',
                         tabBarActiveTintColor: 'black',
                         tabBarIcon: (props) => {
                             if (props.focused) {
@@ -156,6 +159,7 @@ export default function MainScreen({ navigation, route }) {
                     }} />
                 <Tab.Screen name="GalleryTab" component={GalleryTab} navigation={navigation}
                     options={{
+                        tabBarLabel: '我的月曆',
                         tabBarActiveTintColor: 'black',
                         tabBarIcon: (props) => {
                             if (props.focused) {
@@ -166,7 +170,9 @@ export default function MainScreen({ navigation, route }) {
                         }
                     }} />
                 <Tab.Screen name="AccountTab" component={AccountTab} navigation={navigation}
+                    tabBarShowLabel
                     options={{
+                        tabBarLabel: '帳戶',
                         tabBarActiveTintColor: 'black',
                         tabBarIcon: (props) => {
                             if (props.focused) {

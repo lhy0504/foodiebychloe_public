@@ -15,6 +15,7 @@ export default class LocationButton extends React.Component {
         Navigation
         Location
         place_id = ''
+        hideTags = false
 
     Optional: color (for tag color)
 
@@ -23,8 +24,8 @@ export default class LocationButton extends React.Component {
         super(props)
         this.state = null
     }
-    
-    async getData () {
+
+    async getData() {
         var l = await getLocation(this.props.location, this.props.place_id, false)
         var desc = ''
 
@@ -35,8 +36,8 @@ export default class LocationButton extends React.Component {
         if (l.hasOwnProperty('price')) {
             desc += " / $" + l.price
         }
-        if(l.hasOwnProperty('average')){
-            desc +=" (" + (l.average).toFixed(1) +")"
+        if (l.hasOwnProperty('average')) {
+            desc += " (" + (l.average).toFixed(1) + ")"
         }
         if (desc != '') {
             this.setState({ description: desc })
@@ -61,10 +62,14 @@ export default class LocationButton extends React.Component {
         return (
             <TouchableHighlight activeOpacity={1} underlayColor="#e6e6e650" onPress={this.onPress} >
                 <HStack alignItems='center' my={.5}>
-                   
+
                     <VStack>
-                        <Text  fontWeight='bold' color='#FF9636' numberOfLines={1}>{this.props.location.trim()}</Text>
-                        {this.state &&  <Text color={this.props.hasOwnProperty('color')?this.props.color:'black'}>{this.state.description}</Text>}
+                        <HStack alignItems={'center'}>
+                            {this.props.hasOwnProperty('hideTags') && 
+                            <Feather name="map-pin" size={16} color='#FF9636' style={{marginRight:4}}/>}
+                            <Text fontWeight='bold' color='#FF9636' numberOfLines={1}>{this.props.location.trim()}</Text>
+                        </HStack>
+                        {this.state && !this.props.hasOwnProperty('hideTags') && <Text color={this.props.hasOwnProperty('color') ? this.props.color : 'black'}>{this.state.description}</Text>}
                     </VStack>
                 </HStack>
             </TouchableHighlight>
