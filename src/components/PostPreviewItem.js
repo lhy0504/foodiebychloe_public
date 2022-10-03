@@ -31,6 +31,9 @@ export default function Post(props) {
             setUser(u);
         }
         getData()
+
+          /* save post to cache */
+          saveToCache('post:' + post.id, post)
     }, [])
 
     return (
@@ -40,7 +43,7 @@ export default function Post(props) {
             || post.publicOrFriends == 'public'
         )
         && <TouchableHighlight activeOpacity={1} underlayColor="#e6e6e6"
-            onPress={() => props.navigation.push('StoryStack', { post: post, currImg: 0 })} >
+            onPress={() => props.navigation.push('StoryStack', { postid: post.id, currImg: 0 })} >
             <VStack mx={5} py={3} borderBottomWidth={1} borderBottomColor='coolGray.300'>
 
                 <HStack justifyContent='space-between' alignItems='center' >

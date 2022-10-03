@@ -46,7 +46,7 @@ export default function Maptab({ navigation, route }) {
         setFdlist(list)
 
         var myuser = await getUser()
-       
+
         setRefreshing(false)
     }
 
@@ -74,93 +74,57 @@ export default function Maptab({ navigation, route }) {
 
                 style={{ width: width, height: height, backgroundColor: '#EEECE3' }}
             >
-               
 
-                    <HStack mx={6} mt={4} justifyContent='space-between' alignItems='center' >
-                        <Text fontSize={24} fontWeight='bold'  >動態</Text>
-                        <NotificationButton navigation={navigation} />
-                    </HStack>
-                    <FlatList
-                        mx={6} borderColor={'coolGray.200'}
-                        style={{
-                            backgroundColor: 'white', borderRadius: 15
-                            , borderWidth: 1
-                        }}
-                        flexGrow={0}
-                        showsVerticalScrollIndicator={false}
-                        data={noti}
-                        ListEmptyComponent={
-                            <Text width={'100%'} textAlign='center' my={10} key={999}>沒有最近動態</Text>
-                        }
-                        renderItem={({ item, index }) => {
-                            var data = item.request.content
-                            var date = new Date(item.date)
 
-                            return (
+                <HStack mx={6} mt={4} justifyContent='space-between' alignItems='center' >
+                    <Text fontSize={24} fontWeight='bold'  >關係分數 ♛</Text>
+                    <NotificationButton navigation={navigation} />
+                </HStack>
 
-                                <TouchableOpacity onPress={() => navigation.push(data.data.screen, data.data)} key={index}>
-                                    <HStack py={2} alignItems='center'
-                                        borderBottomColor='coolGray.100'
-                                        borderBottomWidth={1}
+                <HStack mx={6} my={4} alignItems='center' >
 
-                                    >
+                    <Text fontSize={'xs'} color='coolGray.400'
+                        mx={3} flexWrap='wrap' flex={1}>{"foodieScore 統計您和好友的互動。透過在帖文標記、回應、讚好，來增加你和對方的分數，成為最好的foodies吧"}</Text>
+                </HStack>
+                <FlatList mx={6} borderColor={'coolGray.200'}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={getData}
+                        />
+                    }
+                    ListEmptyComponent={<Text textAlign={'center'} flex={1} key={888}>快去加好友！</Text>}
+                    style={{
+                        backgroundColor: 'rgba(255,255,255,1)', borderRadius: 15
+                        , borderWidth: 1
+                    }}
 
-                                        <Avatar ml='15px' mr='8px' size="35px" source={{ uri: data.data.propic, }} />
-
-                                        <VStack justifyContent='center'>
-                                            <Text  >{data.title}</Text>
-                                            <Text color='coolGray.500'>{date.toLocaleDateString('en-US')}</Text>
-                                        </VStack>
-
+                    data={fdlist}
+                    renderItem={({ item, index }) => (
+                        <TouchableOpacity onPress={() => openFriendship(item.uid, item.score, index + 1)} key={index}>
+                            <VStack py={3} alignItems='flex-end' borderColor='coolGray.200'
+                                mx={6} borderBottomWidth={1} >
+                                <HStack alignItems={'center'} justifyContent='space-between' width='100%'>
+                                    <HStack alignItems={'center'}>
+                                        <Text width={8} fontSize='lg' fontWeight={'bold'}>{index + 1}</Text>
+                                        <Avatar ml={3} size={21} source={{ uri: item.propic }} />
+                                        <Text ml={2} fontWeight='bold' mr={1}>{item.name}</Text>
                                     </HStack>
-                                </TouchableOpacity>
-                            )
-                        }}
-
-                    />
-                    <HStack mx={6} my={4} alignItems='center' >
-                        <Text fontSize={24} fontWeight='bold'  >關係分數 ♛</Text>
-                        <Text fontSize={'xs'} color='coolGray.400'
-                            mx={3} flexWrap='wrap' flex={1}>{"foodieScore 統計您和好友的互動。透過在帖文標記、回應、讚好，來增加你和對方的分數，成為最好的foodies吧"}</Text>
-                    </HStack>
-                    <FlatList mx={6} borderColor={'coolGray.200'}
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={refreshing}
-                                onRefresh={getData}
-                            />
-                        }
-                        ListEmptyComponent={<Text textAlign={'center'} flex={1} key={888}>快去加好友！</Text>}
-                        style={{
-                            backgroundColor: 'rgba(255,255,255,1)', borderRadius: 15
-                            , borderWidth: 1
-                        }}
-
-                        data={fdlist}
-                        renderItem={({ item, index }) => (
-                            <TouchableOpacity onPress={() => openFriendship(item.uid, item.score, index + 1)} key={index}>
-                                <VStack py={3} alignItems='flex-end' borderColor='coolGray.200'
-                                    mx={6} borderBottomWidth={1} >
-                                    <HStack alignItems={'center'} justifyContent='space-between' width='100%'>
-                                        <HStack alignItems={'center'}>
-                                            <Text width={8} fontSize='lg' fontWeight={'bold'}>{index + 1}</Text>
-                                            <Avatar ml={3} size={21} source={{ uri: item.propic }} />
-                                            <Text ml={2} fontWeight='bold' mr={1}>{item.name}</Text>
-                                        </HStack>
-                                        <Text >{item.score}</Text>
-                                    </HStack>
-                                    {index == 0 &&
-                                        <Button style={{ margin: 5, padding: 5 }} title='🎉慶祝您們的友誼' />
-                                    }
-                                </VStack>
+                                    <Text >{item.score}</Text>
+                                </HStack>
+                                {index == 0 &&
+                                    <Button style={{ margin: 5, padding: 5 }} title='🎉慶祝您們的友誼' />
+                                }
+                            </VStack>
 
 
-                            </TouchableOpacity>
-                        )}
-                    />
+                        </TouchableOpacity>
+                    )}
+                />
 
-                    <Text textAlign={'center'} m={100}>🍺</Text>
-                
+                <View style={{ marginBottom: 48 }}>
+                    <Text textAlign={'center'} m={5} >🍺</Text>
+                </View>
             </ImageBackground>
         </NativeBaseProvider >
     );

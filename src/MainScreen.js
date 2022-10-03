@@ -10,7 +10,7 @@ import AccountTab from './tabs/AccountTab';
 import AddMediaStack from './stacks/AddMediaStack';
 
 import { Feather, Ionicons, } from '@expo/vector-icons';
-import { checkIfNewUser, TestingPurpose } from './utils/FirebaseUtil'
+import { checkIfNewUser, getUser, TestingPurpose } from './utils/FirebaseUtil'
 
 import { registerForPushNotificationsAsync } from './utils/PushNotifications'
 import * as Noti from './utils/SaveNotifications'
@@ -78,7 +78,10 @@ export default function MainScreen({ navigation, route }) {
 
     //Unfortunately, need to check if new user is created
     checkIfNewUser(navigation)
-
+    const browseBookmark = async () => {
+      //  var u = await getUser(undefined, true) // will delay
+        navigation.push('LocationPreviewStack', { showBookmarks:true, title: `我的收藏` })
+    }
     return (
         <><StatusBar
             animated={true}
@@ -100,6 +103,7 @@ export default function MainScreen({ navigation, route }) {
                         left: 0,
                         bottom: 0,
                         right: 0,
+                        height:48
 
                     }
                 }}>
@@ -157,16 +161,23 @@ export default function MainScreen({ navigation, route }) {
                             }
                         }
                     }} />
-                <Tab.Screen name="GalleryTab" component={GalleryTab} navigation={navigation}
+                <Tab.Screen name="GalleryTab" component={() => null}
+                    listeners={() => ({
+                        tabPress: (e) => {
+                            e.preventDefault();
+                        },
+                    })} 
+                    navigation={navigation}
                     options={{
                         tabBarLabel: '我的月曆',
                         tabBarActiveTintColor: 'black',
                         tabBarIcon: (props) => {
-                            if (props.focused) {
-                                return <Ionicons name="calendar" size={24} color="black" />;
-                            } else {
-                                return <Ionicons name="calendar-outline" size={24} color='grey' />;
-                            }
+                            return <View >
+                                <Ionicons
+
+                                    name="bookmark-outline" size={24} color="grey"
+                                    onPress={() =>browseBookmark()} />
+                            </View>;
                         }
                     }} />
                 <Tab.Screen name="AccountTab" component={AccountTab} navigation={navigation}

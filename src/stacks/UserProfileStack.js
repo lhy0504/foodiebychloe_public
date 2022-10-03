@@ -9,6 +9,7 @@ import { getUserPosts, getUser, followUser, getMyUid, blockUser, unblockUser, ge
 import Post from '../components/Post'
 import { InfiniteMonthView } from '../components/InfiniteMonthView'
 import { TouchableOpacity, TouchableHighlight } from 'react-native-gesture-handler';
+import ConfettiCannon from 'react-native-confetti-cannon';
 
 /* props: userid */
 var { width, height } = Dimensions.get('window')
@@ -33,6 +34,10 @@ function Feed(props) {
 
         <VStack backgroundColor='white' >
             <FlatList
+                maxToRenderPerBatch={5}
+                updateCellsBatchingPeriod={1000}
+                initialNumToRender={5}
+           
                 contentContainerStyle={{ paddingBottom: 20 }}
                 refreshControl={
                     <RefreshControl
@@ -44,7 +49,7 @@ function Feed(props) {
                 data={data}
                 renderItem={({ item, index }) => (
 
-                    <Post postid={item.id} index={index} navigation={props.navigation} />
+                    <Post postid={item.id} index={index} navigation={props.navigation} explode={props.explode}/>
                 )}
                 ListHeaderComponent={
                     <Header userid={props.userid} navigation={props.navigation} />
@@ -61,7 +66,7 @@ function Feed(props) {
 function Header(props) {
     const [user, setUser] = useState({ friends: [], requests: [], following: [] })
     const [myself, setMyself] = useState({ friends: [], requests: [], following: [] })
-    const [score,setScore]=useState(0)
+    const [score, setScore] = useState(0)
 
     async function getData() {
         var u = await getUser(props.userid, true)
@@ -70,7 +75,7 @@ function Header(props) {
         setMyself(u)
 
         var fdScore = await getFoodieScore()
-        if(fdScore.hasOwnProperty(props.userid))setScore(fdScore[props.userid])
+        if (fdScore.hasOwnProperty(props.userid)) setScore(fdScore[props.userid])
     }
 
     useEffect(() => {
@@ -172,16 +177,16 @@ function Header(props) {
         </ImageBackground>
 
         <HStack justifyContent={'center'} alignItems={'flex-end'}>
-            {user.hasOwnProperty('bookmarks') && <TouchableHighlight style={{flex:1}}
-            activeOpacity={1} underlayColor="#e6e6e6" onPress={browseBookmark}>
+            {user.hasOwnProperty('bookmarks') && <TouchableHighlight style={{ flex: 1 }}
+                activeOpacity={1} underlayColor="#e6e6e6" onPress={browseBookmark}>
                 <VStack alignItems={'center'} py={4} px={4}>
                     <Feather name={'bookmark'} size={35} color='#555' />
                     <Text color='#555' fontSize={'xs'}>  {`他的收藏 (${user.bookmarks.length || 0})`} </Text>
                 </VStack>
 
             </TouchableHighlight>}
-            {props.userid!=getMyUid()&&<TouchableHighlight style={{flex:1}}
-            activeOpacity={1} underlayColor="#e6e6e6" onPress={browseSocial}>
+            {props.userid != getMyUid() && <TouchableHighlight style={{ flex: 1 }}
+                activeOpacity={1} underlayColor="#e6e6e6" onPress={browseSocial}>
                 <VStack alignItems={'center'} py={4} px={4}>
                     <Text fontSize={24}>{score}</Text>
                     <Text color='#555' fontSize={'xs'}>  {`foodieScore`} </Text>
@@ -192,12 +197,17 @@ function Header(props) {
     </VStack>
 }
 export default class GalleryTab extends React.Component {
-
+    constructor(props) {
+        super(props)
+        this.explosion = React.createRef()
+    }
     state = {
         viewStyle: 'large',
         user: null
     }
-
+    explode=()=>{
+        this.explosion.current.start()
+    }
     async getData() {
         /* Check block */
         var me = await getUser(undefined, true)
@@ -297,7 +307,8 @@ export default class GalleryTab extends React.Component {
                         this.state.viewStyle == 'large' ?
                             <Feed navigation={this.props.navigation}
                                 userid={this.props.route.params.userid}
-                                viewStyle={this.state.viewStyle} />
+                                viewStyle={this.state.viewStyle} 
+                                explode={this.explode}/>
                             :
                             <View style={{
                                 flex: 1,
@@ -311,6 +322,13 @@ export default class GalleryTab extends React.Component {
                     }
 
                 </View>
+                <ConfettiCannon
+                    count={80} fallSpeed={2000}
+                    origin={{ x: -20, y: 0 }}
+                    autoStart={false}
+                    fadeOut
+                    ref={this.explosion}
+                />
             </NativeBaseProvider>
         );
     }

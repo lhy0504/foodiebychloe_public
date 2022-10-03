@@ -12,7 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 T*/
 
 const Testing = false
-const testUID = 'gladysfoodie.fdchloe@gmail.com'
+const testUID = 'anthonywellxx@gmail.com'
 
 export function TestingPurpose() {
   if (!Testing) return
@@ -250,13 +250,16 @@ export async function getPublicPosts() {
   var postList = [];
   var snapshot = await firebase.firestore()
     .collection('posts')
+    .where('publicOrFriends','==','public')
     .orderBy('postDate', 'desc')
+    .limit(20)
     .get()
 
   snapshot.forEach((doc) => {
     const singlePost = doc.data();
     singlePost.id = doc.id;
-    postList.push(convertTimestampToDate(singlePost));
+   /*  postList.push(convertTimestampToDate(singlePost)); */
+    postList.push((singlePost));
   });
   return (postList);
 }

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
-    View, Image,   Dimensions
+    View, Image, Dimensions
 } from 'react-native';
-import { TouchableHighlight ,TouchableOpacity} from 'react-native-gesture-handler';
+import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 import {
     HStack, Text, Box,
     VStack, Avatar
@@ -14,20 +14,29 @@ import {
 } from '../utils/FirebaseUtil'
 import LocationButton from '../components/LocationButton'
 import StarRating from 'react-native-star-rating';
-import YummyRankView from './../components/YummyRankView'
+import { saveToCache } from '../utils/AsyncStorageCache';
 
 var { width, height } = Dimensions.get('window')
-const delayPressIn = 200
 
+/* 
+Props
+- postid
+- navigation
+(explode)
+*/
 export default function Post(props) {
-    const [currIndex, setCurrIndex] = useState(0) //imageindex
-    const [item, setItem] = useState(null)
+    const [item, setItem] = useState({})
     const [liked, setLiked] = useState(false)
+    const [randomViews, setRandomViews] = useState(Math.floor(Math.random() * 30) + 20
+    )
 
     useEffect(() => {
         async function getData() {
             var p = await getPostById(props.postid)
-            setLiked(p.likes.includes(getMyUid()))
+            /* save post to cache */
+            saveToCache('post:' + props.postid, p)
+
+
 
             /* Check block */
             var me = await getUser(undefined, false)
@@ -41,33 +50,45 @@ export default function Post(props) {
                 name: u.name,
                 friends: u.friends
             });
+            setLiked(p.likes.includes(getMyUid()))
+
+
         }
         getData()
+
+
     }, [])
 
     const openStory = () => {
         props.navigation.push('StoryStack', {
-            post: item, openedFromStory: false
+            postid: props.postid, openedFromStory: false
         })
     }
 
     const openComment = () => {
         props.navigation.push('CommentStack', {
-            item: item
+            item: { comment: item.comment, id: item.id, userid: item.userid, likes: item.likes }
         })
     }
 
     const doLike = async () => {
+     
         if (liked) {
-            unlikePost(item.id)
             setLiked(false)
+            unlikePost(item.id)
+        
+           setItem({...item,likes:item.likes.slice(0,-1)})
         } else {
+         
             setLiked(true)
+           
             likePost(item.id, item.userid)
+            setItem({...item,likes:item.likes.concat([getMyUid()])})
+            props.explode()
         }
         //refresh post
-        var newdata = await getPostById(item.id)
-        setItem({ ...item, ...newdata })
+       /*  var newdata = await getPostById(item.id)
+        setItem({ ...item, ...newdata }) */
     }
 
     const openProfile = () => {
@@ -78,7 +99,7 @@ export default function Post(props) {
     const ImageDesc = (props) => {
         return (
             <VStack backgroundColor='gray.600' pl={2} py={1}>
-                <Text numberOfLines={1} px={0} fontSize='sm'  color='white' textAlign={'center'}>{props.title}</Text>
+                <Text numberOfLines={1} px={0} fontSize='sm' color='white' textAlign={'center'}>{props.title}</Text>
                 {props.yummystar > 0 &&
                     <HStack alignItems='center' justifyContent={'center'} pl={0.2}>
                         <StarRating disabled={true} halfStar={'star-half'}
@@ -86,7 +107,7 @@ export default function Post(props) {
                             starStyle={{ marginRight: 2 }}
                             fullStarColor='#ff9636'
                             rating={props.yummystar}
-                            
+
                         />
                     </HStack>
                 }
@@ -94,11 +115,11 @@ export default function Post(props) {
         )
     }
     return (
-        item &&
+        item.hasOwnProperty('friends') &&
         (item.publicOrFriends == 'friends' && item.friends.includes(getMyUid())
             || item.userid == getMyUid()
             || item.publicOrFriends == 'public'
-        ) && <><TouchableHighlight activeOpacity={1} underlayColor="#e6e6e6" onPress={openStory}>
+        ) && <TouchableHighlight activeOpacity={1} underlayColor="#e6e6e6" onPress={openStory}>
             <Box>
 
                 <TouchableHighlight activeOpacity={1} underlayColor="#e6e6e6" onPress={openProfile}>
@@ -134,15 +155,15 @@ export default function Post(props) {
                 <View style={{ flexDirection: 'row', marginTop: 2, marginBottom: 2 }} >
                     {item.image.length > 1 ?
                         (<>
-                            <View style={{ flex: 1, marginRight: 2, overflow: 'hidden' }}>
+                            <View style={{ flex: 1, marginRight: 2, overflow: 'hidden' ,marginTop:30}}>
                                 <Image source={{ uri: item.image[0] }}
                                     style={{ height: width / 2, width: width / 2, overflow: 'hidden' }} />
-                                <ImageDesc yummystar={item.yummystar[0]} title={item.title[0]} />
+                               {/*  <ImageDesc yummystar={item.yummystar[0]} title={item.title[0]} /> */}
                             </View>
 
                             <View style={{ flex: 1, }}>
                                 <Image source={{ uri: item.image[1] }} style={{ height: width / 2, width: width / 2, }} />
-                                <ImageDesc yummystar={item.yummystar[1]} title={item.title[1]} />
+                              {/*   <ImageDesc yummystar={item.yummystar[1]} title={item.title[1]} /> */}
 
                             </View></>
                         )
@@ -150,7 +171,7 @@ export default function Post(props) {
                         :
 
                         <View style={{ flex: 1, }}>
-                            <Image source={{ uri: item.image[0] }} style={{ height: width , width: '100%', }} />
+                            <Image source={{ uri: item.image[0] }} style={{ height: width, width: '100%', }} />
                             <ImageDesc yummystar={item.yummystar[0]} title={item.title[0]} />
                         </View>
                     }
@@ -163,50 +184,48 @@ export default function Post(props) {
                         navigation={props.navigation} />
                 </HStack>
 
-                <Box>
 
-                    <Box px={5} mb={2} mt={3}>
-                        <HStack justifyContent='space-between'>
-                            <HStack alignContent='center' mb={1}>
-                                <TouchableOpacity onPress={doLike}>
-                                    <HStack p={1}>
-                                        <AntDesign name={liked ? "like1" : "like2"} size={22} color='#555' />
-                                        {item.likes.length != 0 &&
-                                            <Text color='#555'>  {item.likes.length} </Text>}
-                                    </HStack>
 
-                                </TouchableOpacity>
 
-                                <Text>{"         "}</Text>
-                                <TouchableOpacity onPress={() => {
-                                    openComment();
-                                }}>
-                                    <HStack p={1}>
-                                        <Ionicons name={"chatbox-outline"} size={22} color='#555' />
-                                        {item.comment.length != 0 &&
-                                            <Text color='#555'>  {item.comment.length} </Text>}
-                                    </HStack>
-                                </TouchableOpacity>
-
+                <HStack justifyContent='space-between' px={5} mb={2} mt={3}>
+                    <HStack alignItems='center' mb={1}>
+                        <TouchableOpacity onPress={doLike}>
+                            <HStack p={1} w={16}>
+                                <AntDesign name={liked ? "like1" : "like2"} size={22} color='#555' />
+                                {item.likes.length != 0 &&
+                                    <Text color='#555'>  {item.likes.length} </Text>}
                             </HStack>
-                            <HStack style={{ justifyContent: 'center' }}>
 
-                                <Text color='coolGray.500' fontSize='xs' textAlign='center'>{"  "}{item.date}  {item.time}</Text>
+                        </TouchableOpacity>
+
+
+                        <TouchableOpacity onPress={openComment}>
+                            <HStack p={1} w={16}>
+                                <Ionicons name={"chatbox-outline"} size={22} color='#555' />
+                                {item.comment.length != 0 &&
+                                    <Text color='#555'>  {item.comment.length} </Text>}
                             </HStack>
+                        </TouchableOpacity>
+
+                        {/* Fake view */}
+                        <HStack p={1} w={16}>
+                            <Ionicons name={"eye-outline"} size={22} color='#555' />
+                            <Text color='#555'>  {randomViews} </Text>
                         </HStack>
 
+                    </HStack>
+                    <HStack style={{ justifyContent: 'center' }}>
+
+                        <Text color='coolGray.500' fontSize='xs' textAlign='center'>{"  "}{item.date}  {item.time}</Text>
+                    </HStack>
+                </HStack>
 
 
 
-                    </Box>
+                <Box h={6} px={10} backgroundColor='#eee' />
 
-                    {/* divider
-      */}
-
-                    <Box h={6} px={10} backgroundColor='#eee' />
-                </Box>
             </Box>
         </TouchableHighlight>
-        </>
+
     )
 }

@@ -45,18 +45,17 @@ export default class LocationButton extends React.Component {
 
         return (
             
-                    <IconButton
-                        onPress={() => {
-                            this.props.navigation.push('NotificationsStack')
-                            this.setState({ newnoti: false })
-                        }
-                        }
-                        mx='10px' icon={
+          
                             <Ionicons
                                 name={this.state.newnoti ? "notifications" : "notifications-outline"}
                                 size={24}
-                                color={this.state.newnoti ? "#ff9636" : "black"} />
-                        } />
+                                color={this.state.newnoti ? "#ff9636" : "black"} 
+                                onPress={() => {
+                                    this.props.navigation.push('NotificationsStack')
+                                    this.setState({ newnoti: false })
+                                }
+                                }/>
+                    
                
         );
     }

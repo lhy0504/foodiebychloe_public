@@ -32,6 +32,10 @@ function Feed(props) {
 
         <VStack backgroundColor='white' >
             <FlatList
+             maxToRenderPerBatch={5}
+             updateCellsBatchingPeriod={1000}
+             initialNumToRender={5}
+
                 contentContainerStyle={{ paddingBottom: 20 }}
                 refreshControl={
                     <RefreshControl

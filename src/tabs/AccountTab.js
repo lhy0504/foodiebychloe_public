@@ -34,9 +34,8 @@ export default function Maptab({ navigation, route }) {
         })
     }
     const browseBookmark = async () => {
-        var u = await getUser(undefined, true) // will delay
-        setUsers(u)
-        navigation.push('LocationPreviewStack', { locationIDs: u.bookmarks, title: `${user.name}的收藏` })
+       
+        navigation.push('LocationPreviewStack', { showBookmarks:true, title: `我的收藏` })
     }
     const browseFriends = async () => {
         var u = await getUser(undefined, true) // will delay

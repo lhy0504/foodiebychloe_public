@@ -104,7 +104,7 @@ export default function CommentModal({ navigation, route }) {
                     <ScrollView ref={scrollview}>
                         {
                             commentUsers == null ?
-                                <Box flex={1} justifyContent='center' alignItems='center'  >
+                                <Box flex={1} p={10}justifyContent='center' alignItems='center'  >
                                     <Spinner />
                                 </Box>
                                 :

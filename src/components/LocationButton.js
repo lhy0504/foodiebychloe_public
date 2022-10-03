@@ -54,25 +54,34 @@ export default class LocationButton extends React.Component {
             })
 
     }
+render() {
+    if (!this.props.hasOwnProperty('location')) return <></>
+    if (this.props.location == '') return <></>
+    var fontSize = this.props.hasOwnProperty('fontSize') ? this.props.fontSize : 'md'
 
-    render() {
-        if (!this.props.hasOwnProperty('location')) return <></>
-        if (this.props.location == '') return <></>
+    return (
+        <TouchableHighlight activeOpacity={1} underlayColor="#e6e6e650" onPress={this.onPress} >
+            <HStack alignItems='center' my={.5}>
 
-        return (
-            <TouchableHighlight activeOpacity={1} underlayColor="#e6e6e650" onPress={this.onPress} >
-                <HStack alignItems='center' my={.5}>
-
-                    <VStack>
-                        <HStack alignItems={'center'}>
-                            {this.props.hasOwnProperty('hideTags') && 
-                            <Feather name="map-pin" size={16} color='#FF9636' style={{marginRight:4}}/>}
-                            <Text fontWeight='bold' color='#FF9636' numberOfLines={1}>{this.props.location.trim()}</Text>
-                        </HStack>
-                        {this.state && !this.props.hasOwnProperty('hideTags') && <Text color={this.props.hasOwnProperty('color') ? this.props.color : 'black'}>{this.state.description}</Text>}
-                    </VStack>
-                </HStack>
-            </TouchableHighlight>
-        )
-    }
+                <VStack>
+                    <HStack alignItems={'center'}>
+                        {this.props.hasOwnProperty('hideTags') &&
+                            <Feather name="map-pin" size={16} color='#FF9636' style={{ marginRight: 4 }} />}
+                        <Text fontWeight='bold' color='#FF9636' numberOfLines={1} fontSize={fontSize}>
+                            {this.props.location.trim()}
+                        </Text>
+                    </HStack>
+                    {this.state && !this.props.hasOwnProperty('hideTags') &&
+                        <Text fontSize={fontSize}
+                            color={
+                                this.props.hasOwnProperty('color') ?
+                                    this.props.color
+                                    :
+                                    'black'
+                            }>{this.state.description}</Text>}
+                </VStack>
+            </HStack>
+        </TouchableHighlight>
+    )
+}
 }

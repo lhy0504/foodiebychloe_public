@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Dimensions, Share, ImageBackground, Image, ScrollView } from 'react-native';
+import { View, Dimensions, Share, ImageBackground, Image, ScrollView, FlatList } from 'react-native';
 import {
     HStack, IconButton, Text,
-    VStack, NativeBaseProvider, Box
+    VStack, NativeBaseProvider, Box, Spinner
 } from "native-base";
 import { Feather, Ionicons } from '@expo/vector-icons';
-import { getLocation, getLocationPosts, getLocationFriendPost } from '../utils/FirebaseUtil'
+import { getUser, getLocationPosts, getLocationFriendPost } from '../utils/FirebaseUtil'
 import LocationPreview from '../components/LocationPreview'
 
 
@@ -14,12 +14,24 @@ import LocationPreview from '../components/LocationPreview'
 props:
 title
 locationIDs  OR locations
+(showBookmarks)
 */
 var { width, height } = Dimensions.get('window')
 
 export default class GalleryTab extends React.Component {
 
+    state = {
+        locationIDs: null
+    }
+    componentDidMount() {
+        if (this.props.route.params.hasOwnProperty('showBookmarks')) this.getData()
+    }
+    getData = async () => {
 
+        var u = await getUser(undefined, true) // will delay
+        this.setState({ locationIDs: u.bookmarks.reverse() })
+
+    }
     render() {
         return (
             <NativeBaseProvider>
@@ -43,22 +55,38 @@ export default class GalleryTab extends React.Component {
                 </View>
                 <VStack backgroundColor='white' flex={1}>
                     <Text m={4} fontWeight='bold' fontSize='2xl' >{this.props.route.params.title}</Text>
-                    <ScrollView>
 
 
-                        {this.props.route.params.hasOwnProperty('locations') ?
-                            this.props.route.params.locations.map((item) => (
-                                <LocationPreview location={item} navigation={this.props.navigation} />
-                            ))
+
+                    {this.props.route.params.hasOwnProperty('locations') ?
+                        <FlatList
+                            data={this.props.route.params.locations}
+                            ListEmptyComponent={ <Text textAlign={'center'} m={10}>沒有結果</Text>}
+                            renderItem={({ item }) => <LocationPreview location={item} navigation={this.props.navigation} />}
+                        />
+                        :
+                        this.props.route.params.hasOwnProperty('locationIDs')
+                            ?
+                            <FlatList
+                                data={this.props.route.params.locationIDs}
+                                ListEmptyComponent={ <Text textAlign={'center'} m={10}>沒有結果</Text>}
+                                renderItem={({ item }) => <LocationPreview place_id={item} navigation={this.props.navigation} />}
+                            />
                             :
-                            this.props.route.params.locationIDs.map((item) => (
-                                <LocationPreview place_id={item} navigation={this.props.navigation} />
-                            )
-                            )}
-                            {!this.props.route.params.locations?.length
-                            &&!this.props.route.params.locationIDs?.length&&
-                            <Text textAlign={'center'} m={10}>沒有結果</Text>}
-                    </ScrollView>
+                            this.state.locationIDs
+                                ?
+                                <FlatList
+                                    data={this.state.locationIDs}
+                                    ListEmptyComponent={ <Text textAlign={'center'} m={10}>沒有結果</Text>}
+                                    renderItem={({ item }) => <LocationPreview place_id={item} navigation={this.props.navigation} />}
+                                />
+                                :
+                                <HStack justifyContent={'center'} my={10}>
+                                    <Spinner />
+                                </HStack>
+                    }
+                  
+
                 </VStack>
             </NativeBaseProvider >
         );

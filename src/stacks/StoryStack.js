@@ -21,11 +21,14 @@ import {
 } from '../utils/FirebaseUtil'
 import LocationButton from '../components/LocationButton'
 import StarRating from 'react-native-star-rating';
-import YummyRankView from '../components/YummyRankView';
+import ConfettiCannon from 'react-native-confetti-cannon';
 import { getTheme } from '../consts/themes';
+import { getFromCache } from '../utils/AsyncStorageCache';
 /* 
 Props:
 -  post  (whole post)
+
+If post is undefined, will find from Cache first, then Web.
 */
 
 export default function StoryStack({ navigation, route }) {
@@ -39,6 +42,7 @@ export default function StoryStack({ navigation, route }) {
     const [comment, setComment] = useState('');
     const [author, setAuthor] = React.useState({ propic: '', name: '' })
 
+    const explosion = React.useRef(0) 
 
     useEffect(() => {
 
@@ -65,14 +69,29 @@ export default function StoryStack({ navigation, route }) {
     const openStory = _openStory.bind(this);
 
     async function refreshPost() {
-        //refresh post
-        var newdata = await getPostById(route.params.hasOwnProperty('post') ? route.params.post.id : route.params.postid)
-        setContent(newdata)
-        setLiked(newdata.likes.includes(getMyUid()))
-
+        /* 
+        Refresh logic:
+        1. we load post from Cache
+        2. We fetch again
+        */
+        var newdata
+        if (route.params.hasOwnProperty('postid')) {
+            newdata = await getFromCache('post:' + route.params.postid)
+            setContent(newdata)
+            setLiked(newdata.likes.includes(getMyUid())) 
+        } else if (route.params.hasOwnProperty('post')) {
+            newdata=route.params.post
+            setContent(route.params.post)
+            setLiked(newdata.likes.includes(getMyUid())) 
+        }
         //get writer propic and name
         var u = await getUser(newdata.userid, false)
         setAuthor(u)
+
+        // refresh up to date
+       /*  newdata = await getPostById(route.params.hasOwnProperty('post') ? route.params.post.id : route.params.postid)
+        setContent(newdata)
+        setLiked(newdata.likes.includes(getMyUid())) */
 
         //get commenter propic and names
         var newStateArray = [];
@@ -96,6 +115,7 @@ export default function StoryStack({ navigation, route }) {
         } else {
             setLiked(true)
             likePost(content.id, content.userid)
+            explosion.current.start()
         }
         //refresh post
         var newdata = await getPostById(content.id)
@@ -234,10 +254,11 @@ export default function StoryStack({ navigation, route }) {
     }
 
     var theme = getTheme(content)
-    var isZlayout = content.hasOwnProperty('layout') && content.layout
+    var isZlayout = content && content.hasOwnProperty('layout') && content.layout
 
     return content != null ? (
         <NativeBaseProvider>
+            
             {/*  Header Bar  */}
             <View style={{
                 height: 50,
@@ -330,7 +351,7 @@ export default function StoryStack({ navigation, route }) {
                                 marginLeft: isZlayout && index % 2 == 1 ? 90 : 16,
                                 marginRight: isZlayout && index % 2 == 0 ? 90 : 16,
 
-                                marginVertical: 18
+                                marginVertical: 10
                             }}>
                             <TouchableWithoutFeedback onPress={() => openStory(index)} >
                                 <View style={{
@@ -399,7 +420,7 @@ export default function StoryStack({ navigation, route }) {
 
                             </HStack>}
                         <HStack alignItems={'flex-end'}>
-                            {content.overallscore>0 && <VStack alignItems='center' flex={1.5} borderColor='coolGray.300'>
+                            {content.overallscore > 0 && <VStack alignItems='center' flex={1.5} borderColor='coolGray.300'>
                                 <Text fontWeight={'semibold'} color='#ff9636' fontSize={36}>{content.overallscore}</Text>
                                 <Text fontWeight='bold' color='coolGray.500' >整體</Text>
 
@@ -442,7 +463,7 @@ export default function StoryStack({ navigation, route }) {
 
                         {commentUsers.map((item, index) =>
                             <HStack key={index}>
-                                <TouchableOpacity onPress={() => openProfile(item.userid)}>
+                                <TouchableOpacity onPress={() => openProfile(item.uid)}>
                                     <Text fontWeight='bold' color={theme.color}>{item.name} </Text>
                                 </TouchableOpacity>
                                 <Text color={theme.color}>{content.comment[index].comment}</Text>
@@ -467,7 +488,13 @@ export default function StoryStack({ navigation, route }) {
                 </ScrollView>
             </ImageBackground>
 
-
+            <ConfettiCannon
+                count={80} fallSpeed={2000}
+                origin={{ x: -10, y: 0 }}
+                autoStart={false}
+                fadeOut
+                ref={explosion}
+            />
 
             {/*  Footer Bar  */}
 
@@ -495,17 +522,35 @@ export default function StoryStack({ navigation, route }) {
 
             </HStack>
 
-
+          
         </NativeBaseProvider>
     ) :
         (
             <NativeBaseProvider>
+                {/*  Header Bar  */}
+                <View style={{
+                    height: 50, 
+                    position: 'absolute', top: 0
+
+                }}>
+                    <HStack alignItems='center'
+                        borderBottomWidth={2} borderBottomColor='#ff9636'
+                        backgroundColor='white' height='50px' px={2} width={width}
+
+                    >
+
+                        <IconButton onPress={() => navigation.goBack()}
+                            icon={<Ionicons name="ios-chevron-back" size={24} color="black" />} />
+
+
+
+
+                    </HStack>
+                </View>
                 <View style={{ alignItems: 'center', height: height, justifyContent: 'center' }}>
-                    <View>
-                        <Text style={{ fontFamily: 'sans-serif-light', color: 'black', marginBottom: 3 }}
-                            textAlign='right'>ғᴏᴏᴅɪᴇ ʙʏ ᴄʜʟᴏᴇ🍺     </Text>
-                        <Spinner />
-                    </View>
+
+                    <Spinner />
+
                 </View>
                 {/* logo */}
 

@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
-
-    RefreshControl, ScrollView, ImageBackground, Dimensions,
+    StyleSheet,
+    Animated,
+    RefreshControl, ImageBackground, Dimensions, Image,
 } from 'react-native';
 import {
     FlatList, HStack, IconButton, Text, Box,
-    VStack, NativeBaseProvider, Button, Avatar
+    VStack, NativeBaseProvider, Button, Avatar, View
 } from "native-base";
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import {
@@ -13,12 +14,15 @@ import {
     , getAllRestaurants, getPublicPosts
 } from '../utils/FirebaseUtil'
 import Post from '../components/Post'
-import LocationPreview from './../components/LocationPreview'
-import UserPreview from './../components/UserPreview'
 import { Feather, Ionicons, } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import NotificationButton from './../components/NotificationButton'
+import LocationButton from '../components/LocationButton';
+import * as Bookmark from '../utils/Bookmark'
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+
+import ConfettiCannon from 'react-native-confetti-cannon';
 
 const Tab = createMaterialTopTabNavigator();
 var { width, height } = Dimensions.get('window')
@@ -92,8 +96,17 @@ function Feed(props) {
 
     async function getData() {
         setRefreshing(true);
-        var dat = await getPublicPosts()//(await getUser()).feed
-        setData(dat)
+        var publicPosts = await getPublicPosts()//(await getUser()).feed
+        var feed = (await getUser()).feed
+
+        // combine sort by dates
+        for (var i of feed) {
+            i.postDate = i.timestamp
+        }
+        var combined = feed.concat(publicPosts)
+        combined.sort((a, b) => b.postDate.seconds - a.postDate.seconds)
+
+        setData(combined)
         setRefreshing(false);
     }
 
@@ -104,8 +117,12 @@ function Feed(props) {
     return (
         <VStack backgroundColor='white' flex={1} >
             <FlatList
+                maxToRenderPerBatch={5}
+                updateCellsBatchingPeriod={1000}
+                initialNumToRender={2}
+              
                 style={{ flex: 1 }}
-                contentContainerStyle={{ paddingBottom: 20 }}
+                contentContainerStyle={{ paddingBottom: 45 }}
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
@@ -115,7 +132,7 @@ function Feed(props) {
                 showsVerticalScrollIndicator={false}
                 data={data}
                 renderItem={({ item, index }) => (
-                    <Post postid={item.id} index={index} navigation={props.navigation} />
+                    <Post postid={item.id} index={index} navigation={props.navigation} explode={props.explode}/>
                 )}
                 ListHeaderComponent={
                     <SuggestedFoodiesView navigation={props.navigation} />
@@ -125,137 +142,159 @@ function Feed(props) {
 
     );
 }
-function FriendList(props) {
-    const [allusers, setAllusers] = useState([])
-    const [myuser, setMyuser] = useState({ friends: [], requests: [] })
-    const [refreshing, setRefreshing] = React.useState(false);
-
-    async function getData() {
-        setRefreshing(true);
-
-        var dat = await getAllUsers()
-        setAllusers(dat)
-
-        var dat = await getUser()
-        setMyuser(dat)
-        setRefreshing(false);
+function getRandom(arr, n) {
+    var result = new Array(n),
+        len = arr.length,
+        taken = new Array(len);
+    if (n > len)
+        throw new RangeError("getRandom: more elements taken than available");
+    while (n--) {
+        var x = Math.floor(Math.random() * len);
+        result[n] = arr[x in taken ? taken[x] : x];
+        taken[x] = --len in taken ? taken[len] : len;
     }
-
-    useEffect(() => { getData() }, [])
-
-    const openProfile = (id) => {
-        props.navigation.push('UserProfileStack', {
-            userid: id
-        })
-    }
-
-    return (
-        <ImageBackground
-            source={require("./../../assets/gallery_bg.png")}
-            style={{ width: width, height: height }}
-        >
-            <VStack flex={1} >
-                <ScrollView refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={getData}
-                    />
-                }>
-                    {myuser.requests.length != 0 &&
-                        <HStack m={5}>
-                            <Text fontSize={'xl'} color='white' fontWeight={'bold'}>{"追蹤請求"}</Text>
-                        </HStack>
-                    }
-                    {myuser.requests.map((item) => (
-                        <Box borderRadius={9} m={5} my={2} py={2} overflow='hidden' backgroundColor={'#EEECE3'}>
-                            <UserPreview userid={item} navigation={props.navigation} /></Box>
-                    )
-                    )}
-                    <HStack m={5}>
-                        <Text fontSize={'xl'} color='white' fontWeight={'bold'}>{"熱門foodie"}</Text>
-                    </HStack>
-
-
-                    {allusers.map((item, index) => (
-                        <Box borderRadius={9} m={5} my={2} py={2} overflow='hidden' backgroundColor={'#EEECE3'}>
-                            <UserPreview user={item} navigation={props.navigation} /></Box>
-                    )
-                    )}
-                    <HStack m={5}>
-                        <Text fontSize={'xl'} color='white' fontWeight={'bold'}>{"朋友"}</Text>
-                    </HStack>
-
-                    {myuser.friends.map((item) => (
-                        <Box borderRadius={9} m={5} my={2} py={2} overflow='hidden' backgroundColor={'#EEECE3'}>
-                            <UserPreview userid={item} navigation={props.navigation} /></Box>
-                    )
-                    )}
-                    <Box m={20} />
-                </ScrollView>
-            </VStack >
-        </ImageBackground>
-    );
+    return result;
 }
+function RandomView(props) {
 
-function RestaurantList(props) {
-    const [allrestaurants, setAllrestaurants] = useState([])
-    const [bookmarks, setBookmarks] = useState([])
+    const [data, setData] = useState([])
+    const [bookmarkedArray, setBookmarkedArray] = useState([0, 0, 0])
     const [refreshing, setRefreshing] = React.useState(false);
+    const explosion = useRef()
+    const [fadeAnim] = useState(new Animated.Value(0));
 
+
+    const tabBarHeight = useBottomTabBarHeight();
     async function getData() {
+        Animated.sequence([
+            Animated.timing(fadeAnim, {
+                toValue: 0,
+                duration: 500, useNativeDriver: true
+            }),
+            Animated.timing(fadeAnim, {
+                toValue: 1,
+                duration: 500, useNativeDriver: true
+            })]).start();
         setRefreshing(true);
+        var dat = getRandom(await getPublicPosts(), 3)//(await getUser()).feed
+        setData(dat)
+        setBookmarkedArray([0, 0, 0])
 
-        var dat = await getAllRestaurants()
-        setAllrestaurants(dat)
-
-        var dat = await getUser()
-        setBookmarks(dat.bookmarks)
+        /* save to cache for smooth navigation */
+        for (var i of dat) {
+            /* save post to cache */
+            saveToCache('post:' + i.id, i)
+        }
         setRefreshing(false);
-    }
 
-    useEffect(() => { getData() }, [])
+    }
+    const addBookmark = (name, id, index) => {
+        props.explode()
+        setTimeout(getData, 1400)
+
+        Bookmark.addBookmark(name, id)
+        var newarr = [...bookmarkedArray]
+        newarr[index] = 1
+        setBookmarkedArray(newarr)
+
+
+    }
+   
+    useEffect(() => {
+        getData()
+    }, [])
 
     return (
+
         <ImageBackground
             source={require("./../../assets/gallery_bg.png")}
-            style={{ width: width, height: height }}
+            style={{ flex: 1 }}
         >
-            <VStack flex={1}>
-                <ScrollView refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={getData}
+
+
+            <View style={{ flex: 1, paddingBottom: tabBarHeight }}>
+                <HStack mx={5} justifyContent={'space-between'} alignItems='center'>
+                    <Text fontSize={18} color='white' textAlign={'center'}
+                        my={5} mb={3} >選擇一間餐廳加入收藏吧！</Text>
+                    <IconButton onPress={getData}
+                        icon={<Feather name="refresh-cw" size={24} color='#EEECE3' />} />
+                </HStack>
+                <Animated.View
+                    style={{
+                        flex: 1,
+                        opacity: fadeAnim,
+                    }}  >
+
+
+                    <FlatList
+                        data={data}
+                        renderItem={({ item: post, index }) => (
+                            <TouchableOpacity activeOpacity={.7}
+                                onPress={() => props.navigation.push('StoryStack', { postid: post.id, currImg: 0 })} >
+                                <VStack
+                                    borderRadius={9} m={5} my={2} overflow='hidden' 
+                                 backgroundColor={'#EEECE3'}>
+                                    <HStack p={3} pointerEvents="none" >
+                                        <Image source={{ uri: post.image[0] }} style={{ height: 85, width: 85, }} resizeMode='cover' />
+
+                                        <VStack ml={3} flex={1}>
+
+                                            <HStack justifyContent='space-between' alignItems='center' >
+                                                {post.overalltitle != '' ?
+                                                    <Text fontSize={'md'} fontWeight={'bold'}
+                                                        flexWrap='wrap' flex={1}
+                                                        numberOfLines={2}
+                                                    >{post.overalltitle.trim()}</Text>
+                                                    :
+                                                    <View />
+                                                }
+                                            </HStack>
+                                            <LocationButton disabled
+                                                fontSize='sm'
+                                                location={post.location}
+                                                place_id={post.place_id}
+                                                navigation={props.navigation}
+                                                color={'black'} />
+                                        </VStack>
+                                    </HStack>
+
+                                    <TouchableOpacity onPress={() => addBookmark(post.location, post.place_id, index)}>
+                                        <HStack alignItems={'center'} pl={5}
+                                            borderTopWidth={1} borderColor='coolGray.400' p={3} py={2}
+                                            backgroundColor={bookmarkedArray[index] ? "#3cb043" : "transparent"}
+                                            borderBottomRadius={9}>
+                                            <Ionicons
+                                                name={bookmarkedArray[index] ? "ios-checkmark" : "bookmark-outline"} size={24}
+                                                color={bookmarkedArray[index] ? "white" : "black"}
+                                            />
+                                            <Text color={bookmarkedArray[index] ? "white" : "coolGray.800"}> 加入我的收藏</Text>
+                                        </HStack>
+                                    </TouchableOpacity>
+                                </VStack>
+                            </TouchableOpacity>
+                        )}
+
+
                     />
-                }>
 
-                    <HStack m={5}>
-                        <Text fontSize={'xl'} color='white' fontWeight={'bold'}>{"排名"}</Text>
-                    </HStack>
 
-                    {allrestaurants.map((item, index) => (
-                        <Box borderRadius={9} m={5} my={2} overflow='hidden' backgroundColor={'#EEECE3'}>
-                            <LocationPreview location={item} navigation={props.navigation} />
-                        </Box>
-                    )
-                    )}
-                    <HStack m={5}>
-                        <Text fontSize={'xl'} color='white' fontWeight={'bold'}>{"書籤"}</Text>
-                    </HStack>
+                </Animated.View>
 
-                    {bookmarks.map((item) => (
-                        <Box borderRadius={9} m={5} my={2} overflow='hidden' backgroundColor={'#EEECE3'}>
-                            <LocationPreview place_id={item} navigation={props.navigation} />
-                        </Box>
-                    )
-                    )}
-                    <Box m={20} />
-                </ScrollView>
-            </VStack ></ImageBackground>
+            </View>
+
+           
+        </ImageBackground >
 
     );
 }
 export default class HomeTab extends React.Component {
-
+constructor(props){
+    super(props)
+    this.explosion = React.createRef(null);
+}
+     explode = () => {
+        this.explosion.current.start();
+    };
 
     render() {
 
@@ -264,7 +303,7 @@ export default class HomeTab extends React.Component {
 
                 {/*  Header Bar  */}
                 <HStack alignItems='center' justifyContent='space-between'
-                    borderBottomWidth={2} borderBottomColor='#ff9636'
+                    h={50}
                     backgroundColor='white'
                     py={2}
                 >
@@ -274,13 +313,50 @@ export default class HomeTab extends React.Component {
                         <Ionicons
                             name="add-circle-outline" size={24} color="black"
                             onPress={() => this.props.navigation.push('AddMediaStack')} />
-                        <NotificationButton navigation={this.props.navigation} />
+                        <Box mx={4}><NotificationButton navigation={this.props.navigation} /></Box>
+
                     </HStack>
                 </HStack>
+                <Tab.Navigator
+                    swipeEnabled
+                    screenOptions={{
+                        lazy: true,
+                        tabBarLabelStyle: { fontWeight: 'bold', textTransform: "none", marginTop: -9 },
+                        tabBarIndicatorStyle: { backgroundColor: '#ff9636' },
+                        tabBarStyle: {
+                            height: 35
+                        }
 
-                <Feed navigation={this.props.navigation} />
+                    }}
+                >
+                    <Tab.Screen name="看一看" children={()=><RandomView navigation={this.props.navigation} explode={this.explode}/>}
+                   />
+                    <Tab.Screen name="朋友們" children={()=><Feed navigation={this.props.navigation} explode={this.explode}/>} />
+                </Tab.Navigator>
+
+                <ConfettiCannon fadeOut
+                count={80} fallSpeed={2000}
+                origin={{ x: -10, y: 0 }}
+                autoStart={false}
+                ref={this.explosion}
+            />
             </NativeBaseProvider>
         );
     }
 }
 
+const styles = StyleSheet.create({
+
+    boxshadow: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 3.84,
+        elevation: 8,
+        backgroundColor: '#fff',
+        overflow: 'visible',
+    }
+});
