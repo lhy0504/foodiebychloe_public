@@ -58,27 +58,27 @@ export default class GalleryTab extends React.Component {
 
 
 
-                  
-                        <InfiniteMonthView
-                            styles={{ flex: 1, height: height }}
-                            navigation={this.props.navigation}
-                            uid={getMyUid()}
-                            allowAdd={true}
-                        />
-                        {/* logo */}
-                        <View style={{
-                            position: 'absolute',
-                            height: 80,
-                            width: width,
-                            right: 0,
-                            bottom: 0,
-                            flexDirection: 'row',
-                            justifyContent: 'flex-end',
-                            alignItems: 'center'
-                        }}>
-                            <Text style={{ fontFamily: 'sans-serif-light', color: '#EEECE3' }} textAlign='right'>ғᴏᴏᴅɪᴇ ʙʏ ᴄʜʟᴏᴇ🍺     </Text>
-                        </View>
-             
+
+                    <InfiniteMonthView
+                        styles={{ flex: 1, height: height }}
+                        navigation={this.props.navigation}
+                        uid={getMyUid()}
+                        allowAdd={true}
+                    />
+                    {/* logo */}
+                    <View style={{
+                        position: 'absolute',
+                        height: 80,
+                        width: width,
+                        right: 0,
+                        bottom: 0,
+                        flexDirection: 'row',
+                        justifyContent: 'flex-end',
+                        alignItems: 'center'
+                    }}>
+                        <Text style={{ fontFamily: 'sans-serif-light', color: '#EEECE3' }} textAlign='right'>ғᴏᴏᴅɪᴇ ʙʏ ᴄʜʟᴏᴇ🍺     </Text>
+                    </View>
+
                 </ViewShot>
 
                 <View style={{
@@ -90,11 +90,14 @@ export default class GalleryTab extends React.Component {
                     flexDirection: 'row',
                     alignItems: 'center'
                 }}>
-                    <IconButton onPress={this.reload}
-                        mr={1} icon={<Feather name="refresh-cw" size={24} color='#EEECE3' />} />
+                    {/*  <IconButton onPress={this.reload}
+                        mr={1} icon={<Feather name="refresh-cw" size={24} color='#EEECE3' />} /> */}
+
 
                     <IconButton onPress={this.captureAndShareScreenshot}
                         mr={2} icon={<Feather name="instagram" size={24} color='#EEECE3' />} />
+                    <IconButton onPress={() => this.props.navigation.goBack()}
+                        mr={1} icon={<Feather name='x' size={24} color='#EEECE3' />} />
                 </View>
 
 

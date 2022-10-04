@@ -57,7 +57,7 @@ export default class LocationButton extends React.Component {
 render() {
     if (!this.props.hasOwnProperty('location')) return <></>
     if (this.props.location == '') return <></>
-    var fontSize = this.props.hasOwnProperty('fontSize') ? this.props.fontSize : 'md'
+    var fontSize = this.props.hasOwnProperty('fontSize') ? this.props.fontSize : 'sm'
 
     return (
         <TouchableHighlight activeOpacity={1} underlayColor="#e6e6e650" onPress={this.onPress} >

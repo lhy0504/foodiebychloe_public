@@ -31,11 +31,11 @@
           "remote-notification"
         ]
       },
-      "buildNumber": "35"
+      "buildNumber": "39"
     },
     "android": {
       "package": "com.foodiebychloe",
-      "versionCode": 35,
+      "versionCode": 39,
       "permissions": [
         "CAMERA_ROLL",
         "CAMERA",

@@ -43,24 +43,22 @@ export default class GalleryTab extends React.Component {
         return (
             <NativeBaseProvider>
                 <VStack backgroundColor={'white'} flex={1}>
-                    {/*  Header Bar  */}
-                    <View style={{
-                        height: 50
-                    }}>
-                        <HStack alignItems='center'
-                            borderBottomWidth={2} borderBottomColor='#ff9636'
-                            backgroundColor='white' height='50px' px={2}
-                        >
-                            <HStack alignItems={'center'}>
-                                <IconButton onPress={() => this.props.navigation.goBack()}
-                                    icon={<Ionicons name="ios-chevron-back" size={24} color="black" />} />
+                <VStack
+                    borderBottomWidth={2} borderBottomColor='#ff9636'
+                    alignItems={'flex-start'}
+                >
+                    <ImageBackground
+                        source={require("./../../assets/Midnight.png")}
+                        style={{ width: width, alignContent: 'flex-start' }}
+                    >
+                        <Box m={4}>
+                            <Ionicons name="ios-chevron-back" size={24} color="white" onPress={() => this.props.navigation.goBack()} />
+                        </Box>
+                        <Text m={4} fontWeight='bold' fontSize='2xl' color='white' >搜尋結果</Text>
+                    </ImageBackground>
 
-                                <Text fontWeight='bold' color='black' fontSize='sm'>  {"搜尋結果"}</Text>
+                </VStack>
 
-                            </HStack>
-
-                        </HStack>
-                    </View>
                     <FriendList navigation={this.props.navigation} users={this.props.route.params.users} />
                 </VStack >
             </NativeBaseProvider >

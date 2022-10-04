@@ -504,7 +504,8 @@ export default function StoryStack({ navigation, route }) {
                 px={3}
             >
                 <TouchableOpacity onPress={doLike} >
-                    <AntDesign name={liked ? "like1" : "like2"} size={24} />
+                    <AntDesign name={liked ? "like1" : "like2"} size={24}
+                    color={liked ? "#ff9636" : "#555"}  />
                 </TouchableOpacity>
 
                 <TextInput

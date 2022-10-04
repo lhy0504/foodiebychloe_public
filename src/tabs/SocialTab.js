@@ -78,7 +78,12 @@ export default function Maptab({ navigation, route }) {
 
                 <HStack mx={6} mt={4} justifyContent='space-between' alignItems='center' >
                     <Text fontSize={24} fontWeight='bold'  >關係分數 ♛</Text>
-                    <NotificationButton navigation={navigation} />
+                    <HStack alignItems={'center'}>
+                       
+                        <IconButton onPress={() => navigation.goBack()}
+                            ml={1} icon={<Feather name='x' size={24} />} />
+                    </HStack>
+
                 </HStack>
 
                 <HStack mx={6} my={4} alignItems='center' >

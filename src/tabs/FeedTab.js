@@ -77,9 +77,10 @@ function SuggestedFoodiesView(props) {
     }
     return (
         <Box backgroundColor={'coolGray.200'}>
-            <HStack ml={6} mt={4} justifyContent='space-between' alignItems='center' >
+            {allusers.length > 0 && <HStack ml={6} mt={4} justifyContent='space-between' alignItems='center' >
                 <Text fontSize={20} fontWeight={'bold'} color='#ff9639'  >為您推薦的熱門Foodies</Text>
             </HStack>
+            }
 
             <FlatList
                 showsHorizontalScrollIndicator={false}
@@ -163,7 +164,7 @@ export default class HomeTab extends React.Component {
                 <HStack alignItems='center' justifyContent='space-between'
                     h={60}
                     backgroundColor='white'
-                    py={2}borderBottomWidth={2} borderBottomColor='#ff9636'
+                    py={2} borderBottomWidth={2} borderBottomColor='#ff9636'
                 >
                     <Text ml={5} fontSize='lg' color='coolGray.600' fontWeight={'semibold'} textAlign='center'>ғᴏᴏᴅɪᴇ ʙʏ ᴄʜʟᴏᴇ🍺</Text>
 

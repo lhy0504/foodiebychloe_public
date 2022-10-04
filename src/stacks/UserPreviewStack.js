@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Dimensions, Share, ImageBackground, Image, ScrollView, RefreshControl } from 'react-native';
+import { View, Dimensions, Share, ImageBackground, Image, ScrollView, RefreshControl, FlatList } from 'react-native';
 import {
     HStack, IconButton, Text,
     VStack, NativeBaseProvider, Box
@@ -39,8 +39,22 @@ function FriendList(props) {
 
         <VStack flex={1} justifyContent='flex-start'>
 
+            <ImageBackground
+                source={require("./../../assets/Midnight.png")}
+                style={{ width: width, alignContent: 'flex-start', borderBottomWidth: 2, borderBottomColor: '#ff9636' }}
+            >
+                <HStack alignItems='center'
+                    height='50px' px={2}
+                >
+                    <HStack alignItems={'center'}>
+                        <IconButton onPress={() => props.navigation.goBack()}
+                            icon={<Ionicons name="ios-chevron-back" size={24} color="white" />} />
 
-            <ScrollView  >
+                        <Text fontWeight='bold' color='white' fontSize='sm'>  {props.user.name}</Text>
+
+                    </HStack>
+
+                </HStack>
                 <ScrollView horizontal >
                     <TouchableOpacity onPress={showFriend}>
                         <Text m={5} fontSize={'xl'} color={showing == 'friends' ? '#ff9639' : '#c3c3c3'}
@@ -57,14 +71,19 @@ function FriendList(props) {
                         </TouchableOpacity>
                     }
                 </ScrollView>
-                {data.map((item, index) => (
+            </ImageBackground>
+            <FlatList
+                data={data}
+                renderItem={({ item, index }) => (
                     <Box backgroundColor={'#fff'} key={showing + index} >
                         <UserPreview userid={item} navigation={props.navigation} /></Box>
-                )
+
                 )}
-                 {data.length==0&&
-                            <Text textAlign={'center'} m={10}>沒有結果</Text>}
-            </ScrollView>
+                ListEmptyComponent={<Text textAlign={'center'} m={10}>沒有結果</Text>}
+            />
+
+        
+
         </VStack >
 
     );
@@ -76,24 +95,7 @@ export default class GalleryTab extends React.Component {
         return (
             <NativeBaseProvider>
                 <VStack backgroundColor={'white'} flex={1}>
-                    {/*  Header Bar  */}
-                    <View style={{
-                        height: 50
-                    }}>
-                        <HStack alignItems='center'
-                            borderBottomWidth={2} borderBottomColor='#ff9636'
-                            backgroundColor='white' height='50px' px={2}
-                        >
-                            <HStack alignItems={'center'}>
-                                <IconButton onPress={() => this.props.navigation.goBack()}
-                                    icon={<Ionicons name="ios-chevron-back" size={24} color="black" />} />
 
-                                <Text fontWeight='bold' color='black' fontSize='sm'>  {this.props.route.params.user.name}</Text>
-
-                            </HStack>
-
-                        </HStack>
-                    </View>
                     <FriendList navigation={this.props.navigation} user={this.props.route.params.user} />
                 </VStack >
             </NativeBaseProvider >

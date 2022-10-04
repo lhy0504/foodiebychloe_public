@@ -43,6 +43,7 @@ export default class PostPreview extends React.Component {
                 style={{ flex: 1 }}
                 data={this.props.posts}
                 renderItem={this.renderPost}
+                ListEmptyComponent={<Text my={15} textAlign='center'>沒有帖子</Text>}
             />
         )
 

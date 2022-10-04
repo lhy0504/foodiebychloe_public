@@ -33,6 +33,9 @@ import { useAuthentication } from './src/utils/UseAuth';
 import { NavigationContainer, useNavigationContainerRef, } from '@react-navigation/native';
 
 import { TransitionPresets } from '@react-navigation/stack';
+import GalleryTab from './src/tabs/GalleryTab';
+import SocialTab from './src/tabs/SocialTab';
+
 const Stack = createStackNavigator();
 
 
@@ -104,6 +107,14 @@ export default function App() {
                 <Stack.Screen
                   name="MainScreen"
                   component={MainScreen}
+                />
+                 <Stack.Screen
+                  name="GalleryTab"
+                  component={GalleryTab}
+                />
+                <Stack.Screen
+                  name="SocialTab"
+                  component={SocialTab}
                 />
                 <Stack.Screen
                   name="NotificationsStack"

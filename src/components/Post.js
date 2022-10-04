@@ -179,9 +179,9 @@ export default function Post(props) {
 
                             :
 
-                            <View style={{ flex: 1,margin:50, marginVertical:10 }}>
-                                <Image source={{ uri: item.image[0] }} style={{ height: width-100, width: '100%', }} />
-                              {/*   <ImageDesc yummystar={item.yummystar[0]} title={item.title[0]} /> */}
+                            <View style={{ flex: 1, margin: 50, marginVertical: 10 }}>
+                                <Image source={{ uri: item.image[0] }} style={{ height: width - 100, width: '100%', }} />
+                                {/*   <ImageDesc yummystar={item.yummystar[0]} title={item.title[0]} /> */}
                             </View>
                         }
                     </View>
@@ -197,18 +197,24 @@ export default function Post(props) {
 
 
 
-                <HStack justifyContent='space-between' px={5} mb={2} mt={3}>
+                <HStack justifyContent='space-between' px={5} mb={2} mt={3}alignItems='center'>
                     <HStack alignItems='center' mb={1}>
                         <TouchableOpacity onPress={doLike}>
                             <HStack p={1} w={16}>
-                                <AntDesign name={liked ? "like1" : "like2"} size={22} color='#555' />
+                                <AntDesign name={liked ? "like1" : "like2"} size={22} color={liked ? "#ff9636" : "#555"} />
                                 {item.likes.length != 0 &&
-                                    <Text color='#555'>  {item.likes.length} </Text>}
+                                    <Text color={liked ? "#ff9636" : "#555"} >  {item.likes.length} </Text>}
                             </HStack>
 
                         </TouchableOpacity>
 
 
+                      
+                        {/* Fake view */}
+                        <HStack p={1} w={16}>
+                            <Ionicons name={"eye-outline"} size={22} color='#555' />
+                            <Text color='#555'>  {randomViews} </Text>
+                        </HStack>
                         <TouchableOpacity onPress={openComment}>
                             <HStack p={1} w={16}>
                                 <Ionicons name={"chatbox-outline"} size={22} color='#555' />
@@ -217,17 +223,10 @@ export default function Post(props) {
                             </HStack>
                         </TouchableOpacity>
 
-                        {/* Fake view */}
-                        <HStack p={1} w={16}>
-                            <Ionicons name={"eye-outline"} size={22} color='#555' />
-                            <Text color='#555'>  {randomViews} </Text>
-                        </HStack>
-
                     </HStack>
-                    <HStack style={{ justifyContent: 'center' }}>
 
-                        <Text color='coolGray.500' fontSize='xs' textAlign='center'>{"  "}{item.date}  {item.time}</Text>
-                    </HStack>
+                    <Text color='coolGray.500' fontSize='xs'>{"  "}{item.date}  {item.time}</Text>
+
                 </HStack>
 
 

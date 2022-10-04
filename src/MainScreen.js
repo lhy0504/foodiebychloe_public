@@ -165,19 +165,8 @@ export default function MainScreen({ navigation, route }) {
                             }
                         }
                     }} />
-                     <Tab.Screen name="ExploreTab" component={ExploreTab}
-                    options={{
-                        tabBarLabel: '探索',
-                        tabBarActiveTintColor: 'black',
-                        tabBarIcon: (props) => {
-                            if (props.focused) {
-                                return <Ionicons name="search" size={24} color="black" />;
-                            } else {
-                                return <Ionicons name="search-outline" size={24} color='grey' />;
-                            }
-                        }
-                    }} />
-                <Tab.Screen name="GalleryTab" component={() => null}
+                    
+                <Tab.Screen name="Bookmark" component={() => null}
                     listeners={() => ({
                         tabPress: (e) => {
                             e.preventDefault();
@@ -191,9 +180,21 @@ export default function MainScreen({ navigation, route }) {
                             return <View >
                                 <Ionicons
 
-                                    name="bookmark-outline" size={24} color="grey"
+                                    name="bookmarks-outline" size={24} color="grey"
                                     onPress={() =>browseBookmark()} />
                             </View>;
+                        }
+                    }} />
+                     <Tab.Screen name="ExploreTab" component={ExploreTab}
+                    options={{
+                        tabBarLabel: '探索',
+                        tabBarActiveTintColor: 'black',
+                        tabBarIcon: (props) => {
+                            if (props.focused) {
+                                return <Ionicons name="search" size={24} color="black" />;
+                            } else {
+                                return <Ionicons name="search-outline" size={24} color='grey' />;
+                            }
                         }
                     }} />
                 <Tab.Screen name="AccountTab" component={AccountTab} navigation={navigation}
@@ -203,9 +204,9 @@ export default function MainScreen({ navigation, route }) {
                         tabBarActiveTintColor: 'black',
                         tabBarIcon: (props) => {
                             if (props.focused) {
-                                return <Ionicons name='ios-person' size={24} color="black" />;
+                                return <Ionicons name='md-person-circle' size={24} color="black" />;
                             } else {
-                                return <Ionicons name="ios-person-outline" size={24} color='grey' />;
+                                return <Ionicons name="md-person-circle-outline" size={24} color='grey' />;
                             }
                         }
                     }} />
