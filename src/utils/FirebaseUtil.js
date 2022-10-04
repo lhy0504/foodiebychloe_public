@@ -258,8 +258,8 @@ export async function getPublicPosts() {
   snapshot.forEach((doc) => {
     const singlePost = doc.data();
     singlePost.id = doc.id;
-   /*  postList.push(convertTimestampToDate(singlePost)); */
-    postList.push((singlePost));
+   postList.push(convertTimestampToDate(singlePost)); 
+
   });
   return (postList);
 }

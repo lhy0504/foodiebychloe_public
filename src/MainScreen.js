@@ -8,8 +8,9 @@ import SocialTab from './tabs/SocialTab';
 
 import AccountTab from './tabs/AccountTab';
 import AddMediaStack from './stacks/AddMediaStack';
+import FeedTab from './tabs/FeedTab'
 
-import { Feather, Ionicons, } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Ionicons, } from '@expo/vector-icons';
 import { checkIfNewUser, getUser, TestingPurpose } from './utils/FirebaseUtil'
 
 import { registerForPushNotificationsAsync } from './utils/PushNotifications'
@@ -113,24 +114,15 @@ export default function MainScreen({ navigation, route }) {
                         tabBarActiveTintColor: 'black',
                         tabBarIcon: (props) => {
                             if (props.focused) {
-                                return <Ionicons name="home" size={24} color="black" />;
+                                return <MaterialCommunityIcons name="dice-5" size={24} color="black"
+                                style={{transform: [{rotate: '25deg'}]}}/>;
                             } else {
-                                return <Ionicons name="home-outline" size={24} color='grey' />;
+                                return <MaterialCommunityIcons name="dice-5-outline" size={24} color='grey'
+                                style={{transform: [{rotate: '25deg'}]}} />;
                             }
                         }
                     }} />
-                <Tab.Screen name="ExploreTab" component={ExploreTab}
-                    options={{
-                        tabBarLabel: '探索',
-                        tabBarActiveTintColor: 'black',
-                        tabBarIcon: (props) => {
-                            if (props.focused) {
-                                return <Ionicons name="search" size={24} color="black" />;
-                            } else {
-                                return <Ionicons name="search-outline" size={24} color='grey' />;
-                            }
-                        }
-                    }} />
+               
                 {/*  <Tab.Screen name="New"
                     component={() => null}
                     listeners={() => ({
@@ -149,7 +141,7 @@ export default function MainScreen({ navigation, route }) {
                             </View>;
                         }
                     }} /> */}
-                <Tab.Screen name="SocialTab" component={SocialTab} navigation={navigation}
+               {/*  <Tab.Screen name="SocialTab" component={SocialTab} navigation={navigation}
                     options={{
                         tabBarLabel: '社交',
                         tabBarActiveTintColor: 'black',
@@ -158,6 +150,30 @@ export default function MainScreen({ navigation, route }) {
                                 return <Ionicons name="ios-people" size={24} color="black" />;
                             } else {
                                 return <Ionicons name="ios-people-outline" size={24} color='grey' />;
+                            }
+                        }
+                    }} /> */}
+                     <Tab.Screen name="FeedTab" component={FeedTab} navigation={navigation}
+                    options={{
+                        tabBarLabel: '動態',
+                        tabBarActiveTintColor: 'black',
+                        tabBarIcon: (props) => {
+                            if (props.focused) {
+                                return <Ionicons name="beer" size={24} color="black" />;
+                            } else {
+                                return <Ionicons name="beer-outline" size={24} color='grey' />;
+                            }
+                        }
+                    }} />
+                     <Tab.Screen name="ExploreTab" component={ExploreTab}
+                    options={{
+                        tabBarLabel: '探索',
+                        tabBarActiveTintColor: 'black',
+                        tabBarIcon: (props) => {
+                            if (props.focused) {
+                                return <Ionicons name="search" size={24} color="black" />;
+                            } else {
+                                return <Ionicons name="search-outline" size={24} color='grey' />;
                             }
                         }
                     }} />

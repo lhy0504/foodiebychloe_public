@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    View, Image, Dimensions
+    View, Image, Dimensions, ImageBackground
 } from 'react-native';
 import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 import {
@@ -15,6 +15,7 @@ import {
 import LocationButton from '../components/LocationButton'
 import StarRating from 'react-native-star-rating';
 import { saveToCache } from '../utils/AsyncStorageCache';
+import { getTheme } from '../consts/themes';
 
 var { width, height } = Dimensions.get('window')
 
@@ -72,23 +73,23 @@ export default function Post(props) {
     }
 
     const doLike = async () => {
-     
+
         if (liked) {
             setLiked(false)
             unlikePost(item.id)
-        
-           setItem({...item,likes:item.likes.slice(0,-1)})
+
+            setItem({ ...item, likes: item.likes.slice(0, -1) })
         } else {
-         
+
             setLiked(true)
-           
+
             likePost(item.id, item.userid)
-            setItem({...item,likes:item.likes.concat([getMyUid()])})
+            setItem({ ...item, likes: item.likes.concat([getMyUid()]) })
             props.explode()
         }
         //refresh post
-       /*  var newdata = await getPostById(item.id)
-        setItem({ ...item, ...newdata }) */
+        /*  var newdata = await getPostById(item.id)
+         setItem({ ...item, ...newdata }) */
     }
 
     const openProfile = () => {
@@ -114,6 +115,8 @@ export default function Post(props) {
             </VStack>
         )
     }
+    var theme = getTheme(item)
+
     return (
         item.hasOwnProperty('friends') &&
         (item.publicOrFriends == 'friends' && item.friends.includes(getMyUid())
@@ -152,37 +155,44 @@ export default function Post(props) {
                         numberOfLines={5} mb={2}>{item.overalldescription.trim()}</Text>}
 
                 </VStack>
-                <View style={{ flexDirection: 'row', marginTop: 2, marginBottom: 2 }} >
-                    {item.image.length > 1 ?
-                        (<>
-                            <View style={{ flex: 1, marginRight: 2, overflow: 'hidden' ,marginTop:30}}>
-                                <Image source={{ uri: item.image[0] }}
-                                    style={{ height: width / 2, width: width / 2, overflow: 'hidden' }} />
-                               {/*  <ImageDesc yummystar={item.yummystar[0]} title={item.title[0]} /> */}
+                <ImageBackground
+                    style={{ height: '100%', width: width, flex: 1 }}
+                    source={theme.image}
+
+                    imageStyle={{ resizeMode: 'cover' }}
+                >
+                    <View style={{ flexDirection: 'row', marginTop: 8 }} >
+                        {item.image.length > 1 ?
+                            (<>
+                                <View style={{ flex: 1, marginRight: 2, overflow: 'hidden', marginTop: 30 }}>
+                                    <Image source={{ uri: item.image[0] }}
+                                        style={{ height: width / 2, width: width / 2, overflow: 'hidden' }} />
+                                    {/*  <ImageDesc yummystar={item.yummystar[0]} title={item.title[0]} /> */}
+                                </View>
+
+                                <View style={{ flex: 1, }}>
+                                    <Image source={{ uri: item.image[1] }} style={{ height: width / 2, width: width / 2, }} />
+                                    {/*   <ImageDesc yummystar={item.yummystar[1]} title={item.title[1]} /> */}
+
+                                </View></>
+                            )
+
+                            :
+
+                            <View style={{ flex: 1,margin:50, marginVertical:10 }}>
+                                <Image source={{ uri: item.image[0] }} style={{ height: width-100, width: '100%', }} />
+                              {/*   <ImageDesc yummystar={item.yummystar[0]} title={item.title[0]} /> */}
                             </View>
+                        }
+                    </View>
+                    <HStack justifyContent='space-between' alignItems='center' px={6} my={3}>
+                        <LocationButton
+                            location={item.location}
+                            place_id={item.place_id}
+                            navigation={props.navigation} color={theme.color} />
+                    </HStack>
+                </ImageBackground>
 
-                            <View style={{ flex: 1, }}>
-                                <Image source={{ uri: item.image[1] }} style={{ height: width / 2, width: width / 2, }} />
-                              {/*   <ImageDesc yummystar={item.yummystar[1]} title={item.title[1]} /> */}
-
-                            </View></>
-                        )
-
-                        :
-
-                        <View style={{ flex: 1, }}>
-                            <Image source={{ uri: item.image[0] }} style={{ height: width, width: '100%', }} />
-                            <ImageDesc yummystar={item.yummystar[0]} title={item.title[0]} />
-                        </View>
-                    }
-                </View>
-
-                <HStack justifyContent='space-between' alignItems='center' px={6} mt={3}>
-                    <LocationButton
-                        location={item.location}
-                        place_id={item.place_id}
-                        navigation={props.navigation} />
-                </HStack>
 
 
 

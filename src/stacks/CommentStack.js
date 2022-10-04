@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import {
-    Dimensions, 
+    Dimensions,
     StyleSheet, View, TextInput
 } from 'react-native';
 import {
-    HStack, Text, Avatar, ScrollView, NativeBaseProvider, Box, IconButton, Spinner
+    HStack, Text, Avatar, ScrollView, NativeBaseProvider, Box, IconButton, Spinner, FlatList
 } from "native-base";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { Feather, AntDesign } from '@expo/vector-icons';
@@ -12,7 +12,7 @@ import {
     commentPost, getUser, getMyUid, unlikePost, likePost
     , getPostById
 } from '../utils/FirebaseUtil'
-import { TouchableOpacity,  } from 'react-native-gesture-handler';
+import { TouchableOpacity, } from 'react-native-gesture-handler';
 
 var { width, height } = Dimensions.get('window')
 
@@ -20,7 +20,6 @@ export default function CommentModal({ navigation, route }) {
 
     const [post, setPost] = useState(route.params.item)
     const input = React.createRef();
-    const scrollview = React.createRef()
 
     const [commentUsers, setCommentUsers] = React.useState(null)
     const [comment, setComment] = useState('');
@@ -31,11 +30,11 @@ export default function CommentModal({ navigation, route }) {
         var newdata = await getPostById(post.id)
         setPost(newdata)
 
-        
+
         //get commenter propic and names
         var newStateArray = [];
         for (var i in newdata.comment) {
-            var u = await getUser(newdata.comment[i].userid,false)
+            var u = await getUser(newdata.comment[i].userid, false)
             newStateArray.push(u);
         }
         setCommentUsers(newStateArray);
@@ -57,7 +56,7 @@ export default function CommentModal({ navigation, route }) {
             setLiked(false)
         } else {
             setLiked(true)
-            likePost(post.id,post.userid)
+            likePost(post.id, post.userid)
         }
         //no need refresh post
     }
@@ -77,7 +76,7 @@ export default function CommentModal({ navigation, route }) {
                 width: width,
                 height: height,
                 backgroundColor: '#000',
-                opacity:0.5
+                opacity: 0.5
             }} >
                 <TouchableWithoutFeedback
                     onPress={() => navigation.goBack()}
@@ -101,14 +100,16 @@ export default function CommentModal({ navigation, route }) {
 
                         <Text color='#d5d3ca'  >{'留言'}</Text>
                     </HStack>
-                    <ScrollView ref={scrollview}>
-                        {
-                            commentUsers == null ?
-                                <Box flex={1} p={10}justifyContent='center' alignItems='center'  >
-                                    <Spinner />
-                                </Box>
-                                :
-                                commentUsers.map((item, index) =>
+
+                    {
+                        commentUsers == null ?
+                            <Box flex={1} p={10} justifyContent='center' alignItems='center'  >
+                                <Spinner />
+                            </Box>
+                            :
+                            <FlatList
+                                data={commentUsers}
+                                renderItem={({ item, index }) => (
                                     <HStack key={index} my={1.5} alignItems='center' mx={3} >
                                         <TouchableOpacity onPress={() => openProfile(item.uid)}>
                                             <HStack alignItems='center' >
@@ -118,9 +119,11 @@ export default function CommentModal({ navigation, route }) {
                                         </TouchableOpacity>
                                         <Text>{"  "}{post.comment[index].comment}</Text>
                                     </HStack>
-                                )
-                        }
-                    </ScrollView>
+                                )}
+                                ListEmptyComponent={<Text textAlign={'center'} my={10}>沒有回應</Text>}
+                            />
+                    }
+
                     <HStack alignItems='center' justifyContent='space-between'
                         borderTopWidth='1px' borderTopColor='coolGray.300'
                         px={3}
