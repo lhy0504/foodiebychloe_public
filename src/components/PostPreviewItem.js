@@ -14,6 +14,7 @@ import LocationButton from '../components/LocationButton'
 import StarRating from 'react-native-star-rating';
 import YummyRankView from './YummyRankView';
 import {  TouchableHighlight } from 'react-native-gesture-handler';
+import { saveToCache } from '../utils/AsyncStorageCache';
 
 export default function Post(props) {
 

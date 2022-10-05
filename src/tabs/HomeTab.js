@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
     StyleSheet,
     Animated,
-    RefreshControl, ImageBackground, Dimensions, Image,
+    RefreshControl, ImageBackground, Dimensions, Image, Easing
 } from 'react-native';
 import {
     FlatList, HStack, IconButton, Text, Box,
@@ -42,15 +42,16 @@ function getRandom(arr, n) {
 }
 function RandomView(props) {
 
+    const [allpostdata, setAllPostData] = useState(null)
     const [data, setData] = useState([])
-    const [bookmarkedArray, setBookmarkedArray] = useState([0, 0, 0])
+    const [bookmarkedArray, setBookmarkedArray] = useState([-1, -1, -1])
     const [refreshing, setRefreshing] = React.useState(false);
-    const explosion = useRef()
     const [fadeAnim] = useState(new Animated.Value(0));
-
+    const [zoomAnim,setZoomAnim] = useState(new Animated.Value(1));
 
     const tabBarHeight = useBottomTabBarHeight();
     async function getData() {
+
         Animated.sequence([
             Animated.timing(fadeAnim, {
                 toValue: 0,
@@ -60,10 +61,23 @@ function RandomView(props) {
                 toValue: 1,
                 duration: 500, useNativeDriver: true
             })]).start();
+
         setRefreshing(true);
-        var dat = getRandom(await getPublicPosts(), 3)//(await getUser()).feed
-        setData(dat)
-        setBookmarkedArray([0, 0, 0])
+
+        var dat = allpostdata
+        if (!allpostdata) {
+            dat = await getPublicPosts()
+            setAllPostData(dat)
+        }
+        dat = getRandom(dat, 3)//(await getUser()).feed
+        setTimeout(() => {
+            setData([])
+            setBookmarkedArray([-1, -1, -1])
+            setData(dat)
+           setZoomAnim(new Animated.Value(1))
+        }
+            , 500)
+
 
         /* save to cache for smooth navigation */
         for (var i of dat) {
@@ -75,10 +89,14 @@ function RandomView(props) {
     }
     const addBookmark = (name, id, index) => {
         props.explode()
+        Animated.timing(zoomAnim, {
+            toValue: 1.1,
+            duration: 100, useNativeDriver: true, easing: Easing.cubic
+        }).start()
         setTimeout(getData, 1400)
 
         Bookmark.addBookmark(name, id)
-        var newarr = [...bookmarkedArray]
+        var newarr = [0, 0, 0]
         newarr[index] = 1
         setBookmarkedArray(newarr)
 
@@ -102,7 +120,7 @@ function RandomView(props) {
                 <HStack mx={6} justifyContent={'space-between'} alignItems='center' my={5} mb={0} >
                     <VStack>
                         <Text fontSize='md' color='white' >ғᴏᴏᴅɪᴇ ʙʏ ᴄʜʟᴏᴇ🍺</Text>
-                        <Text fontSize='xs' color='#ddd' fontWeight={'thin'}>選擇一間餐廳加入收藏吧！</Text>
+                        <Text fontSize='xs' color='#ddd' fontWeight={'thin'}>餐廳三選一</Text>
                     </VStack>
 
                     <IconButton onPress={getData}
@@ -116,49 +134,55 @@ function RandomView(props) {
                         }}  >
 
                         {data.map((post, index) => (
-                            <TouchableOpacity activeOpacity={.7}
-                                onPress={() => props.navigation.push('StoryStack', { postid: post.id, currImg: 0 })} >
-                                <VStack
-                                    borderRadius={9} m={5} my={2} overflow='hidden'
-                                    backgroundColor={'#EEECE3'}>
-                                    <HStack p={3} pointerEvents="none" >
-                                        <Image source={{ uri: post.image[0] }} style={{ height: 85, width: 85, }} resizeMode='cover' />
+                            <Animated.View
+                                style={{
+                                    transform: [{ scale: bookmarkedArray[index] === 1 ? zoomAnim : 1 }],
+                                }}  >
+                                <TouchableOpacity activeOpacity={.7}
+                                    onPress={() => props.navigation.push('StoryStack', { postid: post.id, currImg: 0 })} >
+                                    <VStack
+                                        borderRadius={9} m={5} my={2} overflow='hidden'
+                                        backgroundColor={'#EEECE3'} style={bookmarkedArray[index] === 0 && { opacity: .7 }}>
+                                        <HStack p={3} pointerEvents="none" >
+                                            <Image source={{ uri: post.image[0] }} style={{ height: 85, width: 85, }} resizeMode='cover' />
 
-                                        <VStack ml={3} flex={1}>
+                                            <VStack ml={3} flex={1}>
 
-                                            <HStack justifyContent='space-between' alignItems='center' >
-                                                {post.overalltitle != '' ?
-                                                    <Text fontSize={'md'} fontWeight={'bold'}
-                                                        flexWrap='wrap' flex={1}
-                                                        numberOfLines={2}
-                                                    >{post.overalltitle.trim()}</Text>
-                                                    :
-                                                    <View />
-                                                }
-                                            </HStack>
-                                            <LocationButton disabled
-                                                fontSize='sm'
-                                                location={post.location}
-                                                place_id={post.place_id}
-                                                navigation={props.navigation}
-                                                color={'black'} />
-                                        </VStack>
-                                    </HStack>
-
-                                    <TouchableOpacity onPress={() => addBookmark(post.location, post.place_id, index)}>
-                                        <HStack alignItems={'center'} pl={5}
-                                            borderTopWidth={1} borderColor='coolGray.400' p={3} py={2}
-                                            backgroundColor={bookmarkedArray[index] ? "#3cb043" : "transparent"}
-                                            borderBottomRadius={9}>
-                                            <Ionicons
-                                                name={bookmarkedArray[index] ? "ios-checkmark" : "bookmark-outline"} size={24}
-                                                color={bookmarkedArray[index] ? "white" : "black"}
-                                            />
-                                            <Text color={bookmarkedArray[index] ? "white" : "coolGray.800"}> 加入我的收藏</Text>
+                                                <HStack justifyContent='space-between' alignItems='center' >
+                                                    {post.overalltitle != '' ?
+                                                        <Text fontSize={'md'} fontWeight={'bold'}
+                                                            flexWrap='wrap' flex={1}
+                                                            numberOfLines={2}
+                                                        >{post.overalltitle.trim()}</Text>
+                                                        :
+                                                        <View />
+                                                    }
+                                                </HStack>
+                                                <LocationButton disabled
+                                                    fontSize='sm'
+                                                    location={post.location}
+                                                    place_id={post.place_id}
+                                                    navigation={props.navigation}
+                                                    color={'black'} />
+                                            </VStack>
                                         </HStack>
-                                    </TouchableOpacity>
-                                </VStack>
-                            </TouchableOpacity>
+
+                                        <TouchableOpacity onPress={() => addBookmark(post.location, post.place_id, index)}>
+                                            <HStack alignItems={'center'} pl={5}
+                                                borderTopWidth={1} borderColor='coolGray.400' p={3} py={2}
+                                                backgroundColor={bookmarkedArray[index] === 1 ? "#3cb043" : "transparent"}
+                                                borderBottomRadius={9}
+                                            >
+                                                <Ionicons
+                                                    name={bookmarkedArray[index] === 1 ? "ios-checkmark" : "bookmark-outline"} size={24}
+                                                    color={bookmarkedArray[index] === 1 ? "white" : "black"}
+                                                />
+                                                <Text color={bookmarkedArray[index] === 1 ? "white" : "coolGray.800"}> 收藏</Text>
+                                            </HStack>
+                                        </TouchableOpacity>
+                                    </VStack>
+                                </TouchableOpacity>
+                            </Animated.View>
                         )
 
 

@@ -99,7 +99,7 @@ function Feed(props) {
     async function getData() {
         setRefreshing(true);
         var publicPosts = await getPublicPosts()//(await getUser()).feed
-        var feed = (await getUser()).feed
+        var feed = (await getUser(undefined,true)).feed
 
         // combine sort by dates
         for (var i of feed) {

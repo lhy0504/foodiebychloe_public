@@ -167,12 +167,12 @@ export async function checkIfNewUser(navigation) {
           .collection("users").doc(getAuth().currentUser.uid).update({
             pushtoken: token || 'error',
           })
-      ).catch(e=>{
+      ).catch(e => {
         console.log(e)
-         firebase.firestore()
-        .collection("users").doc(getAuth().currentUser.uid).update({
-          pushtoken: e.toString(),
-        })
+        firebase.firestore()
+          .collection("users").doc(getAuth().currentUser.uid).update({
+            pushtoken: e.toString(),
+          })
       })
     }
   }
@@ -244,13 +244,13 @@ export async function deleteUser() {
 
   return
 }
-export async function getPublicPosts() {
+export async function getPublicPosts(limit=20) {
 
   //descending, limit 30
   var postList = [];
   var snapshot = await firebase.firestore()
     .collection('posts')
-    .where('publicOrFriends','==','public')
+    .where('publicOrFriends', '==', 'public')
     .orderBy('postDate', 'desc')
     .limit(20)
     .get()
@@ -258,7 +258,7 @@ export async function getPublicPosts() {
   snapshot.forEach((doc) => {
     const singlePost = doc.data();
     singlePost.id = doc.id;
-   postList.push(convertTimestampToDate(singlePost)); 
+    postList.push(convertTimestampToDate(singlePost));
 
   });
   return (postList);
@@ -515,22 +515,23 @@ export async function uploadPost(post, publicOrFriends) {
 
     // pollDish: add all dish to 0 , then vote
     //poll dish
-    var updateObj = {}
-    var maxRating = 0
-    var maxIndex = 0
-    for (let p in post.title) {
-      updateObj[post.title[p]] = 0
-      if (post.yummystar[p] > maxRating) {
-        maxRating = post.yummystar[p]
-        maxIndex = p
+    try {
+      var updateObj = {}
+      var maxRating = 0
+      var maxIndex = 0
+      for (let p in post.title) {
+        updateObj[post.title[p]] = 0
+        if (post.yummystar[p] > maxRating) {
+          maxRating = post.yummystar[p]
+          maxIndex = p
+        }
       }
-    }
-    firebase.firestore()
-      .collection('dishPoll')
-      .doc(post.place_id)
-      .set(updateObj)
-      .then(() => pollDish(post.place_id, post.title[maxIndex]));
-
+      firebase.firestore()
+        .collection('dishPoll')
+        .doc(post.place_id)
+        .set(updateObj)
+        .then(() => pollDish(post.place_id, post.title[maxIndex]));
+    } catch (e) { }
 
 
   }

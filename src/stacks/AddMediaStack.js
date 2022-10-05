@@ -40,8 +40,8 @@ export default function AddMediaTab({ navigation, route }) {
     useEffect(async () => {
         const { status } = await Permissions.askAsync(Permissions.CAMERA);
         console.log(status)
-        const cameraPermission = await Camera.requestPermissionsAsync();
-
+        const cameraPermission = await Camera.requestCameraPermissionsAsync();
+        navigation.replace("AddMediaStack")
     })
 
     function handleBackButtonClick() {
