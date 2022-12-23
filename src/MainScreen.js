@@ -108,20 +108,7 @@ export default function MainScreen({ navigation, route }) {
 
                     }
                 }}>
-                <Tab.Screen name="Home" component={HomeTab} stackNavigation={navigation}
-                    options={{
-                        tabBarLabel: '動態',
-                        tabBarActiveTintColor: 'black',
-                        tabBarIcon: (props) => {
-                            if (props.focused) {
-                                return <MaterialCommunityIcons name="dice-5" size={24} color="black"
-                                style={{transform: [{rotate: '25deg'}]}}/>;
-                            } else {
-                                return <MaterialCommunityIcons name="dice-5-outline" size={24} color='grey'
-                                style={{transform: [{rotate: '25deg'}]}} />;
-                            }
-                        }
-                    }} />
+                
                
                 {/*  <Tab.Screen name="New"
                     component={() => null}
@@ -165,7 +152,20 @@ export default function MainScreen({ navigation, route }) {
                             }
                         }
                     }} />
-                    
+                    <Tab.Screen name="Home" component={HomeTab} stackNavigation={navigation}
+                    options={{
+                        tabBarLabel: '動態',
+                        tabBarActiveTintColor: 'black',
+                        tabBarIcon: (props) => {
+                            if (props.focused) {
+                                return <MaterialCommunityIcons name="dice-5" size={24} color="black"
+                                style={{transform: [{rotate: '25deg'}]}}/>;
+                            } else {
+                                return <MaterialCommunityIcons name="dice-5-outline" size={24} color='grey'
+                                style={{transform: [{rotate: '25deg'}]}} />;
+                            }
+                        }
+                    }} />
                 <Tab.Screen name="Bookmark" component={() => null}
                     listeners={() => ({
                         tabPress: (e) => {

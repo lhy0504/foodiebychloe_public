@@ -1,9 +1,11 @@
 import React, { Component, useState, useEffect } from 'react';
 import { TouchableHighlight, View, Dimensions, RefreshControl } from 'react-native';
 import {
-    FlatList, HStack, IconButton, Text, Spinner, Box, Image,
+    FlatList, HStack, IconButton, Text, Spinner, Box, 
     VStack, NativeBaseProvider, Avatar
 } from "native-base";
+import Image from '../components/Image';
+
 import { Feather, AntDesign, Ionicons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { getUserPosts, getUser, followUser, getMyUid } from '../utils/FirebaseUtil'

@@ -6,10 +6,12 @@ import {
     View,
     Dimensions,
     TouchableOpacity,
-    Image,
+    
     BackHandler,
     StatusBar,
 } from 'react-native';
+import Image from '../components/Image';
+
 import {
     HStack, IconButton, Text, Box,
     VStack, NativeBaseProvider

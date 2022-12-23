@@ -3,7 +3,7 @@
     "name": "foodieByChloe",
     "slug": "foodieByChloe",
     "scheme": "foodiebychloe",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -35,7 +35,7 @@
     },
     "android": {
       "package": "com.foodiebychloe",
-      "versionCode": 40,
+      "versionCode": 42,
       "permissions": [
         "CAMERA_ROLL",
         "CAMERA",

@@ -2,8 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
     StyleSheet,
     Animated,
-    RefreshControl, ImageBackground, Dimensions, Image, Easing
+    RefreshControl, ImageBackground, Dimensions,  Easing
 } from 'react-native';
+import Image from '../components/Image';
+
 import {
     FlatList, HStack, IconButton, Text, Box,
     VStack, NativeBaseProvider, Button, Avatar, View

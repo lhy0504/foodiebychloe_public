@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, RefreshControl, Alert, Dimensions, ImageBackground,TouchableOpacity  } from 'react-native';
 import {
-    FlatList, HStack, IconButton, Text, Image, Box,
+    FlatList, HStack, IconButton, Text,  Box,
     VStack, NativeBaseProvider, Avatar
 } from "native-base";
+import Image from '../components/Image';
+
 import { Feather, Entypo, Ionicons } from '@expo/vector-icons';
 import { getBothUserPosts, getUser, followUser, getMyUid, blockUser, unblockUser } from '../utils/FirebaseUtil'
 import Post from '../components/Post'

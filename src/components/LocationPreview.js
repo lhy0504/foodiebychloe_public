@@ -3,8 +3,10 @@ import {  TouchableHighlight } from 'react-native-gesture-handler';
 
 import {
     FlatList, HStack, IconButton, Text, Box,
-    VStack, NativeBaseProvider, Button, Avatar, Image
+    VStack, NativeBaseProvider, Button, Avatar
 } from "native-base";
+import Image from '../components/Image';
+
 import {
     getLocation,
 

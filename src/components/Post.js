@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    View, Image, Dimensions, ImageBackground
+    View,  Dimensions, ImageBackground
 } from 'react-native';
 import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 import {
@@ -16,6 +16,7 @@ import LocationButton from '../components/LocationButton'
 import StarRating from 'react-native-star-rating';
 import { saveToCache } from '../utils/AsyncStorageCache';
 import { getTheme } from '../consts/themes';
+import Image from './Image';
 
 var { width, height } = Dimensions.get('window')
 
@@ -25,7 +26,8 @@ Props
 - navigation
 (explode)
 */
-export default function Post(props) {
+export default React.memo(Post)
+  function Post(props) {
     const [item, setItem] = useState({})
     const [liked, setLiked] = useState(false)
     const [randomViews, setRandomViews] = useState(Math.floor(Math.random() * 30) + 20
@@ -33,6 +35,9 @@ export default function Post(props) {
 
     useEffect(() => {
         async function getData() {
+            //prevent rerender
+            if(Object.keys(item).length!=0) return
+
             var p = await getPostById(props.postid)
             /* save post to cache */
             saveToCache('post:' + props.postid, p)
@@ -213,7 +218,7 @@ export default function Post(props) {
                         {/* Fake view */}
                         <HStack p={1} w={16}>
                             <Ionicons name={"eye-outline"} size={22} color='#555' />
-                            <Text color='#555'>  {randomViews} </Text>
+                            <Text color='#555'>  {Math.floor(Math.random() * 30) + 20} </Text>
                         </HStack>
                         <TouchableOpacity onPress={openComment}>
                             <HStack p={1} w={16}>

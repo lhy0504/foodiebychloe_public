@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
-    View, Dimensions, StyleSheet, Image, TextInput, Button,  ScrollView
+    View, Dimensions, StyleSheet,  TextInput, Button,  ScrollView
     , 
 } from 'react-native';
+import Image from '../components/Image';
+
 import { TouchableHighlight,TouchableOpacity } from 'react-native-gesture-handler';
 import {
     Text, Spinner,

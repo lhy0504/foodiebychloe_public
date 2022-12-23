@@ -139,6 +139,9 @@ export default function App() {
                 <Stack.Screen
                   name="AddMediaStack"
                   component={AddMediaStack}
+                  options={{
+                    animationEnabled: false,
+                  }}
                 />
                 <Stack.Screen
                   name="LocationProfileStack"

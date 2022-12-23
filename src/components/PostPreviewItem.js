@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
-    View, Image
+    View
 } from 'react-native';
+import Image from '../components/Image';
+
 import {
     HStack, Text,
     VStack
@@ -13,10 +15,11 @@ import {
 import LocationButton from '../components/LocationButton'
 import StarRating from 'react-native-star-rating';
 import YummyRankView from './YummyRankView';
-import {  TouchableHighlight } from 'react-native-gesture-handler';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 import { saveToCache } from '../utils/AsyncStorageCache';
 
-export default function Post(props) {
+export default React.memo(Post)
+function Post(props) {
 
     var post = props.post
     const [user, setUser] = useState(null)
@@ -33,8 +36,8 @@ export default function Post(props) {
         }
         getData()
 
-          /* save post to cache */
-          saveToCache('post:' + post.id, post)
+        /* save post to cache */
+        saveToCache('post:' + post.id, post)
     }, [])
 
     return (
@@ -65,10 +68,10 @@ export default function Post(props) {
 
                 </HStack>
                 <LocationButton disabled hideTags
-                                location={post.location}
-                                place_id={post.place_id}
-                                navigation={props.navigation}
-                                color={'black'} />
+                    location={post.location}
+                    place_id={post.place_id}
+                    navigation={props.navigation}
+                    color={'black'} />
                 {post.overalldescription != '' && <Text numberOfLines={3} fontSize='md' >{post.overalldescription}</Text>}
                 <View style={{ flexWrap: 'wrap', flexDirection: 'row' }} >
                     {post.image.map(

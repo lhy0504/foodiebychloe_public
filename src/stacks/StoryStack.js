@@ -4,7 +4,7 @@ import {
     StyleSheet,
     View, TextInput,
     Alert,
-    Image, FlatList, TouchableOpacity,
+     FlatList, TouchableOpacity,
     BackHandler, useWindowDimensions, ImageBackground
 } from 'react-native';
 import {
@@ -24,6 +24,8 @@ import StarRating from 'react-native-star-rating';
 import ConfettiCannon from 'react-native-confetti-cannon';
 import { getTheme } from '../consts/themes';
 import { getFromCache } from '../utils/AsyncStorageCache';
+import Image from '../components/Image';
+
 /* 
 Props:
 -  post  (whole post)
@@ -256,7 +258,7 @@ export default function StoryStack({ navigation, route }) {
     var theme = getTheme(content)
     var isZlayout = content && content.hasOwnProperty('layout') && content.layout
 
-    return content != null ? (
+    return content != null && author.name!='' ? (
         <NativeBaseProvider>
             
             {/*  Header Bar  */}

@@ -61,3 +61,4 @@ dist/
 
 # @end expo-cli
 src*-*複製/
+src/consts/env.js

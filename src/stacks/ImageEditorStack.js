@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, Dimensions, ScrollView, View, Image, TouchableWithoutFeedback, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { StyleSheet, Dimensions, ScrollView, View,  TouchableWithoutFeedback, TouchableHighlight, TouchableOpacity } from 'react-native';
 import { ImageEditor } from "expo-image-editor";
+import Image from '../components/Image';
+
 import {
     HStack, IconButton, Box,
     Text,
