@@ -60,7 +60,3 @@ web-build/
 dist/
 
 # @end expo-cli
-/src*-*複製/
-/src/consts/env.js
-/google-services.json
-/GoogleService-Info.plist
